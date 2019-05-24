@@ -1,0 +1,60 @@
+databaseChangeLog:
+
+    - changeSet:
+        id: 1
+        author: sasha_vosu
+        changes:
+
+        - createTable:
+            tableName: user_entity
+              - column:
+                 name: id
+                 type: bigint
+                 constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_user_entity
+                    nullable: false
+              - column:
+                 name: first_name
+                 type: varchar(15)
+                 constraints:
+                    nullable: false
+              - column:
+                 name: last_name
+                 type: varchar(15)
+                 constraints:
+                    nullable: false
+              - column:
+                 name: nick_name
+                 type: varchar(10)
+                 constraints:
+                    nullable: false
+              - column:
+                 name: password
+                 type: varchar(20)
+                 constraints:
+                    nullable: false
+              - column:
+                 name: birthday
+                 type: date
+              - column:
+                 name: gender
+                 type: varchar(6)
+              - column:
+                 name: mail
+                 type: varchar(50)
+                 constraints:
+                    nullable: false
+              - column:
+                 name: phone_number
+                 type: varchar(13)
+              - column:
+                 name: address
+                 type: varchar
+              - column:
+                 name: role
+                 type: varchar(9)
+              - column:
+                 name: permission_to_order
+                 type: boolean
+                 defaultValueBoolean: true

@@ -1,0 +1,45 @@
+databaseChangeLog:
+
+    - changeSet:
+        id: 5
+        author: sasha_vosu
+        changes:
+
+        - createTable:
+            tableName: archive_book_usage
+              - column:
+                 name: id
+                 type: bigint
+                 constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_archive_book_usage
+                    nullable: false
+              - column:
+                 name: id_reader
+                 type: bigint
+                 constraints:
+                    nullable: false
+                    foreignKeyName: fk_reader_id
+                    references: user_entity(id)
+              - column:
+                 name: id_copies_book
+                 type: bigint
+                 constraints:
+                    nullable: false
+                    foreignKeyName: fk_book_copy
+                    references: copies_of_books(id)
+              - column:
+                 name: book_condition
+                 type: varchar(8)
+                 constraints:
+                    nullable: false
+              - column:
+                 name: monetary_sanctions
+                 type: bigint
+                 defaultValueNumeric: 0
+              - column:
+                 name: fine_paid
+                 type: boolean
+                 defaultValueBoolean: true
+                 constraints:
+                    nullable: false
