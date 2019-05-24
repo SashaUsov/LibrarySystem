@@ -1,4 +1,12 @@
 databaseChangeLog:
 
     - include:
-        file:
+        file: 20190524T1454_create_user_table.yaml
+    - include:
+        file: 20190524T1527_create_book_catalog_table.yaml
+    - include:
+        file: 20190524T1534_create_copies_of_books_table.yaml
+    - include:
+        file: 20190524T1600_create_issued_books_table.yaml
+    - include:
+        file: 20190524T1640_create_archive_book_usage_table.yaml
