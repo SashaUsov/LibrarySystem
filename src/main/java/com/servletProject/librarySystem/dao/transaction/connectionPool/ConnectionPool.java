@@ -1,4 +1,4 @@
-package com.servletProject.librarySystem.transaction.connectionPool;
+package com.servletProject.librarySystem.dao.transaction.connectionPool;
 
 import com.servletProject.librarySystem.exception.ConnectionPoolIsEmptyException;
 import lombok.Getter;
