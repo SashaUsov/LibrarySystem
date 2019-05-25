@@ -14,6 +14,7 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: pk_issued_books
                     nullable: false
+                    unique: true
               - column:
                  name: id_reader
                  type: bigint
@@ -36,7 +37,7 @@ databaseChangeLog:
                     foreignKeyName: fk_issued_copies
                     references: copies_of_books(id)
               - column:
-                 name: readingPlace
+                 name: reading_place
                  type: varchar(4)
               - column:
                  name: date_of_issue

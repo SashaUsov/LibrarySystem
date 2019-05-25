@@ -14,6 +14,7 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: pk_copies_of_books
                     nullable: false
+                    unique: true
               - column:
                  name: id_book
                  type: bigint
