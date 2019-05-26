@@ -7,6 +7,7 @@ databaseChangeLog:
 
         - createTable:
             tableName: user_entity
+            columns:
               - column:
                  name: id
                  type: bigint
@@ -14,6 +15,7 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: pk_user_entity
                     nullable: false
+                    autoIncrement: true
                     unique: true
               - column:
                  name: first_name
@@ -36,9 +38,6 @@ databaseChangeLog:
                  type: varchar(20)
                  constraints:
                     nullable: false
-              - column:
-                 name: birthday
-                 type: date
               - column:
                  name: gender
                  type: varchar(6)

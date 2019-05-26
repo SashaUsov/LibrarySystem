@@ -8,15 +8,17 @@ import java.util.Date;
 
 @Getter
 @Setter
-@Builder
+//@Builder
 public class UserEntity {
+
+    public UserEntity() {
+    }
 
     private long id;
     private String firstName;
     private String lastName;
     private String nickName;
     private String password;
-    private Date birthday;
     private String gender;
     private String mail;
     private String phoneNumber;
