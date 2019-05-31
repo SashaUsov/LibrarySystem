@@ -10,3 +10,13 @@ databaseChangeLog:
         file: liquibase/changelog/20190524T1600_create_issued_books_table.yaml
     - include:
         file: liquibase/changelog/20190524T1640_create_archive_book_usage_table.yaml
+    - include:
+        file: liquibase/changelog/20190529T2259_create_user_role_table.yaml
+    - include:
+        file: liquibase/changelog/20190529T2309_create_user_table_sequence.yaml
+    - include:
+        file: liquibase/changelog/20190530T2015_create_index_on_user_table.yaml
+    - include:
+        file: liquibase/changelog/20190531T1509_create_user_role_table_sequence.yaml
+    - include:
+        file: liquibase/changelog/20190531T1511_rename_column_user_role_table.yaml

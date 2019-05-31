@@ -1,13 +1,13 @@
 package com.servletProject.librarySystem.utils;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 public class WorkWithHttpRequestUtil {
 
-    public static Map<String, String> getCurrentParam(HttpSession hs, String param, Map<String, String> paramMap) {
+    public static Map<String, String> getCurrentParam(HttpServletRequest request, String param, Map<String, String> paramMap) {
 
-        final String value = (String) hs.getAttribute(param);
+        final String value = request.getParameter(param);
         if (isExist(value)) {
             paramMap.put(param, value.trim());
         } else {
@@ -16,7 +16,7 @@ public class WorkWithHttpRequestUtil {
         return paramMap;
     }
 
-    public static boolean isExist(String param) {
+    private static boolean isExist(String param) {
         return param != null && !"".equalsIgnoreCase(param.trim());
     }
 }

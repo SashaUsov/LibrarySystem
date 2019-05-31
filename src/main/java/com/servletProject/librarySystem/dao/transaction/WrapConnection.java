@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class WrapConnection {
+public class WrapConnection implements AutoCloseable{
     private Connection connection;
 
     public WrapConnection(Connection connection){
@@ -25,6 +25,6 @@ public class WrapConnection {
     }
 
     public void close(){
-
+        TransactionManager.connections.set(new WrapConnection(connection));
     }
 }

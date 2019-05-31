@@ -2,89 +2,84 @@ package com.servletProject.librarySystem.dao;
 
 import com.servletProject.librarySystem.dao.transaction.TransactionManager;
 import com.servletProject.librarySystem.dao.transaction.WrapConnection;
-import com.servletProject.librarySystem.dto.UserEntity;
+import com.servletProject.librarySystem.domen.UserEntity;
+import com.servletProject.librarySystem.utils.DomainModelUtil;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Properties;
+import java.util.Map;
 
 public class UserDao {
-    private Properties dbProps;
 
-    public UserDao() {
-        loadPropertyFile();
+    public UserEntity findUserById(long id) throws SQLException {
+        WrapConnection connection = TransactionManager.getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM user_entity WHERE id= ?");
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            UserEntity user = null;
+
+            if (resultSet.next()) {
+                user = DomainModelUtil.createUserEntity(resultSet);
+                return user;
+            } else {
+                return null;
+            }
+
+        } finally {
+            connection.close();
+        }
     }
 
     public UserEntity findUserByNickName(String nickName) throws SQLException {
         WrapConnection connection = TransactionManager.getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement("FIND_USER_BY_NICK_NAME");
+        try  {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM user_entity where nick_name= ?");
             preparedStatement.setString(1, nickName);
             ResultSet resultSet = preparedStatement.executeQuery();
             UserEntity user = null;
 
             if (resultSet.next()) {
-                user = createUserEntity(resultSet);
+                user = DomainModelUtil.createUserEntity(resultSet);
             }
             return user;
-        }finally{
+        } finally {
             connection.close();
         }
     }
 
-    public UserEntity save(UserEntity user) throws SQLException {
-
+    public UserEntity save(Map<String, String> paramMap) throws SQLException {
         WrapConnection connection = TransactionManager.getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SAVE_USER");
-            preparedStatement.setLong(1, user.getId()); //////????????
-            preparedStatement.setString(2, user.getFirstName());
-            preparedStatement.setString(3, user.getLastName());
-            preparedStatement.setString(4, user.getNickName());
-            preparedStatement.setString(5, user.getPassword());
-            preparedStatement.setString(6, user.getGender());
-            preparedStatement.setString(7, user.getMail());
-            preparedStatement.setString(8, user.getPhoneNumber());
-            preparedStatement.setString(9, user.getAddress());
-            preparedStatement.setString(10, user.getRole());
-            preparedStatement.execute();
-            return findUserByNickName(user.getNickName());
-        } finally{
+        try  {
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO user_entity (id, first_name, last_name, nick_name," +
+                                                                                      "password, mail, address) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            long id = getNextUserId();
+
+            preparedStatement.setLong(1, id);
+            preparedStatement.setString(2, paramMap.get("first_name"));
+            preparedStatement.setString(3, paramMap.get("last_name"));
+            preparedStatement.setString(4, paramMap.get("nick_name"));
+            preparedStatement.setString(5, paramMap.get("password"));
+            preparedStatement.setString(6, paramMap.get("mail"));
+            preparedStatement.setString(7, paramMap.get("address"));
+            preparedStatement.executeUpdate();
+
+            return findUserById(id); //BY_ID
+        } finally {
             connection.close();
         }
     }
 
-    private UserEntity createUserEntity(ResultSet resultSet) throws SQLException {
-//        final UserEntity buildUser = UserEntity.builder()
-//                .firstName(resultSet.getString("first_name"))
-//                .lastName(resultSet.getString("last_name"))
-//                .nickName(resultSet.getString("nick_name"))
-//                .password(resultSet.getString("password"))
-//                .gender(resultSet.getString("gender"))
-//                .address(resultSet.getString("address"))
-//                .mail(resultSet.getString("mail"))
-//                .id(resultSet.getLong("id"))
-//                .phoneNumber(resultSet.getString("phone_number"))
-//                .permissionToOrder(resultSet.getBoolean("permission_to_order"))
-//                .role(resultSet.getString("role"))
-//                .build();
-//        return buildUser;
-    return null;
-    }
-
-    private void loadPropertyFile() {
-        try (FileInputStream in = new FileInputStream("/Users/samsonov/IdeaProjects/LibrarySystem" +
-                                                              "/src/main/resources/sql-userDao-request.properties")) {
-            dbProps  = new Properties();
-            dbProps.load(in);
-        } catch (IOException e) {
-            e.printStackTrace();
+    private long getNextUserId() throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT nextval('seq_user_id')");
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            Long id = null;
+            if (resultSet.next()) {
+                id = resultSet.getLong("nextval");
+            }
+            return id;
         }
-        dbProps.getProperty("FIND_USER_BY_NICK_NAME");
     }
-
-
 }

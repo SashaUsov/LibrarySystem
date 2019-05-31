@@ -1,4 +1,4 @@
-package com.servletProject.librarySystem.dto;
+package com.servletProject.librarySystem.domen;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,0 +1,11 @@
+databaseChangeLog:
+
+    - changeSet:
+        id: renameColumn-in-user-role-table
+        author: liquibase-docs
+        changes:
+        - renameColumn:
+            columnDataType: varchar
+            newColumnName: user_role
+            oldColumnName: first_name
+            tableName: user_role
