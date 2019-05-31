@@ -1,0 +1,9 @@
+package com.servletProject.librarySystem.dao.queries;
+
+public class UserDaoQueries {
+    public static final String FIND_USER_BY_NICK_NAME = "SELECT * FROM user_entity where nick_name= ?";
+    public static final String FIND_USER_BY_ID = "SELECT * FROM user_entity WHERE id= ?";
+    public static final String SAVE_USER = "INSERT INTO user_entity (id, first_name, last_name, nick_name," +
+                                            "password, mail, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public static final String GET_NEXT_ID = "SELECT nextval('seq_user_id')";
+}

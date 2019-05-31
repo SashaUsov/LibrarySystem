@@ -5,6 +5,7 @@ import com.servletProject.librarySystem.service.UserService;
 import com.servletProject.librarySystem.utils.WorkWithHttpRequestUtil;
 import org.apache.commons.validator.routines.EmailValidator;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,12 +36,23 @@ public class RegisterUser extends HttpServlet {
             response.setStatus(422);
         } else {
             try {
-                final UserEntity saveUser = userService.save(paramMap);
-                response.setStatus(201);
+                UserEntity saveUser = userService.save(paramMap);
+                ifSaveSuccessfully(request, response, saveUser);
             } catch (SQLException e) {
                 response.setStatus(500);
             }
         }
+    }
+    private void ifSaveSuccessfully(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/userpage.jsp");
+        requestDispatcher.forward(request, response);
+    }
+
+    private void ifSaveSuccessfully(HttpServletRequest request, HttpServletResponse response, UserEntity saveUser) throws ServletException, IOException {
+        response.setStatus(201);
+        request.getSession().setAttribute("user", saveUser);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/userpage.jsp");
+        requestDispatcher.forward(request, response);
     }
 
     private boolean isValidEmail(String email) {

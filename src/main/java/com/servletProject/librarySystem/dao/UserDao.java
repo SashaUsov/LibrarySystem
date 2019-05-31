@@ -1,5 +1,6 @@
 package com.servletProject.librarySystem.dao;
 
+import com.servletProject.librarySystem.dao.queries.UserDaoQueries;
 import com.servletProject.librarySystem.dao.transaction.TransactionManager;
 import com.servletProject.librarySystem.dao.transaction.WrapConnection;
 import com.servletProject.librarySystem.domen.UserEntity;
@@ -15,7 +16,7 @@ public class UserDao {
     public UserEntity findUserById(long id) throws SQLException {
         WrapConnection connection = TransactionManager.getConnection();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM user_entity WHERE id= ?");
+            PreparedStatement preparedStatement = connection.prepareStatement(UserDaoQueries.FIND_USER_BY_ID);
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             UserEntity user = null;
@@ -35,7 +36,7 @@ public class UserDao {
     public UserEntity findUserByNickName(String nickName) throws SQLException {
         WrapConnection connection = TransactionManager.getConnection();
         try  {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM user_entity where nick_name= ?");
+            PreparedStatement preparedStatement = connection.prepareStatement(UserDaoQueries.FIND_USER_BY_NICK_NAME);
             preparedStatement.setString(1, nickName);
             ResultSet resultSet = preparedStatement.executeQuery();
             UserEntity user = null;
@@ -52,8 +53,7 @@ public class UserDao {
     public UserEntity save(Map<String, String> paramMap) throws SQLException {
         WrapConnection connection = TransactionManager.getConnection();
         try  {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO user_entity (id, first_name, last_name, nick_name," +
-                                                                                      "password, mail, address) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement preparedStatement = connection.prepareStatement(UserDaoQueries.SAVE_USER);
             long id = getNextUserId();
 
             preparedStatement.setLong(1, id);
@@ -73,7 +73,7 @@ public class UserDao {
 
     private long getNextUserId() throws SQLException {
         try (WrapConnection connection = TransactionManager.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT nextval('seq_user_id')");
+            PreparedStatement preparedStatement = connection.prepareStatement(UserDaoQueries.GET_NEXT_ID);
             final ResultSet resultSet = preparedStatement.executeQuery();
             Long id = null;
             if (resultSet.next()) {
