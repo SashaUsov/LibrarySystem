@@ -21,8 +21,8 @@
             out.println("<div class=\"w3-panel w3-green w3-display-container w3-card-4 w3-round\">\n" +
                                 "<span onclick=\"this.parentElement.style.display='none'\" " +
                                 "class=\"w3-button w3-margin-right w3-display-right w3-round-large w3-hover-green w3-border w3-border-green w3-hover-border-grey\">×</span>\n" +
-                                "<h5> User '" + user.getLastName() + " " + user.getFirstName() + " " +
-                                "' registration is successful!</h5>\n" +
+                                "<h5> User " + user.getLastName() + " " + user.getFirstName() + " " +
+                                " account details</h5>\n" +
                                 "</div>");
 
             out.println("</ul>");

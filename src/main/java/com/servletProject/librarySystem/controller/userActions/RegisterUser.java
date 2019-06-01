@@ -51,7 +51,7 @@ public class RegisterUser extends HttpServlet {
 
         response.setStatus(201);
         request.getSession().setAttribute("user", saveUser);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/userpage.jsp");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/index.jsp");
         requestDispatcher.forward(request, response);
     }
 

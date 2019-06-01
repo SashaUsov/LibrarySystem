@@ -35,6 +35,7 @@ public class UserEntity {
     @Getter
     @Setter
     private boolean permissionToOrder;
+
     @Getter
     @Setter
     private boolean login = false;
