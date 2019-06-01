@@ -5,9 +5,12 @@ import com.servletProject.librarySystem.dao.UserRoleDao;
 import com.servletProject.librarySystem.dao.transaction.TransactionManager;
 import com.servletProject.librarySystem.domen.Role;
 import com.servletProject.librarySystem.domen.UserEntity;
+import com.servletProject.librarySystem.exception.AuthorisationException;
 import com.servletProject.librarySystem.exception.ClientAlreadyExistsException;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class UserService {
@@ -23,8 +26,31 @@ public class UserService {
 
             user = userDao.save(paramMap);
             userRoleDao.setDefaultRole(user.getId());
-            user.setRole(Role.USER.toString());
+            String[] role = new String[] {Role.USER.toString()};
+            user.setRole(Arrays.asList(role));
             return user;
+        } catch (SQLException | NullPointerException e) {
+            TransactionManager.rollBackTransaction();
+            throw e;
+        } finally {
+            TransactionManager.commitTransaction();
+        }
+    }
+
+    public UserEntity login(Map<String, String> paramMap) throws SQLException {
+        UserEntity user = null;
+        try {
+            TransactionManager.beginTransaction();
+            user = userDao.findUserByNickName(paramMap.get("nick_name"));
+            if (user == null) {
+                throw new ClientAlreadyExistsException("Client with this nick name does not exists");
+            } else if (!paramMap.get("password").trim().equals(user.getPassword())) {
+                throw new AuthorisationException("Password or nickname does not match");
+            } else {
+                List<String> roleList = userRoleDao.findUserRoleById(user.getId());
+                user.setRole(roleList);
+                return user;
+            }
         } catch (SQLException | NullPointerException e) {
             TransactionManager.rollBackTransaction();
             throw e;

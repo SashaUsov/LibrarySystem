@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class LoadSQLRequest {
+public class LoadSQLRequestUtil {
 
     public static void loadPropertyFile(Properties sqlUserRequest, String path) {
         try (FileInputStream in = new FileInputStream(path)) {

@@ -1,9 +1,10 @@
 package com.servletProject.librarySystem.dao;
 
-import com.servletProject.librarySystem.dao.queries.UserDaoQueries;
+import com.servletProject.librarySystem.dao.queries.UserEntityDaoQueries;
 import com.servletProject.librarySystem.dao.transaction.TransactionManager;
 import com.servletProject.librarySystem.dao.transaction.WrapConnection;
 import com.servletProject.librarySystem.domen.UserEntity;
+import com.servletProject.librarySystem.utils.DaoUtil;
 import com.servletProject.librarySystem.utils.DomainModelUtil;
 
 import java.sql.PreparedStatement;
@@ -14,9 +15,8 @@ import java.util.Map;
 public class UserDao {
 
     public UserEntity findUserById(long id) throws SQLException {
-        WrapConnection connection = TransactionManager.getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(UserDaoQueries.FIND_USER_BY_ID);
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(UserEntityDaoQueries.FIND_USER_BY_ID);
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             UserEntity user = null;
@@ -28,32 +28,27 @@ public class UserDao {
                 return null;
             }
 
-        } finally {
-            connection.close();
         }
     }
 
     public UserEntity findUserByNickName(String nickName) throws SQLException {
-        WrapConnection connection = TransactionManager.getConnection();
-        try  {
-            PreparedStatement preparedStatement = connection.prepareStatement(UserDaoQueries.FIND_USER_BY_NICK_NAME);
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(UserEntityDaoQueries.FIND_USER_BY_NICK_NAME);
             preparedStatement.setString(1, nickName);
             ResultSet resultSet = preparedStatement.executeQuery();
             UserEntity user = null;
 
             if (resultSet.next()) {
                 user = DomainModelUtil.createUserEntity(resultSet);
+                user.setPassword(resultSet.getString("password"));
             }
             return user;
-        } finally {
-            connection.close();
         }
     }
 
     public UserEntity save(Map<String, String> paramMap) throws SQLException {
-        WrapConnection connection = TransactionManager.getConnection();
-        try  {
-            PreparedStatement preparedStatement = connection.prepareStatement(UserDaoQueries.SAVE_USER);
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(UserEntityDaoQueries.SAVE_USER);
             long id = getNextUserId();
 
             preparedStatement.setLong(1, id);
@@ -66,20 +61,10 @@ public class UserDao {
             preparedStatement.executeUpdate();
 
             return findUserById(id); //BY_ID
-        } finally {
-            connection.close();
         }
     }
 
     private long getNextUserId() throws SQLException {
-        try (WrapConnection connection = TransactionManager.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(UserDaoQueries.GET_NEXT_ID);
-            final ResultSet resultSet = preparedStatement.executeQuery();
-            Long id = null;
-            if (resultSet.next()) {
-                id = resultSet.getLong("nextval");
-            }
-            return id;
-        }
+            return DaoUtil.getNextUserId(UserEntityDaoQueries.GET_NEXT_ID);
     }
 }

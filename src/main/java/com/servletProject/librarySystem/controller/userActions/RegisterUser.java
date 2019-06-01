@@ -1,6 +1,7 @@
 package com.servletProject.librarySystem.controller.userActions;
 
 import com.servletProject.librarySystem.domen.UserEntity;
+import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
 import com.servletProject.librarySystem.service.UserService;
 import com.servletProject.librarySystem.utils.WorkWithHttpRequestUtil;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -30,7 +31,7 @@ public class RegisterUser extends HttpServlet {
             throws IOException, ServletException {
 
         if (request != null) {
-            getAllParam(request);
+            WorkWithHttpRequestUtil.getAllParam(request, paramList, paramMap);
         }
         if (!isValidEmail(paramMap.get("mail"))) {
             response.setStatus(422);
@@ -40,15 +41,14 @@ public class RegisterUser extends HttpServlet {
                 ifSaveSuccessfully(request, response, saveUser);
             } catch (SQLException e) {
                 response.setStatus(500);
+                throw new DataIsNotCorrectException("Enter the correct data");
             }
         }
     }
-    private void ifSaveSuccessfully(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/userpage.jsp");
-        requestDispatcher.forward(request, response);
-    }
 
-    private void ifSaveSuccessfully(HttpServletRequest request, HttpServletResponse response, UserEntity saveUser) throws ServletException, IOException {
+    private void ifSaveSuccessfully(HttpServletRequest request, HttpServletResponse response, UserEntity saveUser)
+            throws ServletException, IOException {
+
         response.setStatus(201);
         request.getSession().setAttribute("user", saveUser);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/userpage.jsp");
@@ -58,12 +58,4 @@ public class RegisterUser extends HttpServlet {
     private boolean isValidEmail(String email) {
         return EmailValidator.getInstance().isValid(email);
     }
-
-    private void getAllParam(HttpServletRequest request) {
-        for (String param : paramList) {
-            WorkWithHttpRequestUtil.getCurrentParam(request, param, paramMap);
-        }
-    }
-
-
 }

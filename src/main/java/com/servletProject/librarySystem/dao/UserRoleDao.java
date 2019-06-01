@@ -1,21 +1,24 @@
 package com.servletProject.librarySystem.dao;
 
+import com.servletProject.librarySystem.dao.queries.UserRoleDaoQueries;
 import com.servletProject.librarySystem.dao.transaction.TransactionManager;
 import com.servletProject.librarySystem.dao.transaction.WrapConnection;
 import com.servletProject.librarySystem.domen.Role;
-import com.servletProject.librarySystem.domen.UserEntity;
-import com.servletProject.librarySystem.utils.DomainModelUtil;
+import com.servletProject.librarySystem.utils.DaoUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserRoleDao {
 
     public void setDefaultRole(long user_id) throws SQLException {
         try (WrapConnection connection = TransactionManager.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO user_role (id, user_id, user_role) VALUES (?, ?, ?)");
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement(UserRoleDaoQueries.SET_DEFAULT_ROLE);
+
             long id = getNextUserId();
 
             preparedStatement.setLong(1, id);
@@ -26,14 +29,23 @@ public class UserRoleDao {
     }
 
     private long getNextUserId() throws SQLException {
+            return DaoUtil.getNextUserId(UserRoleDaoQueries.GET_NEXT_ID);
+    }
+
+    public List<String> findUserRoleById(long id) throws SQLException {
         try (WrapConnection connection = TransactionManager.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT nextval('seq_user_role_id')");
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement(UserRoleDaoQueries.FIND_USER_ROLE_BY_ID);
+
+            preparedStatement.setLong(1, id);
             final ResultSet resultSet = preparedStatement.executeQuery();
-            Long id = null;
-            if (resultSet.next()) {
-                id = resultSet.getLong("nextval");
+
+            List<String> roleList = new ArrayList<>();
+            while (resultSet.next()) {
+                String role = resultSet.getString("user_role");
+                roleList.add(role);
             }
-            return id;
+            return roleList;
         }
     }
 }

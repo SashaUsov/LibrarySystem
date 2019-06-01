@@ -30,13 +30,14 @@ public class UserEntity {
     @Setter
     private String address;
     @Getter
+    @Setter
     private List<String> role = new ArrayList<>();
     @Getter
     @Setter
     private boolean permissionToOrder;
+    @Getter
+    @Setter
+    private boolean login = false;
 
-    public void setRole(String userRole) {
-        role.add(userRole);
-    }
 }
 
