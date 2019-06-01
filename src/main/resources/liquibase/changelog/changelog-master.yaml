@@ -20,3 +20,5 @@ databaseChangeLog:
         file: liquibase/changelog/20190531T1509_create_user_role_table_sequence.yaml
     - include:
         file: liquibase/changelog/20190531T1511_rename_column_user_role_table.yaml
+    - include:
+        file: liquibase/changelog/20190601T1016_create_index_on_column_mail_in_user_table.yaml
