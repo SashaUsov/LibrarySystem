@@ -29,17 +29,22 @@ public class LoginUser extends HttpServlet {
             try {
                 UserEntity user = userService.login(paramMap);
                 if (user != null) {
-                    user.setLogin(true);
-                    HttpSession session = request.getSession();
-                    session.setAttribute("user", user);
-                    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/");
-                    requestDispatcher.forward(request, response);
+                    ifLoginSuccessful(request, response, user);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
         }
+
+    private void ifLoginSuccessful(HttpServletRequest request, HttpServletResponse response, UserEntity user) throws ServletException, IOException {
+        user.setLogin(true);
+        user.setPassword(null);
+        HttpSession session = request.getSession();
+        session.setAttribute("user", user);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/");
+        requestDispatcher.forward(request, response);
+    }
 
 
 }
