@@ -60,7 +60,7 @@ public class UserDao {
             preparedStatement.setString(7, paramMap.get("address"));
             preparedStatement.executeUpdate();
 
-            return findUserById(id); //BY_ID
+            return findUserById(id);
         }
     }
 

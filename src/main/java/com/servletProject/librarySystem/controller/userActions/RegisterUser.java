@@ -38,6 +38,7 @@ public class RegisterUser extends HttpServlet {
         } else {
             try {
                 UserEntity saveUser = userService.save(paramMap);
+                saveUser.setLogin(true);
                 ifSaveSuccessfully(request, response, saveUser);
             } catch (SQLException e) {
                 response.setStatus(500);

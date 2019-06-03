@@ -14,17 +14,20 @@ public class WrapConnection implements AutoCloseable{
     public void rollback() throws SQLException {
         connection.rollback();
     }
+
     public void commit() throws SQLException {
         connection.commit();
-    };
-    public Connection getRealConnection(){
+    }
+
+    Connection getRealConnection(){
         return connection;
     }
+
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         return connection.prepareStatement(sql);
     }
 
-    public void close(){
-        TransactionManager.connections.set(new WrapConnection(connection));
+    public void close() {
+
     }
 }

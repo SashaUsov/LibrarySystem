@@ -52,6 +52,7 @@ public class TransactionManager {
             connection.commit();
             Connection realConnection = connection.getRealConnection();
             realConnection.close();
+            connections.set(null);
         } catch (SQLException e) {
             throw new TransactionException(e);
         }
@@ -63,7 +64,7 @@ public class TransactionManager {
             throw new TransactionException();
         }
         return wrapConnection;
-    };
+    }
 
 
 }

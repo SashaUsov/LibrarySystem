@@ -21,42 +21,27 @@ public class UserpageAuthorizationFilter implements Filter {
         UserEntity user = (UserEntity) session.getAttribute("user");
 
         if (user == null) {
-            redirectOnAuthorization(request, response);
+            FilterUtil.redirectOnAuthorization(request, response);
         }
         else if (user.isLogin()) {
             ifUserIsLoggedIn(request, response, chain, user);
         } else {
-            redirectOnAuthorization(request, response);
+            FilterUtil.redirectOnAuthorization(request, response);
         }
     }
 
     private void ifUserIsLoggedIn(ServletRequest request, ServletResponse response,
                                   FilterChain chain, UserEntity user)
             throws IOException, ServletException {
-        if (hasAnyRole(user)) {
+        if (FilterUtil.hasAnyRole(user)) {
             List<String> roles = user.getRole();
             long accessLevel = FilterUtil.getAccessLevel(roles);
             if (accessLevel > 0) {
-                sendToTheView(request, response, chain);
+                chain.doFilter(request, response);
             } else {
-                redirectOnAuthorization(request, response);
+                FilterUtil.redirectOnAuthorization(request, response);
             }
         }
-    }
-
-    private void redirectOnAuthorization(ServletRequest request, ServletResponse response) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/authorization");
-        requestDispatcher.forward(request, response);
-    }
-
-    private void sendToTheView(ServletRequest request,
-                               ServletResponse response,
-                               FilterChain chain) throws IOException, ServletException {
-        chain.doFilter(request, response);
-    }
-
-    private boolean hasAnyRole(UserEntity user) {
-        return user.getRole() != null && !user.getRole().isEmpty();
     }
 
     @Override

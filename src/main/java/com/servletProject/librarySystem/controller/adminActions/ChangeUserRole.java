@@ -40,6 +40,7 @@ public class ChangeUserRole extends HttpServlet {
             HttpSession session = request.getSession();
             if (adminService.isUserExist(id)) {
                 String role = request.getParameter("role");
+                adminService.removeUserRole(id, role);
                 sendAnswer(request, resp, session, "Role successfully revoked");
             } else {
                 sendAnswer(request, resp, session, "User already has this role");
