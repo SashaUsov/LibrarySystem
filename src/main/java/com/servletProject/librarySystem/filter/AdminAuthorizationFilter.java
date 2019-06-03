@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebFilter("/admin")
+@WebFilter(urlPatterns = {"/admin", "/admin/action"})
 public class AdminAuthorizationFilter implements Filter {
 
 
