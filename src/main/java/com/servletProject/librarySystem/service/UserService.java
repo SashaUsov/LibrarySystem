@@ -3,13 +3,11 @@ package com.servletProject.librarySystem.service;
 import com.servletProject.librarySystem.dao.UserDao;
 import com.servletProject.librarySystem.dao.UserRoleDao;
 import com.servletProject.librarySystem.dao.transaction.TransactionManager;
-import com.servletProject.librarySystem.domen.Role;
 import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.exception.AuthorisationException;
 import com.servletProject.librarySystem.exception.ClientAlreadyExistsException;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -26,8 +24,8 @@ public class UserService {
 
             user = userDao.save(paramMap);
             userRoleDao.setDefaultRole(user.getId());
-            String[] role = new String[] {Role.USER.toString()};
-            user.setRole(Arrays.asList(role));
+            List<String> roleList = userRoleDao.findUserRoleById(user.getId());
+            user.setRole(roleList);
             return user;
         } catch (SQLException | NullPointerException e) {
             TransactionManager.rollBackTransaction();
@@ -58,5 +56,4 @@ public class UserService {
             TransactionManager.commitTransaction();
         }
     }
-
 }

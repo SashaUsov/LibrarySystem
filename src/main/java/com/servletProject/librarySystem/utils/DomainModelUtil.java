@@ -21,4 +21,5 @@ public class DomainModelUtil {
 
         return userFromDb;
     }
+
 }

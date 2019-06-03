@@ -1,3 +1,5 @@
+<%@ page import="com.servletProject.librarySystem.domen.UserEntity" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,6 +21,18 @@
             }
         %>
         <button class="w3-btn w3-hover-green w3-round-large" onclick="location.href='/userpage'">My account details</button>
+
+        <%
+            if (request.getSession().getAttribute("user") != null) {
+                UserEntity user = (UserEntity) request.getSession().getAttribute("user");
+                List<String> roles = user.getRole();
+                for (String role : roles) {
+                    if ("ADMIN".equals(role)) out.println("<button class=\"w3-btn w3-hover-green w3-round-large\" " +
+                                                                  "onclick=\"location.href='/admin'\">Admin page</button>");
+                }
+            }
+        %>
+
     </div>
 </div>
 

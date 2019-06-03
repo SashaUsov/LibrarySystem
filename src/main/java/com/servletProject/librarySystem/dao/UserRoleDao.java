@@ -14,22 +14,34 @@ import java.util.List;
 
 public class UserRoleDao {
 
-    public void setDefaultRole(long user_id) throws SQLException {
+    public void deleteRoleByUserIdAndRole(long id, String role) throws SQLException{
         try (WrapConnection connection = TransactionManager.getConnection()) {
             PreparedStatement preparedStatement = connection
-                    .prepareStatement(UserRoleDaoQueries.SET_DEFAULT_ROLE);
-
-            long id = getNextUserId();
+                    .prepareStatement(UserRoleDaoQueries.DELETE_BY_USER_ID_AND_ROLE);
 
             preparedStatement.setLong(1, id);
-            preparedStatement.setLong(2, user_id);
-            preparedStatement.setString(3, Role.USER.toString());
+            preparedStatement.setString(2, role);
             preparedStatement.executeUpdate();
         }
     }
 
-    private long getNextUserId() throws SQLException {
-            return DaoUtil.getNextUserId(UserRoleDaoQueries.GET_NEXT_ID);
+    public void setDefaultRole(long userId) throws SQLException {
+        final String role = Role.USER.toString();
+        setUserRole(userId, role);
+    }
+
+    public void setUserRole(long userId, String role) throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement(UserRoleDaoQueries.SET_USER_ROLE);
+
+            long id = getNextUserId();
+
+            preparedStatement.setLong(1, id);
+            preparedStatement.setLong(2, userId);
+            preparedStatement.setString(3, role);
+            preparedStatement.executeUpdate();
+        }
     }
 
     public List<String> findUserRoleById(long id) throws SQLException {
@@ -42,10 +54,14 @@ public class UserRoleDao {
 
             List<String> roleList = new ArrayList<>();
             while (resultSet.next()) {
-                String role = resultSet.getString("user_role");
+                String role = resultSet.getString("role");
                 roleList.add(role);
             }
             return roleList;
         }
+    }
+
+    private long getNextUserId() throws SQLException {
+        return DaoUtil.getNextUserId(UserRoleDaoQueries.GET_NEXT_ID);
     }
 }

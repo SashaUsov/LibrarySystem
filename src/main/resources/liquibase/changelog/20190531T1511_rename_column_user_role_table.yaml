@@ -6,6 +6,6 @@ databaseChangeLog:
         changes:
         - renameColumn:
             columnDataType: varchar
-            newColumnName: user_role
+            newColumnName: role
             oldColumnName: first_name
             tableName: user_role

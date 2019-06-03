@@ -12,7 +12,7 @@
 
 <div class="w3-container w3-padding">
     <%
-        String message = (String) request.getSession().getAttribute("logout");
+        String message = (String) request.getSession().getAttribute("message");
         if (message != null && !message.isEmpty()) {
             out.println("<div class=\"w3-panel w3-green w3-display-container w3-card-4 w3-round\">\n" +
                                 "   <span onclick=\"this.parentElement.style.display='none'\"\n" +

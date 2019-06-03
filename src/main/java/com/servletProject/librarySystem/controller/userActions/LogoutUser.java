@@ -21,11 +21,11 @@ public class LogoutUser extends HttpServlet{
             final UserEntity user = (UserEntity) session.getAttribute("user");
             if (user.isLogin()) {
                 session.setAttribute("user", null);
-                session.setAttribute("logout", "Logout successful!");
+                session.setAttribute("message", "Logout successful!");
             }else {
-                session.setAttribute("logout", "You are not logged in the system!");
+                session.setAttribute("message", "You are not logged in the system!");
             }
-            RequestDispatcher requestDispatcher = req.getRequestDispatcher("/logout");
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher("/messagepage");
             requestDispatcher.forward(req, resp);
         }
     }
