@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 @WebFilter("/userpage")
-public class AuthorizationFilter implements Filter {
+public class UserpageAuthorizationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request,
@@ -24,17 +24,23 @@ public class AuthorizationFilter implements Filter {
             redirectOnAuthorization(request, response);
         }
         else if (user.isLogin()) {
-            if (hasAnyRole(user)) {
-                List<String> roles = user.getRole();
-                long accessLevel = FilterUtil.getAccessLevel(roles);
-                if (accessLevel > 0) {
-                    sendToTheView(request, response, chain);
-                } else {
-                    redirectOnAuthorization(request, response);
-                }
-            }
+            ifUserIsLoggedIn(request, response, chain, user);
         } else {
             redirectOnAuthorization(request, response);
+        }
+    }
+
+    private void ifUserIsLoggedIn(ServletRequest request, ServletResponse response,
+                                  FilterChain chain, UserEntity user)
+            throws IOException, ServletException {
+        if (hasAnyRole(user)) {
+            List<String> roles = user.getRole();
+            long accessLevel = FilterUtil.getAccessLevel(roles);
+            if (accessLevel > 0) {
+                sendToTheView(request, response, chain);
+            } else {
+                redirectOnAuthorization(request, response);
+            }
         }
     }
 
