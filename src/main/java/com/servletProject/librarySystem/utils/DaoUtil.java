@@ -30,7 +30,7 @@ public class DaoUtil {
             book.put("bookTitle", resultSet.getString("book_title"));
             book.put("bookAuthor", resultSet.getString("book_author"));
             book.put("yearOfPublication", String.valueOf(resultSet.getLong("publication")));
-            book.put("genre", resultSet.getString("id"));
+            book.put("genre", resultSet.getString("genre"));
             book.put("totalAmount", String.valueOf(resultSet.getLong("total_amount")));
 
             bookCatalod.add(book);

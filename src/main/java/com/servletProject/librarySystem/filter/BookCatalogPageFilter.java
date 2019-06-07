@@ -10,40 +10,34 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebFilter(urlPatterns = {"/admin", "/admin/action"})
-public class AdminAuthorizationFilter implements Filter {
-
-
+@WebFilter("/book/catalog")
+public class BookCatalogPageFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
     }
 
     @Override
-    public void doFilter(ServletRequest request,
-                         ServletResponse response,
-                         FilterChain chain)
-            throws IOException, ServletException {
-
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpSession session = ((HttpServletRequest) request).getSession();
         UserEntity user = (UserEntity) session.getAttribute("user");
         if (user == null) {
             FilterUtil.redirectOnAuthorization(request, response);
         } else if (user.isLogin()) {
             if (FilterUtil.hasAnyRole(user)) {
-                giveAccessIfAdmin(request, response, chain, user);
+                giveAccess(request, response, chain, user);
             } else {
-                FilterUtil.sendMessage(request, response, session, "You do not have permission to access this page.");
+                FilterUtil.sendMessage(request, response, session, "You do not have access to this service.");
             }
         }
     }
 
-    private void giveAccessIfAdmin(ServletRequest request, ServletResponse response,
-                                   FilterChain chain, UserEntity user)
+    private void giveAccess(ServletRequest request, ServletResponse response,
+                            FilterChain chain, UserEntity user)
             throws IOException, ServletException {
         List<String> roles = user.getRole();
         for (String role : roles) {
-            if ("ADMIN".equals(role)) {
+            if ("LIBRARIAN".equals(role) || "ADMIN".equals(role)) {
                 chain.doFilter(request, response);
             }
         }

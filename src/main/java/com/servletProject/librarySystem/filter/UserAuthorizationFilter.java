@@ -10,8 +10,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebFilter("/userpage")
-public class UserpageAuthorizationFilter implements Filter {
+@WebFilter(urlPatterns = {"/userpage", "/book"})
+public class UserAuthorizationFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request,

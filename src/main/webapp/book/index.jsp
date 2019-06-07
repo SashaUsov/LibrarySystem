@@ -60,13 +60,16 @@
     <%
         LibrarianService librarianService = new LibrarianService();
         final List<BookCatalog> allBook = librarianService.getAllBook();
+        out.println("<div class=\"w3-container w3-center w3-green\">\n" +
+                            "            <h2>All books</h2>\n" +
+                            "        </div>");
         if (allBook != null && !allBook.isEmpty()) {
             for (BookCatalog book : allBook) {
-                out.println("<li class=\"w3-hover-sand\">" + "Book title: " + book.getBookTitle()
-                                    + " Book author: " + book.getBookAuthor() + " "
-                                    + " Year of publication: " + book.getYearOfPublication() + " "
-                            + "Genre: " + book.getGenre() + " "
-                            + "Total amount: " + book.getTotalAmount() +"</li>");
+                out.println( "<li class=\"w3-hover-sand\">" + "Book title: " + book.getBookTitle()
+                                    + "; Book author: " + book.getBookAuthor()
+                                    + "; Year of publication: " + book.getYearOfPublication()
+                            + "; Genre: " + book.getGenre() + " "
+                            + "; Total amount: " + book.getTotalAmount() +"</li>");
             }
         }
     %>

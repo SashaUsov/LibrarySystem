@@ -6,6 +6,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -33,5 +34,13 @@ public class FilterUtil {
 
     public static boolean hasAnyRole(UserEntity user) {
         return user.getRole() != null && !user.getRole().isEmpty();
+    }
+
+    public static void sendMessage(ServletRequest request, ServletResponse response,
+                                       HttpSession session, String message)
+            throws ServletException, IOException {
+        session.setAttribute("message", message);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/messagepage");
+        requestDispatcher.forward(request, response);
     }
 }
