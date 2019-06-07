@@ -22,3 +22,9 @@ databaseChangeLog:
         file: liquibase/changelog/20190531T1511_rename_column_user_role_table.yaml
     - include:
         file: liquibase/changelog/20190601T1016_create_index_on_column_mail_in_user_table.yaml
+    - include:
+        file: liquibase/changelog/20190604T1958_create_book_catalog_table_sequence.yaml
+    - include:
+        file: liquibase/changelog/20190604T2000_create_copies_of_books_table_sequence.yaml
+    - include:
+        file: liquibase/changelog/20190604T2001_rename_column_in_book_catalog_table.yaml

@@ -27,24 +27,30 @@ public class AdminAuthorizationFilter implements Filter {
 
         HttpSession session = ((HttpServletRequest) request).getSession();
         UserEntity user = (UserEntity) session.getAttribute("user");
-
         if (user == null) {
             FilterUtil.redirectOnAuthorization(request, response);
         } else if (user.isLogin()) {
             if (FilterUtil.hasAnyRole(user)) {
-                List<String> roles = user.getRole();
-                boolean isAdmin = false;
-                for (String role : roles) {
-                    if ("ADMIN".equals(role)) {
-                        isAdmin = true;
-                        chain.doFilter(request, response);
-                    }
-                }
-                if (!isAdmin) {
-                    session.setAttribute("message", "You do not have permission to access this page.");
-                    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/messagepage");
-                    requestDispatcher.forward(request, response);
-                }
+                giveAccessIfAdmin(request, response, chain, user);
+            } else {
+                sendMessageIfNotAdmin(request, response, session);
+            }
+        }
+    }
+
+    private void sendMessageIfNotAdmin(ServletRequest request, ServletResponse response, HttpSession session) throws ServletException, IOException {
+        session.setAttribute("message", "You do not have permission to access this page.");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/messagepage");
+        requestDispatcher.forward(request, response);
+    }
+
+    private void giveAccessIfAdmin(ServletRequest request, ServletResponse response,
+                                   FilterChain chain, UserEntity user)
+            throws IOException, ServletException {
+        List<String> roles = user.getRole();
+        for (String role : roles) {
+            if ("ADMIN".equals(role)) {
+                chain.doFilter(request, response);
             }
         }
     }

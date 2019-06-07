@@ -1,9 +1,11 @@
 package com.servletProject.librarySystem.utils;
 
+import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.domen.UserEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 
 public class DomainModelUtil {
 
@@ -22,4 +24,15 @@ public class DomainModelUtil {
         return userFromDb;
     }
 
+    public static BookCatalog createBookFromMap(Map<String, String> book) {
+        BookCatalog bookCatalog= new BookCatalog();
+        bookCatalog.setId(Long.valueOf(book.get("id")));
+        bookCatalog.setBookAuthor(book.get("bookAuthor"));
+        bookCatalog.setBookTitle(book.get("bookTitle"));
+        bookCatalog.setGenre(book.get("genre"));
+        bookCatalog.setYearOfPublication(Integer.valueOf(book.get("yearOfPublication")));
+        bookCatalog.setTotalAmount(Integer.valueOf(book.get("totalAmount")));
+
+        return bookCatalog;
+    }
 }

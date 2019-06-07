@@ -1,0 +1,10 @@
+databaseChangeLog:
+
+    - changeSet:
+        id: sequence_on_copias_of_books_table
+        author: sashaVosu
+        changes:
+        - createSequence:
+            incrementBy: 1
+            sequenceName: seq_book_copy_id
+            startValue: 1

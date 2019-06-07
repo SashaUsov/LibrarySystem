@@ -48,7 +48,6 @@ public class UserRoleDao {
         try (WrapConnection connection = TransactionManager.getConnection()) {
             PreparedStatement preparedStatement = connection
                     .prepareStatement(UserRoleDaoQueries.FIND_USER_ROLE_BY_ID);
-
             preparedStatement.setLong(1, id);
             final ResultSet resultSet = preparedStatement.executeQuery();
 
