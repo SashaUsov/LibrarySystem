@@ -98,9 +98,10 @@ public class BooksService {
 
     public List<BookCatalog> getAllBookByGenre(String genre) throws SQLException {
         List<BookCatalog> catalog = new ArrayList<>();
+        String bookGenre = "%" + genre + "%";
         try {
             TransactionManager.beginTransaction();
-            List<Map<String, String>> bookCatalog = booksDao.findBookByGenre(genre);
+            List<Map<String, String>> bookCatalog = booksDao.findBookByGenre(bookGenre);
             return createBookCatalog(catalog, bookCatalog);
         } catch (SQLException | NullPointerException e) {
             TransactionManager.rollBackTransaction();
