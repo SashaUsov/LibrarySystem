@@ -21,10 +21,10 @@
         final List<String> roles = user.getRole();
         for (String role : roles) {
             if ("LIBRARIAN".equals(role) || "ADMIN".equals(role)) {
-                out.println("<div class=\"w3-card-4\" >\n" +
-                                    "    <div class=\"w3-container w3-center w3-green\" >\n" +
-                                    "        <h2 > Add book</h2 >\n" +
-                                    "    </div >\n" +
+                out.println("<details>\n" +
+                                    "    <summary><div class=\"w3-container w3-center w3-green\">\n" +
+                                    "            <h2>Add book</h2>\n" +
+                                    "        </div></summary>" + "<div class=\"w3-card-4\" >\n" +
                                     "\n" +
                                     "    <form id = \"submitform\" action = \"/book/catalog\" method = \"post\" class=\n" +
                                     "                \"w3-selection w3-light-grey w3-padding\" >\n" +
@@ -50,7 +50,8 @@
                                     "\n" +
                                     "        <button type = \"submit\" class=\"w3-btn w3-green w3-round-large w3-margin-bottom\" > Submit </button >\n" +
                                     "    </form >\n" +
-                                    "</div >");
+                                    "</div >" +
+                "</details>");
             }
         }
     }

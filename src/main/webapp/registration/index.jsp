@@ -22,7 +22,7 @@
     %>
     <div class="w3-card-4">
         <div class="w3-container w3-center w3-green">
-            <h2>Add user</h2>
+            <h2>Registration</h2>
         </div>
 
         <form id="submitform" action="/registration/to-register" method="post" class="w3-selection w3-light-grey w3-padding">

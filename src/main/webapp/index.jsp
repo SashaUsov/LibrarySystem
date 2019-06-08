@@ -21,7 +21,7 @@
             }
             if (request.getSession().getAttribute("user") != null) {
                 out.println("<button class=\"w3-btn w3-hover-green w3-round-large\" onclick=\"location.href='/userpage'\">My account details</button>\n" +
-                "<button class=\"w3-btn w3-hover-green w3-round-large\" onclick=\"location.href='/books'\">Book catalog</button>\n");
+                                    "<button class=\"w3-btn w3-hover-green w3-round-large\" onclick=\"location.href='/books'\">Book catalog</button>\n");
                 UserEntity user = (UserEntity) request.getSession().getAttribute("user");
                 List<String> roles = user.getRole();
                 for (String role : roles) {
@@ -35,13 +35,13 @@
 </div>
 
 <div class="w3-container w3-padding">
-<%
-    if (request.getSession().getAttribute("user") != null) {
-        out.println("<div class=\"w3-container w3-grey w3-opacity w3-right-align w3-padding\">\n" +
-                            "<button class=\"w3-btn w3-round-large\" onclick=\"location.href='/logout/exit'\">Logout</button>\n" +
-                            "</div>");
-    }
-%>
+    <%
+        if (request.getSession().getAttribute("user") != null) {
+            out.println("<div class=\"w3-container w3-grey w3-opacity w3-right-align w3-padding\">\n" +
+                                "<button class=\"w3-btn w3-round-large\" onclick=\"location.href='/logout/exit'\">Logout</button>\n" +
+                                "</div>");
+        }
+    %>
 </div>
 
 </body>
