@@ -1,6 +1,6 @@
 <%@ page import="com.servletProject.librarySystem.domen.BookCatalog" %>
 <%@ page import="com.servletProject.librarySystem.domen.UserEntity" %>
-<%@ page import="com.servletProject.librarySystem.service.LibrarianService" %>
+<%@ page import="com.servletProject.librarySystem.service.BooksService" %>
 <%@ page import="java.util.List" %>
 <%@ page import="static com.oracle.jrockit.jfr.ContentType.Address" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -58,18 +58,20 @@
 
 <div class="w3-container w3-padding">
     <%
-        LibrarianService librarianService = new LibrarianService();
-        final List<BookCatalog> allBook = librarianService.getAllBook();
+        BooksService booksService = new BooksService();
+        final List<BookCatalog> allBook = booksService.getAllBook();
         out.println("<div class=\"w3-container w3-center w3-green\">\n" +
                             "            <h2>All books</h2>\n" +
                             "        </div>");
         if (allBook != null && !allBook.isEmpty()) {
             for (BookCatalog book : allBook) {
+                final long id = book.getId();
                 out.println( "<li class=\"w3-hover-sand\">" + "Book title: " + book.getBookTitle()
                                     + "; Book author: " + book.getBookAuthor()
                                     + "; Year of publication: " + book.getYearOfPublication()
                             + "; Genre: " + book.getGenre() + " "
-                            + "; Total amount: " + book.getTotalAmount() +"</li>");
+                            + "; Total amount: " + book.getTotalAmount() + "</li>" +
+                                     "<button class=\"w3-btn w3-green w3-round-large\" onclick=\"location.href='/detail/?book_id=" + id + "'\">Detail</button>\n");
             }
         }
     %>

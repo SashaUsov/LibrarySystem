@@ -37,4 +37,19 @@ public class DaoUtil {
         }
         return bookCatalod;
     }
+
+    public static List<Map<String, String>> createBooksCopy(ResultSet resultSet) throws SQLException {
+        List<Map<String, String>> booksCopy = new ArrayList<>();
+        while (resultSet.next()) {
+            Map<String, String> book = new HashMap<>();
+            book.put("id", String.valueOf(resultSet.getLong("id")));
+            book.put("id_book", String.valueOf(resultSet.getLong("id_book")));
+            book.put("book_condition", resultSet.getString("book_condition"));
+            book.put("availability", String.valueOf(resultSet.getBoolean("availability")));
+
+
+            booksCopy.add(book);
+        }
+        return booksCopy;
+    }
 }

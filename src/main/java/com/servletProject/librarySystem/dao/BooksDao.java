@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-public class LibrarianDao {
+public class BooksDao {
 
     public Long findBookIdByBookTitle(String bookTitle) throws SQLException {
         try (WrapConnection connection = TransactionManager.getConnection()) {
@@ -99,6 +99,18 @@ public class LibrarianDao {
                 totalAmount = resultSet.getLong("id");
             }
             return totalAmount;
+        }
+    }
+
+    public List<Map<String, String>> getAllBookCopy(long id) throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(LibrarianDaoQueries.FIND_ALL_BOOK_COPY);
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Map<String, String>> bookCopy = DaoUtil.createBooksCopy(resultSet);
+            if (bookCopy != null && !bookCopy.isEmpty()) {
+                return bookCopy;
+            } else return null;
         }
     }
 }

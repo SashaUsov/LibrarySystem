@@ -1,6 +1,7 @@
 package com.servletProject.librarySystem.utils;
 
 import com.servletProject.librarySystem.domen.BookCatalog;
+import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.domen.UserEntity;
 
 import java.sql.ResultSet;
@@ -34,5 +35,15 @@ public class DomainModelUtil {
         bookCatalog.setTotalAmount(Integer.valueOf(book.get("totalAmount")));
 
         return bookCatalog;
+    }
+
+    public static CopiesOfBooks createBookCopyFromMap(Map<String, String> oneBook) {
+        CopiesOfBooks copiesOfBooks = new CopiesOfBooks();
+        copiesOfBooks.setId(Long.valueOf(oneBook.get("id")));
+        copiesOfBooks.setIdBook(Long.valueOf(oneBook.get("id_book")));
+        copiesOfBooks.setAvailability(Boolean.valueOf(oneBook.get("availability")));
+        copiesOfBooks.setBookCondition(oneBook.get("book_condition"));
+
+        return copiesOfBooks;
     }
 }
