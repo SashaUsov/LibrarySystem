@@ -21,7 +21,7 @@
             }
             if (request.getSession().getAttribute("user") != null) {
                 out.println("<button class=\"w3-btn w3-hover-green w3-round-large\" onclick=\"location.href='/userpage'\">My account details</button>\n" +
-                                    "<button class=\"w3-btn w3-hover-green w3-round-large\" onclick=\"location.href='/books'\">Book catalog</button>\n");
+                                    "<button class=\"w3-btn w3-hover-green w3-round-large\" onclick=\"location.href='/workwithbooks'\">Work with books</button>\n");
                 UserEntity user = (UserEntity) request.getSession().getAttribute("user");
                 List<String> roles = user.getRole();
                 for (String role : roles) {

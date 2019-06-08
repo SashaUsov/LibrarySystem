@@ -68,9 +68,10 @@ public class BooksService {
 
     public List<BookCatalog> getAllBookByTitle(String title) throws SQLException {
         List<BookCatalog> catalog = new ArrayList<>();
+        String bookTitle = "%" + title + "%";
         try {
             TransactionManager.beginTransaction();
-            List<Map<String, String>> bookCatalog = booksDao.findBookByTitle(title);
+            List<Map<String, String>> bookCatalog = booksDao.findBookByTitle(bookTitle);
             return createBookCatalog(catalog, bookCatalog);
         } catch (SQLException | NullPointerException e) {
             TransactionManager.rollBackTransaction();

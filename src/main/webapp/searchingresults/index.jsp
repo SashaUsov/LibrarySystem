@@ -28,19 +28,20 @@
         </tr>
 
         <%
-            BooksService booksService = new BooksService();
-            final List<BookCatalog> allBook = booksService.getAllBook();
-            if (allBook != null && !allBook.isEmpty()) {
-                for (BookCatalog book : allBook) {
-                    final long id = book.getId();
-                    out.println("<tr>\n" +
-                                        "            <td>" + book.getBookTitle() + "</td>\n" +
-                                        "            <td>" + book.getBookAuthor() + "</td>\n" +
-                                        "            <td>" + book.getYearOfPublication() + "</td>\n" +
-                                        "            <td>" + book.getGenre() + "</td>\n" +
-                                        "            <td>" + book.getTotalAmount() + "</td>\n" +
-                                        "            <td>" + "<button class=\"w3-btn w3-ripple w3-teal\" onclick=\"location.href='/detail/?book_id=" + id + "'\">Detail</button>\n" + "</td>\n" +
-                                        "        </tr>");
+            if (request != null) {
+                List<BookCatalog> allBook = (List<BookCatalog>)request.getSession().getAttribute("books_list");
+                if (allBook != null && !allBook.isEmpty()) {
+                    for (BookCatalog book : allBook) {
+                        final long id = book.getId();
+                        out.println("<tr>\n" +
+                                            "            <td>" + book.getBookTitle() + "</td>\n" +
+                                            "            <td>" + book.getBookAuthor() + "</td>\n" +
+                                            "            <td>" + book.getYearOfPublication() + "</td>\n" +
+                                            "            <td>" + book.getGenre() + "</td>\n" +
+                                            "            <td>" + book.getTotalAmount() + "</td>\n" +
+                                            "            <td>" + "<button class=\"w3-btn w3-ripple w3-teal\" onclick=\"location.href='/detail/?book_id=" + id + "'\">Detail</button>\n" + "</td>\n" +
+                                            "        </tr>");
+                    }
                 }
             }
         %>
