@@ -57,31 +57,77 @@
     }
 %>
 
-<div class="w3-container w3-padding">
-    <%
-        BooksService booksService = new BooksService();
-        final List<BookCatalog> allBook = booksService.getAllBook();
-        out.println("<div class=\"w3-container w3-center w3-green\">\n" +
-                            "            <h2>All books</h2>\n" +
-                            "        </div>");
-        if (allBook != null && !allBook.isEmpty()) {
-            for (BookCatalog book : allBook) {
-                final long id = book.getId();
-                out.println( "<li class=\"w3-hover-sand\">" + "Book title: " + book.getBookTitle()
-                                    + "; Book author: " + book.getBookAuthor()
-                                    + "; Year of publication: " + book.getYearOfPublication()
-                            + "; Genre: " + book.getGenre() + " "
-                            + "; Total amount: " + book.getTotalAmount() + "</li>" +
-                                     "<button class=\"w3-btn w3-green w3-round-large\" onclick=\"location.href='/detail/?book_id=" + id + "'\">Detail</button>\n");
+<details>
+    <summary>
+        <div class="w3-panel w3-blue">
+            <h1>Find a book by title</h1>
+        </div>
+    </summary>
+        <form id="submitform" action="/book/search-by-title" method="post" class="w3-selection w3-light-grey w3-padding">
+            <input type="text" name="Book title" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br/>
+            <button type="submit"  class="w3-btn w3-green w3-round-large w3-margin-bottom">Find</button>
+        </form>
+</details>
+
+<details>
+    <summary>
+        <div class="w3-panel w3-blue">
+            <h1>Find a book by author</h1>
+        </div>
+    </summary>
+        <form id="submitform2" action="/book/search-by-author" method="post" class="w3-selection w3-light-grey w3-padding">
+            <input type="text" name="Book author" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br/>
+            <button type="submit"  class="w3-btn w3-green w3-round-large w3-margin-bottom">Find</button>
+        </form>
+</details>
+
+<details>
+    <summary>
+        <div class="w3-panel w3-blue">
+            <h1>Find a book by genre</h1>
+        </div>
+    </summary>
+        <form id="submitform3" action="/book/search-by-genre" method="post" class="w3-selection w3-light-grey w3-padding">
+            <input type="text" name="Book genre" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br/>
+            <button type="submit"  class="w3-btn w3-green w3-round-large w3-margin-bottom">Find</button>
+        </form>
+</details>
+
+<div class="w3-container w3-center w3-green">
+    <h2>Book catalog</h2>
+
+    <table class="w3-table-all">
+        <tr class="w3-blue">
+            <th>Book title</th>
+            <th>Book author</th>
+            <th>Year of publication</th>
+            <th>Genre</th>
+            <th>Total amount</th>
+            <th> </th>
+        </tr>
+
+        <%
+            BooksService booksService = new BooksService();
+            final List<BookCatalog> allBook = booksService.getAllBook();
+            if (allBook != null && !allBook.isEmpty()) {
+                for (BookCatalog book : allBook) {
+                    final long id = book.getId();
+                    out.println("<tr>\n" +
+                                        "            <td>" + book.getBookTitle() + "</td>\n" +
+                                        "            <td>" + book.getBookAuthor() + "</td>\n" +
+                                        "            <td>" + book.getYearOfPublication() + "</td>\n" +
+                                        "            <td>" + book.getGenre() + "</td>\n" +
+                                        "            <td>" + book.getTotalAmount() + "</td>\n" +
+                                        "            <td>" + "<button class=\"w3-btn w3-ripple w3-teal\" onclick=\"location.href='/detail/?book_id=" + id + "'\">Detail</button>\n" + "</td>\n" +
+                                        "        </tr>");
+                }
             }
-        }
-    %>
+        %>
+    </table>
 </div>
 <%
     if (request.getSession().getAttribute("user") != null) {
-        out.println("<div class=\"w3-container w3-grey w3-opacity w3-right-align w3-padding\">\n" +
-                            "<button class=\"w3-btn w3-round-large\" onclick=\"location.href='/logout/exit'\">Logout</button>\n" +
-                            "</div>");
+        out.println("<button class=\"w3-btn w3-block w3-red w3-left-align\" onclick=\"location.href='/logout/exit'\">Logout</button>\n");
     }
 %>
 </div>

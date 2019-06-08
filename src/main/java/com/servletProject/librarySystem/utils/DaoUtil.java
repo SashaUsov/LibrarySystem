@@ -52,4 +52,11 @@ public class DaoUtil {
         }
         return booksCopy;
     }
+
+    public static List<Map<String, String>> getBooksMaps(ResultSet resultSet) throws SQLException {
+        List<Map<String, String>> bookCatalog = createBookCatalog(resultSet);
+        if (bookCatalog != null && !bookCatalog.isEmpty()) {
+            return bookCatalog;
+        } else return null;
+    }
 }

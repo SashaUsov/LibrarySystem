@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-@WebServlet("/booking")
-public class BookingAction extends HttpServlet {
+@WebServlet("/book/search-by-title")
+public class BookSearchByTitle extends HttpServlet {
     private final BooksService booksService = new BooksService();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
     }
 }

@@ -37,9 +37,7 @@
 <div class="w3-container w3-padding">
     <%
         if (request.getSession().getAttribute("user") != null) {
-            out.println("<div class=\"w3-container w3-grey w3-opacity w3-right-align w3-padding\">\n" +
-                                "<button class=\"w3-btn w3-round-large\" onclick=\"location.href='/logout/exit'\">Logout</button>\n" +
-                                "</div>");
+            out.println("<button class=\"w3-btn w3-block w3-red w3-left-align\" onclick=\"location.href='/logout/exit'\">Logout</button>\n");
         }
     %>
 </div>

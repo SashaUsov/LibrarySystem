@@ -36,14 +36,7 @@ public class BooksService {
         try {
             TransactionManager.beginTransaction();
             List<Map<String, String>> bookCatalog = booksDao.getAllBook();
-            if (bookCatalog != null) {
-                for (Map<String, String> oneBook : bookCatalog) {
-                    catalog.add(DomainModelUtil.createBookFromMap(oneBook));
-                }
-                return catalog;
-            } else {
-                throw new SQLException("Book catalog is empty :(");
-            }
+            return createBookCatalog(catalog, bookCatalog);
         } catch (SQLException | NullPointerException e) {
             TransactionManager.rollBackTransaction();
             throw e;
@@ -70,6 +63,59 @@ public class BooksService {
             throw e;
         } finally {
             TransactionManager.commitTransaction();
+        }
+    }
+
+    public List<BookCatalog> getAllBookByTitle(String title) throws SQLException {
+        List<BookCatalog> catalog = new ArrayList<>();
+        try {
+            TransactionManager.beginTransaction();
+            List<Map<String, String>> bookCatalog = booksDao.findBookByTitle(title);
+            return createBookCatalog(catalog, bookCatalog);
+        } catch (SQLException | NullPointerException e) {
+            TransactionManager.rollBackTransaction();
+            throw e;
+        } finally {
+            TransactionManager.commitTransaction();
+        }
+    }
+
+    public List<BookCatalog> getAllBookByAuthor(String author) throws SQLException {
+        List<BookCatalog> catalog = new ArrayList<>();
+        try {
+            TransactionManager.beginTransaction();
+            List<Map<String, String>> bookCatalog = booksDao.findBookByAuthor(author);
+            return createBookCatalog(catalog, bookCatalog);
+        } catch (SQLException | NullPointerException e) {
+            TransactionManager.rollBackTransaction();
+            throw e;
+        } finally {
+            TransactionManager.commitTransaction();
+        }
+    }
+
+    public List<BookCatalog> getAllBookByGenre(String genre) throws SQLException {
+        List<BookCatalog> catalog = new ArrayList<>();
+        try {
+            TransactionManager.beginTransaction();
+            List<Map<String, String>> bookCatalog = booksDao.findBookByGenre(genre);
+            return createBookCatalog(catalog, bookCatalog);
+        } catch (SQLException | NullPointerException e) {
+            TransactionManager.rollBackTransaction();
+            throw e;
+        } finally {
+            TransactionManager.commitTransaction();
+        }
+    }
+
+    private List<BookCatalog> createBookCatalog(List<BookCatalog> catalog, List<Map<String, String>> bookCatalog) throws SQLException {
+        if (bookCatalog != null) {
+            for (Map<String, String> oneBook : bookCatalog) {
+                catalog.add(DomainModelUtil.createBookFromMap(oneBook));
+            }
+            return catalog;
+        } else {
+            throw new SQLException("Book catalog is empty :(");
         }
     }
 }

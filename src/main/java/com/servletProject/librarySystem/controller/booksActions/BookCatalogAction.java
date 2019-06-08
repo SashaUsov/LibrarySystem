@@ -40,7 +40,7 @@ public class BookCatalogAction extends HttpServlet {
         WorkWithHttpRequestUtil.getAllParam(request, paramList, paramMap);
         try {
             booksService.saveBook(paramMap);
-            response.setStatus(201);
+            response.setStatus(202);
             HttpSession session = request.getSession();
             FilterUtil.sendMessage(request, response, session, "Book successfully added to catalog!");
         } catch (SQLException e) {

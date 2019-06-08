@@ -15,7 +15,13 @@
 </div>
 
 
-<div class="w3-container w3-padding">
+<table class="w3-table-all">
+    <tr>
+        <th>Instance number</th>
+        <th>Available</th>
+        <th>Book condition</th>
+        <th> </th>
+    </tr>
     <%
         if (request != null) {
             long book_id = Long.valueOf(request.getParameter("book_id"));
@@ -26,20 +32,22 @@
                                 "        </div>");
             if (bookCopy != null && !bookCopy.isEmpty()) {
                 for (CopiesOfBooks book : bookCopy) {
-                    out.println("<li class=\"w3-hover-sand\">" + "Instance number: " + book.getId()
-                                        + "; Available: " + book.isAvailability()
-                                        + "; Book condition: " + book.getBookCondition()
-                                        + "</li>");
+                    final long id = book.getId();
+                    out.println("<tr>\n" +
+                                        "<td>" + book.getId() + "</td>\n" +
+                                        "<td>" + book.isAvailability() + "</td>\n" +
+                                        "<td>" + book.getBookCondition() + "</td>\n" +
+                                        "<td>" + "<button class=\"w3-btn w3-ripple w3-teal\" onclick=\"location.href='/book/booking/?copy_id=" + id + "'\">Booking</button>\n" + "</td>\n" +
+                                        "</tr>");
                 }
             }
         }
     %>
+</table>
 </div>
 <%
     if (request.getSession().getAttribute("user") != null) {
-        out.println("<div class=\"w3-container w3-grey w3-opacity w3-right-align w3-padding\">\n" +
-                            "<button class=\"w3-btn w3-round-large\" onclick=\"location.href='/logout/exit'\">Logout</button>\n" +
-                            "</div>");
+        out.println("<button class=\"w3-btn w3-block w3-red w3-left-align\" onclick=\"location.href='/logout/exit'\">Logout</button>\n");
     }
 %>
 </div>

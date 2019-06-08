@@ -1,6 +1,6 @@
 package com.servletProject.librarySystem.dao.queries;
 
-public class LibrarianDaoQueries {
+public class BookDaoQueries {
     public static final String FIND_BOOK_ID_BY_BOOK_TITLE = "SELECT id FROM book_catalog WHERE book_title LIKE ?";
 
     public static final String GET_NEXT_BOOK_ID = "SELECT nextval('seq_book_id')";
@@ -20,9 +20,13 @@ public class LibrarianDaoQueries {
 
     public static final String DELETE_BOOK_COPY_BY_COPY_ID = "DELETE FROM copies_of_books WHERE id= ?";
 
-    public static final String FIND_BOOK_COPY_ID_BY_BOOK_ID = "SELECT id FROM copies_of_books WHERE id_book= ? AND availability= ?";
-
     public static final String FIND_ALL_BOOK_FROM_CATALOG = "SELECT * FROM book_catalog";
 
     public static final String FIND_ALL_BOOK_COPY = "SELECT * FROM copies_of_books WHERE id_book= ?";
+
+    public static final String FIND_ALL_BOOK_BY_BOOK_TITLE = "SELECT * FROM book_catalog WHERE book_title LIKE ?";
+
+    public static final String FIND_ALL_BOOK_BY_BOOK_AUTHOR = "SELECT * FROM book_catalog WHERE book_author LIKE ?";
+
+    public static final String FIND_ALL_BOOK_BY_BOOK_GENRE = "SELECT * FROM book_catalog WHERE genre LIKE ?";
 }

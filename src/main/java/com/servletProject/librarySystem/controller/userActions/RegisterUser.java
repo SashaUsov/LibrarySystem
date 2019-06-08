@@ -50,9 +50,8 @@ public class RegisterUser extends HttpServlet {
     private void ifSaveSuccessfully(HttpServletRequest request, HttpServletResponse response, UserEntity saveUser)
             throws ServletException, IOException {
 
-        response.setStatus(201);
-        request.getSession().setAttribute("user", saveUser);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/");
+        response.setStatus(202);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/login");
         requestDispatcher.forward(request, response);
     }
 
