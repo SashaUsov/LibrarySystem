@@ -83,9 +83,10 @@ public class BooksService {
 
     public List<BookCatalog> getAllBookByAuthor(String author) throws SQLException {
         List<BookCatalog> catalog = new ArrayList<>();
+        String bookAuthor = "%" + author + "%";
         try {
             TransactionManager.beginTransaction();
-            List<Map<String, String>> bookCatalog = booksDao.findBookByAuthor(author);
+            List<Map<String, String>> bookCatalog = booksDao.findBookByAuthor(bookAuthor);
             return createBookCatalog(catalog, bookCatalog);
         } catch (SQLException | NullPointerException e) {
             TransactionManager.rollBackTransaction();

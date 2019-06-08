@@ -15,7 +15,7 @@ public class BookSearchByGenre extends HttpServlet {
     private final BooksService booksService = new BooksService();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
     }
 }
