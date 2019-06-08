@@ -1,5 +1,4 @@
 <%@ page import="com.servletProject.librarySystem.domen.BookCatalog" %>
-<%@ page import="com.servletProject.librarySystem.service.BooksService" %>
 <%@ page import="java.util.List" %>
 <%@ page import="static com.oracle.jrockit.jfr.ContentType.Address" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -15,7 +14,7 @@
 </div>
 
 <div class="w3-container w3-center w3-green">
-    <h2>Book catalog</h2>
+    <h2>Found books</h2>
 
     <table class="w3-table-all">
         <tr class="w3-blue">

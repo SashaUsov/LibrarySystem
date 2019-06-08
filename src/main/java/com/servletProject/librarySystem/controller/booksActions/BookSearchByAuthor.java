@@ -1,6 +1,7 @@
 package com.servletProject.librarySystem.controller.booksActions;
 
 import com.servletProject.librarySystem.domen.BookCatalog;
+import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
 import com.servletProject.librarySystem.service.BooksService;
 import com.servletProject.librarySystem.utils.FilterUtil;
 
@@ -22,7 +23,7 @@ public class BookSearchByAuthor extends HttpServlet {
     private final BooksService booksService = new BooksService();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (request != null) {
             final String bookTitle = request.getParameter("book_author");
@@ -35,19 +36,26 @@ public class BookSearchByAuthor extends HttpServlet {
             throws ServletException, IOException {
         List<BookCatalog> bookByAuthor;
         if (!"".equals(bookAuthor) && bookAuthor != null) {
-            try {
-                bookByAuthor = booksService.getAllBookByAuthor(bookAuthor);
-                if (bookByAuthor != null && !bookByAuthor.isEmpty()) {
-                    ifBooksExist(request, response, bookByAuthor);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            ifBookAuthorPresent(request, response, bookAuthor);
         } else {
-            response.setStatus(500);
+            response.setStatus(422);
             final HttpSession session = request.getSession();
             FilterUtil.sendMessage(request, response, session, "Book not found!");
 
+        }
+    }
+
+    private void ifBookAuthorPresent(HttpServletRequest request, HttpServletResponse response, String bookAuthor) throws ServletException, IOException {
+        List<BookCatalog> bookByAuthor;
+        try {
+            bookByAuthor = booksService.getAllBookByAuthor(bookAuthor);
+            if (bookByAuthor != null && !bookByAuthor.isEmpty()) {
+                ifBooksExist(request, response, bookByAuthor);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.setStatus(500);
+            throw new DataIsNotCorrectException("Enter author's name!");
         }
     }
 

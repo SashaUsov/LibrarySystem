@@ -1,6 +1,7 @@
 package com.servletProject.librarySystem.controller.booksActions;
 
 import com.servletProject.librarySystem.domen.BookCatalog;
+import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
 import com.servletProject.librarySystem.service.BooksService;
 import com.servletProject.librarySystem.utils.FilterUtil;
 
@@ -22,7 +23,7 @@ public class BookSearchByGenre extends HttpServlet {
     private final BooksService booksService = new BooksService();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (request != null) {
             final String bookTitle = request.getParameter("book_genre");
@@ -35,19 +36,25 @@ public class BookSearchByGenre extends HttpServlet {
             throws ServletException, IOException {
         List<BookCatalog> booksByGenre;
         if (!"".equals(bookGenre) && bookGenre != null) {
-            try {
-                booksByGenre = booksService.getAllBookByGenre(bookGenre);
-                if (booksByGenre != null && !booksByGenre.isEmpty()) {
-                    ifBooksExist(request, response, booksByGenre);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            ifBookGenrePresent(request, response, bookGenre);
         } else {
-            response.setStatus(500);
+            response.setStatus(422);
             final HttpSession session = request.getSession();
-            FilterUtil.sendMessage(request, response, session, "Book not found!");
+            FilterUtil.sendMessage(request, response, session, "Enter the book genre");
+        }
+    }
 
+    private void ifBookGenrePresent(HttpServletRequest request, HttpServletResponse response, String bookGenre) throws ServletException, IOException {
+        List<BookCatalog> booksByGenre;
+        try {
+            booksByGenre = booksService.getAllBookByGenre(bookGenre);
+            if (booksByGenre != null && !booksByGenre.isEmpty()) {
+                ifBooksExist(request, response, booksByGenre);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.setStatus(500);
+            throw new DataIsNotCorrectException("Book not found!");
         }
     }
 

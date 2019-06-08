@@ -1,6 +1,7 @@
 package com.servletProject.librarySystem.controller.booksActions;
 
 import com.servletProject.librarySystem.domen.BookCatalog;
+import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
 import com.servletProject.librarySystem.service.BooksService;
 import com.servletProject.librarySystem.utils.FilterUtil;
 
@@ -22,7 +23,7 @@ public class BookSearchByTitle extends HttpServlet {
     private final BooksService booksService = new BooksService();
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (request != null) {
             final String bookTitle = request.getParameter("book_title");
@@ -35,19 +36,26 @@ public class BookSearchByTitle extends HttpServlet {
             throws ServletException, IOException {
         List<BookCatalog> bookByTitle;
         if (!"".equals(bookTitle) && bookTitle != null) {
-            try {
-                bookByTitle = booksService.getAllBookByTitle(bookTitle);
-                if (bookByTitle != null && !bookByTitle.isEmpty()) {
-                    ifBooksExist(request, response, bookByTitle);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            ifBookTitlePresent(request, response, bookTitle);
         } else {
-            response.setStatus(500);
+            response.setStatus(422);
             final HttpSession session = request.getSession();
-            FilterUtil.sendMessage(request, response, session, "Book not found!");
+            FilterUtil.sendMessage(request, response, session, "Enter book title");
 
+        }
+    }
+
+    private void ifBookTitlePresent(HttpServletRequest request, HttpServletResponse response, String bookTitle) throws ServletException, IOException {
+        List<BookCatalog> bookByTitle;
+        try {
+            bookByTitle = booksService.getAllBookByTitle(bookTitle);
+            if (bookByTitle != null && !bookByTitle.isEmpty()) {
+                ifBooksExist(request, response, bookByTitle);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.setStatus(500);
+            throw new DataIsNotCorrectException("Book not found!");
         }
     }
 
