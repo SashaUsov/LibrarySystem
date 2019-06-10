@@ -3,7 +3,7 @@ package com.servletProject.librarySystem.controller.booksActions;
 import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
 import com.servletProject.librarySystem.service.BooksService;
-import com.servletProject.librarySystem.utils.FilterUtil;
+import com.servletProject.librarySystem.utils.QueryResponseUtility;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -40,7 +40,7 @@ public class BookSearchByGenre extends HttpServlet {
         } else {
             response.setStatus(422);
             final HttpSession session = request.getSession();
-            FilterUtil.sendMessage(request, response, session, "Enter the book genre");
+            QueryResponseUtility.sendMessage(request, response, session, "Enter the book genre");
         }
     }
 

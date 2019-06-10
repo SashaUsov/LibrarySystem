@@ -5,11 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ArchiveBookUsage {
-
+public class OnlineOrderBook {
     private long id;
-    private long idReader;
-    private long idCopiesBook;
-    private String bookCondition;
-
+    private long idUser;
+    private long idBookCopy;
 }

@@ -1,0 +1,12 @@
+databaseChangeLog:
+
+    - changeSet:
+            id: delete-column-in-completed-orders-table
+            author: sasha_vosu
+            changes:
+            - dropColumn:
+                  columnName: reading_place
+                  tableName: completed_orders
+            - dropColumn:
+                  columnName: date_of_issue
+                  tableName: completed_orders

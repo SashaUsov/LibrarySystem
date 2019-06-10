@@ -32,12 +32,17 @@
                                 "        </div>");
             if (bookCopy != null && !bookCopy.isEmpty()) {
                 for (CopiesOfBooks book : bookCopy) {
-                    final long id = book.getId();
+                    final long book_copy_id = book.getId();
                     out.println("<tr>\n" +
                                         "<td>" + book.getId() + "</td>\n" +
                                         "<td>" + book.isAvailability() + "</td>\n" +
                                         "<td>" + book.getBookCondition() + "</td>\n" +
-                                        "<td>" + "<button class=\"w3-btn w3-ripple w3-teal\" onclick=\"location.href='/book/booking/?copy_id=" + id + "'\">Booking</button>\n" + "</td>\n" +
+                                        "<td>" + "<div>\n" +
+                                        "    <form id=\"submitform\" action=\"/booking\" method=\"post\">\n" +
+                                        "            <input type=\"hidden\" name=\"book_copy_id\" value=" + book_copy_id + "><br/>\n" +
+                                        "        <button type=\"submit\"  class=\"w3-btn w3-ripple w3-teal\">Booking</button>\n" +
+                                        "    </form>\n" +
+                                        "</div>" + "</td>\n" +
                                         "</tr>");
                 }
             }

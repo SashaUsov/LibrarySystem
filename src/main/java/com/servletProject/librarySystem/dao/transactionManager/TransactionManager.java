@@ -1,7 +1,7 @@
-package com.servletProject.librarySystem.dao.transaction;
+package com.servletProject.librarySystem.dao.transactionManager;
 
 
-import com.servletProject.librarySystem.dao.transaction.connectionPool.ConnectionPool;
+import com.servletProject.librarySystem.dao.transactionManager.connectionPool.ConnectionPool;
 import com.servletProject.librarySystem.exception.TransactionException;
 
 import java.sql.Connection;

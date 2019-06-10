@@ -1,7 +1,7 @@
 package com.servletProject.librarySystem.filter;
 
 import com.servletProject.librarySystem.domen.UserEntity;
-import com.servletProject.librarySystem.utils.FilterUtil;
+import com.servletProject.librarySystem.utils.QueryResponseUtility;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -22,25 +22,25 @@ public class UserAuthorizationFilter implements Filter {
         UserEntity user = (UserEntity) session.getAttribute("user");
 
         if (user == null) {
-            FilterUtil.redirectOnAuthorization(request, response);
+            QueryResponseUtility.redirectOnAuthorization(request, response);
         }
         else if (user.isLogin()) {
             ifUserIsLoggedIn(request, response, chain, user);
         } else {
-            FilterUtil.redirectOnAuthorization(request, response);
+            QueryResponseUtility.redirectOnAuthorization(request, response);
         }
     }
 
     private void ifUserIsLoggedIn(ServletRequest request, ServletResponse response,
                                   FilterChain chain, UserEntity user)
             throws IOException, ServletException {
-        if (FilterUtil.hasAnyRole(user)) {
+        if (QueryResponseUtility.hasAnyRole(user)) {
             List<String> roles = user.getRole();
-            long accessLevel = FilterUtil.getAccessLevel(roles);
+            long accessLevel = QueryResponseUtility.getAccessLevel(roles);
             if (accessLevel > 0) {
                 chain.doFilter(request, response);
             } else {
-                FilterUtil.redirectOnAuthorization(request, response);
+                QueryResponseUtility.redirectOnAuthorization(request, response);
             }
         }
     }

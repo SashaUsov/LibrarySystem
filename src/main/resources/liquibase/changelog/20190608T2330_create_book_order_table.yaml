@@ -1,0 +1,29 @@
+databaseChangeLog:
+
+    - changeSet:
+        id: Create_book_order_table
+        author: sasha_vosu
+        changes:
+
+        - createTable:
+            tableName: book_order
+            columns:
+              - column:
+                 name: id
+                 type: bigint
+                 constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_book_order
+                    nullable: false
+                    autoIncrement: true
+                    unique: true
+              - column:
+                 name: user_id
+                 type: bigint
+                 constraints:
+                    nullable: false
+              - column:
+                 name: book_copy_id
+                 type: bigint
+                 constraints:
+                    nullable: false

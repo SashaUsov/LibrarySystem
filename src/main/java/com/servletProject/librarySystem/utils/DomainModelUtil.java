@@ -6,6 +6,7 @@ import com.servletProject.librarySystem.domen.UserEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class DomainModelUtil {
@@ -45,5 +46,15 @@ public class DomainModelUtil {
         copiesOfBooks.setBookCondition(oneBook.get("book_condition"));
 
         return copiesOfBooks;
+    }
+
+    public static Map<String, String> createCopyBookParametrMap(ResultSet resultSet) throws SQLException {
+        Map<String, String> book = new HashMap<>();
+        book.put("id", String.valueOf(resultSet.getLong("id")));
+        book.put("id_book", String.valueOf(resultSet.getLong("id_book")));
+        book.put("book_condition", resultSet.getString("book_condition"));
+        book.put("availability", String.valueOf(resultSet.getBoolean("availability")));
+
+        return book;
     }
 }

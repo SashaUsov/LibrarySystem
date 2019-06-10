@@ -28,3 +28,15 @@ databaseChangeLog:
         file: liquibase/changelog/20190604T2000_create_copies_of_books_table_sequence.yaml
     - include:
         file: liquibase/changelog/20190604T2001_rename_column_in_book_catalog_table.yaml
+    - include:
+        file: liquibase/changelog/20190608T2330_create_book_order_table.yaml
+    - include:
+        file: liquibase/changelog/20190608T2333_create_book_order_table_sequence.yaml
+    - include:
+        file: liquibase/changelog/20190610T1920_rename_issued_books_table_on_completed_orders.yaml
+    - include:
+        file: liquibase/changelog/20190610T1928_drop_columns_in_completed_orders_table.yaml
+    - include:
+        file: liquibase/changelog/20190610T1932_drop_period_column_in_completed_orders_table.yaml
+    - include:
+        file: liquibase/changelog/20190610T1935_drop_columns_in_archive_book_usage_table.yaml

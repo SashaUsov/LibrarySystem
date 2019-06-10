@@ -1,9 +1,10 @@
 package com.servletProject.librarySystem.service;
 
 import com.servletProject.librarySystem.dao.BooksDao;
-import com.servletProject.librarySystem.dao.transaction.TransactionManager;
+import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
+import com.servletProject.librarySystem.utils.DaoUtil;
 import com.servletProject.librarySystem.utils.DomainModelUtil;
 
 import java.sql.SQLException;
@@ -50,19 +51,23 @@ public class BooksService {
         try {
             TransactionManager.beginTransaction();
             List<Map<String, String>> booksCopy = booksDao.getAllBookCopy(bookId);
-            if (booksCopy != null) {
-                for (Map<String, String> oneBook : booksCopy) {
-                    catalog.add(DomainModelUtil.createBookCopyFromMap(oneBook));
-                }
-                return catalog;
-            } else {
-                throw new SQLException("No copies of the book were found. :(");
-            }
+            return createCopyBookCatalog(catalog, booksCopy);
         } catch (SQLException | NullPointerException e) {
             TransactionManager.rollBackTransaction();
             throw e;
         } finally {
             TransactionManager.commitTransaction();
+        }
+    }
+
+    private List<CopiesOfBooks> createCopyBookCatalog(List<CopiesOfBooks> catalog, List<Map<String, String>> booksCopy) throws SQLException {
+        if (booksCopy != null) {
+            for (Map<String, String> oneBook : booksCopy) {
+                catalog.add(DomainModelUtil.createBookCopyFromMap(oneBook));
+            }
+            return DaoUtil.returnAilableBooks(catalog);
+        } else {
+            throw new SQLException("No copies of the book were found. :(");
         }
     }
 

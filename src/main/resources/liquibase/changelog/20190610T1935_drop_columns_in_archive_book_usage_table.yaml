@@ -1,0 +1,12 @@
+databaseChangeLog:
+
+    - changeSet:
+            id: delete-column-in-archive_book_usage-table
+            author: sasha_vosu
+            changes:
+            - dropColumn:
+                  columnName: monetary_sanctions
+                  tableName: archive_book_usage
+            - dropColumn:
+                  columnName: fine_paid
+                  tableName: archive_book_usage

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-public class FilterUtil {
+public class QueryResponseUtility {
 
     public static long getAccessLevel(List<String> roles) {
         long accessLevel = 0;

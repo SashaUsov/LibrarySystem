@@ -1,7 +1,7 @@
 package com.servletProject.librarySystem.filter;
 
 import com.servletProject.librarySystem.domen.UserEntity;
-import com.servletProject.librarySystem.utils.FilterUtil;
+import com.servletProject.librarySystem.utils.QueryResponseUtility;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -28,12 +28,12 @@ public class AdminAuthorizationFilter implements Filter {
         HttpSession session = ((HttpServletRequest) request).getSession();
         UserEntity user = (UserEntity) session.getAttribute("user");
         if (user == null) {
-            FilterUtil.redirectOnAuthorization(request, response);
+            QueryResponseUtility.redirectOnAuthorization(request, response);
         } else if (user.isLogin()) {
-            if (FilterUtil.hasAnyRole(user)) {
+            if (QueryResponseUtility.hasAnyRole(user)) {
                 giveAccessIfAdmin(request, response, chain, user);
             } else {
-                FilterUtil.sendMessage(request, response, session, "You do not have permission to access this page.");
+                QueryResponseUtility.sendMessage(request, response, session, "You do not have permission to access this page.");
             }
         }
     }

@@ -1,8 +1,8 @@
 package com.servletProject.librarySystem.dao;
 
 import com.servletProject.librarySystem.dao.queries.BookDaoQueries;
-import com.servletProject.librarySystem.dao.transaction.TransactionManager;
-import com.servletProject.librarySystem.dao.transaction.WrapConnection;
+import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
+import com.servletProject.librarySystem.dao.transactionManager.WrapConnection;
 import com.servletProject.librarySystem.utils.DaoUtil;
 
 import java.sql.PreparedStatement;

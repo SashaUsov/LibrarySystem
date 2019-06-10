@@ -1,7 +1,7 @@
 package com.servletProject.librarySystem.controller.booksActions;
 
 import com.servletProject.librarySystem.service.BooksService;
-import com.servletProject.librarySystem.utils.FilterUtil;
+import com.servletProject.librarySystem.utils.QueryResponseUtility;
 import com.servletProject.librarySystem.utils.WorkWithHttpRequestUtil;
 
 import javax.servlet.ServletException;
@@ -32,7 +32,7 @@ public class BookCatalogAction extends HttpServlet {
         } else {
             response.setStatus(422);
             @SuppressWarnings("unchecked") HttpSession session = request.getSession();
-            FilterUtil.sendMessage(request, response, session, "Something went wrong :(");
+            QueryResponseUtility.sendMessage(request, response, session, "Something went wrong :(");
         }
     }
 
@@ -42,7 +42,7 @@ public class BookCatalogAction extends HttpServlet {
             booksService.saveBook(paramMap);
             response.setStatus(202);
             HttpSession session = request.getSession();
-            FilterUtil.sendMessage(request, response, session, "Book successfully added to catalog!");
+            QueryResponseUtility.sendMessage(request, response, session, "Book successfully added to catalog!");
         } catch (SQLException e) {
             e.printStackTrace();
             response.setStatus(500);

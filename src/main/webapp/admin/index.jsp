@@ -20,11 +20,12 @@
                                 "</div>");
         }
     %>
-    <div class="w3-card-4">
-        <div class="w3-container w3-center w3-green">
-            <h2>Add new user role</h2>
-        </div>
-
+    <details>
+        <summary>
+            <div class="w3-container w3-center w3-green">
+                <h1>Assign a new role to the user</h1>
+            </div>
+        </summary>
         <form id="submitform" action="/admin/action" method="post" class="w3-selection w3-light-grey w3-padding">
             <label>User id:
                 <input type="text" name="user_id" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br/>
@@ -42,13 +43,14 @@
 
             <button type="submit"  class="w3-btn w3-green w3-round-large w3-margin-bottom">Submit</button>
         </form>
-    </div>
+    </details>
 
-    <div class="w3-card-4">
-        <div class="w3-container w3-center w3-green">
-            <h2>Remove user role</h2>
-        </div>
-
+    <details>
+        <summary>
+            <div class="w3-container w3-center w3-green">
+                <h1>Revoke user role</h1>
+            </div>
+        </summary>
         <form action="/admin/action" method="get" class="w3-selection w3-light-grey w3-padding">
             <label>User id:
                 <input type="number" name="user_id" class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br/>
@@ -59,7 +61,7 @@
             </label>
             <button type="submit"  class="w3-btn w3-green w3-round-large w3-margin-bottom">Submit</button>
         </form>
-    </div>
+    </details>
 
 </div>
 

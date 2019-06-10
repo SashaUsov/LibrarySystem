@@ -1,4 +1,4 @@
-package com.servletProject.librarySystem.dao.transaction.connectionPool;
+package com.servletProject.librarySystem.dao.transactionManager.connectionPool;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -2,7 +2,7 @@ package com.servletProject.librarySystem.service;
 
 import com.servletProject.librarySystem.dao.UserDao;
 import com.servletProject.librarySystem.dao.UserRoleDao;
-import com.servletProject.librarySystem.dao.transaction.TransactionManager;
+import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.domen.UserEntity;
 
 import java.sql.SQLException;
