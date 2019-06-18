@@ -11,7 +11,8 @@ import java.io.IOException;
 import java.util.List;
 
 @WebFilter(urlPatterns = {"/userpage", "/books", "/booking", "/detail", "/workwithbooks",
-        "/book/search-by-title", "/book/search-by-author", "/book/search-by-genre"})
+        "/book/search-by-title", "/book/search-by-author", "/book/search-by-genre",
+        "/my-orders"})
 public class UserAuthorizationFilter implements Filter {
 
     @Override

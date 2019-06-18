@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class TransactionManager {
-    static ThreadLocal<WrapConnection> connections = new ThreadLocal<>();
+    private static ThreadLocal<WrapConnection> connections = new ThreadLocal<>();
     private static ConnectionPool dataSource;
     static{
         dataSource = new ConnectionPool(10, 30);

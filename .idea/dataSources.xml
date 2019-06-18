@@ -7,6 +7,7 @@
       <configured-by-url>true</configured-by-url>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/library_system</jdbc-url>
+      <default-dialect>PostgreSQL</default-dialect>
     </data-source>
   </component>
 </project>

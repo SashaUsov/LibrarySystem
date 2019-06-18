@@ -1,5 +1,6 @@
 package com.servletProject.librarySystem.dao.transactionManager;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -25,6 +26,10 @@ public class WrapConnection implements AutoCloseable{
 
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         return connection.prepareStatement(sql);
+    }
+
+    public Array createArrayOf(String typeName, Object[] elements) throws SQLException {
+        return connection.createArrayOf(typeName, elements);
     }
 
     public void close() {

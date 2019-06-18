@@ -48,7 +48,7 @@ public class DomainModelUtil {
         return copiesOfBooks;
     }
 
-    public static Map<String, String> createCopyBookParametrMap(ResultSet resultSet) throws SQLException {
+    public static Map<String, String> createCopyBookParameterMap(ResultSet resultSet) throws SQLException {
         Map<String, String> book = new HashMap<>();
         book.put("id", String.valueOf(resultSet.getLong("id")));
         book.put("id_book", String.valueOf(resultSet.getLong("id_book")));

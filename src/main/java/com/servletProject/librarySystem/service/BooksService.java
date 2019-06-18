@@ -65,7 +65,7 @@ public class BooksService {
             for (Map<String, String> oneBook : booksCopy) {
                 catalog.add(DomainModelUtil.createBookCopyFromMap(oneBook));
             }
-            return DaoUtil.returnAilableBooks(catalog);
+            return DaoUtil.returnAvailableBooks(catalog);
         } else {
             throw new SQLException("No copies of the book were found. :(");
         }

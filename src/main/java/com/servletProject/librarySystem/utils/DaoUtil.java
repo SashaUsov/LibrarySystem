@@ -2,7 +2,6 @@ package com.servletProject.librarySystem.utils;
 
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.dao.transactionManager.WrapConnection;
-import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
 
 import java.sql.PreparedStatement;
@@ -25,7 +24,7 @@ public class DaoUtil {
         }
     }
 
-    public static List<Map<String, String>> createBookCatalog(ResultSet resultSet) throws SQLException {
+    private static List<Map<String, String>> createBookCatalog(ResultSet resultSet) throws SQLException {
         List<Map<String, String>> bookCatalod = new ArrayList<>();
         while (resultSet.next()) {
             Map<String, String> book = new HashMap<>();
@@ -44,7 +43,7 @@ public class DaoUtil {
     public static List<Map<String, String>> createBooksCopy(ResultSet resultSet) throws SQLException {
         List<Map<String, String>> booksCopy = new ArrayList<>();
         while (resultSet.next()) {
-            Map<String, String> book = DomainModelUtil.createCopyBookParametrMap(resultSet);
+            Map<String, String> book = DomainModelUtil.createCopyBookParameterMap(resultSet);
             booksCopy.add(book);
         }
         return booksCopy;
@@ -57,7 +56,16 @@ public class DaoUtil {
         } else return null;
     }
 
-    public static List<CopiesOfBooks> returnAilableBooks(List<CopiesOfBooks> bookList) {
+    public static List<CopiesOfBooks> returnAvailableBooks(List<CopiesOfBooks> bookList) {
         return bookList.stream().filter(book -> book.isAvailability() == true).collect(Collectors.toList());
+    }
+
+    public static Long[] getAllBooksId(ResultSet resultSet, String columnName) throws SQLException {
+        List<Long> booksIdList = new ArrayList<>();
+        do {
+            long id = resultSet.getLong(columnName);
+            booksIdList.add(id);
+        } while (resultSet.next());
+        return booksIdList.stream().toArray(Long[]::new);
     }
 }
