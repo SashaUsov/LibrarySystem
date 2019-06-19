@@ -2,6 +2,7 @@ package com.servletProject.librarySystem.controller.generalActions;
 
 import com.servletProject.librarySystem.domen.UserOrdersTransferObject;
 import com.servletProject.librarySystem.service.BookingService;
+import com.servletProject.librarySystem.service.LibrarianService;
 import com.servletProject.librarySystem.utils.BookingUtil;
 
 import javax.servlet.ServletException;
@@ -17,6 +18,7 @@ import java.util.List;
 @WebServlet("/reserve-data")
 public class LibrarianActions extends HttpServlet {
     private final BookingService bookingService = new BookingService();
+    private final LibrarianService librarianService = new LibrarianService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -24,6 +26,20 @@ public class LibrarianActions extends HttpServlet {
             final HttpSession session = request.getSession();
             try {
                 List<UserOrdersTransferObject> listOfReservedBooks = bookingService.getListOfAllReservedBooks();
+                BookingUtil.getReserveListAnswer(listOfReservedBooks, request, response, session, "/orders");
+            } catch (SQLException e) {
+                response.setStatus(500);
+            }
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (request != null) {
+            final HttpSession session = request.getSession();
+            try {
+                String userEmail = request.getParameter("user_email");
+                List<UserOrdersTransferObject> listOfReservedBooks = librarianService.getAllReservedBooksByUser(userEmail);
                 BookingUtil.getReserveListAnswer(listOfReservedBooks, request, response, session, "/orders");
             } catch (SQLException e) {
                 response.setStatus(500);

@@ -65,7 +65,7 @@ public class BookingUtil {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
             requestDispatcher.forward(request, response);
         } else {
-            QueryResponseUtility.sendMessage(request, response, session, "You have no pending orders.");
+            QueryResponseUtility.sendMessage(request, response, session, "There are no pending orders.");
         }
     }
 }

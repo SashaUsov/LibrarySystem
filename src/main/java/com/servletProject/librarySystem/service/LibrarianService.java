@@ -18,16 +18,24 @@ public class LibrarianService {
     private final LibrarianDao librarianDao = new LibrarianDao();
 
     public List<UserOrdersTransferObject> getAllReservedBooksByUser(String email) throws SQLException {
-        UserEntity user = userDao.findUserByEmail(email);
-        List<UserOrdersTransferObject> reservedBooks = new ArrayList<>();
-        if (user != null) {
-            long userId = user.getId();
-            Long[] allBooksCopyByReaderId = bookingDao.findAllReservedBooksCopyByReaderId(userId);
-            if (allBooksCopyByReaderId.length > 0) {
-                BookingUtil.getReaderOrdersByReaderId(reservedBooks, allBooksCopyByReaderId, bookingDao, userId);
+        try {
+            TransactionManager.beginTransaction();
+            UserEntity user = userDao.findUserByEmail(email);
+            List<UserOrdersTransferObject> reservedBooks = new ArrayList<>();
+            if (user != null) {
+                long userId = user.getId();
+                Long[] allBooksCopyByReaderId = bookingDao.findAllReservedBooksCopyByReaderId(userId);
+                if (allBooksCopyByReaderId.length > 0) {
+                    BookingUtil.getReaderOrdersByReaderId(reservedBooks, allBooksCopyByReaderId, bookingDao, userId);
+                }
             }
+            return reservedBooks;
+        } catch (SQLException | NullPointerException e) {
+            TransactionManager.rollBackTransaction();
+            throw e;
+        } finally {
+            TransactionManager.commitTransaction();
         }
-        return reservedBooks;
     }
 
     public void giveBookToTheReader(Long bookCopyId, Long userId, Long librarianId) {
