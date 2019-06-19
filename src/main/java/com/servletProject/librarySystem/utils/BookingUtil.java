@@ -2,15 +2,24 @@ package com.servletProject.librarySystem.utils;
 
 import com.servletProject.librarySystem.dao.BookingDao;
 import com.servletProject.librarySystem.domen.BookCatalog;
+import com.servletProject.librarySystem.domen.OnlineOrderBook;
 import com.servletProject.librarySystem.domen.UserOrdersTransferObject;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BookingUtil {
 
-    public static void getReaderOrders(List<UserOrdersTransferObject> reservedBooks, Long[] allBooksCopyByReaderId,
-                                 BookingDao bookingDao, Long userId)
+    public static void getReaderOrdersByReaderId(List<UserOrdersTransferObject> reservedBooks, Long[] allBooksCopyByReaderId,
+                                                 BookingDao bookingDao, Long userId)
             throws SQLException {
         Long[] allOrderedBooksFromCatalog = bookingDao.findAllOrderedBookFromCatalog(allBooksCopyByReaderId);
         for (int i = 0; i < allBooksCopyByReaderId.length; i++) {
@@ -33,5 +42,30 @@ public class BookingUtil {
         uOTO.setYearOfPublication(bookCatalog.getYearOfPublication());
 
         reservedBooks.add(uOTO);
+    }
+
+    public static void getReaderOrdersByReaderId(List<UserOrdersTransferObject> reservedBooks, List<OnlineOrderBook> orderBooks,
+                                                 BookingDao bookingDao)
+            throws SQLException {
+        Long[] copyIdArray = orderBooks.stream().map(OnlineOrderBook::getIdBookCopy).toArray(Long[]::new);
+        Map<Long, Long> longMap = orderBooks.stream().collect(
+                Collectors.toMap(OnlineOrderBook::getIdBookCopy, OnlineOrderBook::getIdUser));
+        Long[] orderedBookFromCatalog = bookingDao.findAllOrderedBookFromCatalog(copyIdArray);
+        for (int i = 0; i < copyIdArray.length; i++) {
+            BookingUtil.createOrdersTransferObject(reservedBooks, copyIdArray[i],
+                                                   orderedBookFromCatalog[i], bookingDao, longMap.get(copyIdArray[i]));
+        }
+    }
+
+    public static void getReserveListAnswer(List<UserOrdersTransferObject> listOfReservedBooks, ServletRequest request,
+                                            ServletResponse response, HttpSession session, String path)
+            throws ServletException, IOException {
+        if (listOfReservedBooks != null && !listOfReservedBooks.isEmpty()) {
+            session.setAttribute("list_of_reserved_books", listOfReservedBooks);
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
+            requestDispatcher.forward(request, response);
+        } else {
+            QueryResponseUtility.sendMessage(request, response, session, "You have no pending orders.");
+        }
     }
 }

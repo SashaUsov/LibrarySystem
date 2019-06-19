@@ -3,6 +3,7 @@ package com.servletProject.librarySystem.utils;
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.dao.transactionManager.WrapConnection;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
+import com.servletProject.librarySystem.domen.OnlineOrderBook;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -67,5 +68,17 @@ public class DaoUtil {
             booksIdList.add(id);
         } while (resultSet.next());
         return booksIdList.stream().toArray(Long[]::new);
+    }
+
+    public static List<OnlineOrderBook> getAllOrders(ResultSet resultSet) throws SQLException {
+        List<OnlineOrderBook> booksIdList = new ArrayList<>();
+        do {
+            OnlineOrderBook onlineOrderBook = new OnlineOrderBook();
+            onlineOrderBook.setId(resultSet.getLong("id"));
+            onlineOrderBook.setIdBookCopy(resultSet.getLong("book_copy_id"));
+            onlineOrderBook.setIdUser(resultSet.getLong("user_id"));
+            booksIdList.add(onlineOrderBook);
+        } while (resultSet.next());
+        return booksIdList;
     }
 }

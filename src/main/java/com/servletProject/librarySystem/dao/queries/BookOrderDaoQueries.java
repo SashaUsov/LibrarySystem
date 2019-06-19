@@ -20,4 +20,5 @@ public class BookOrderDaoQueries {
     public static final String FIND_ALL_BOOKS_ID_BY_COPY_ID = "SELECT id_book FROM copies_of_books WHERE id = ANY (?::int8[])";
 
     public static final String FIND_BOOK_BY_ID = "SELECT * FROM book_catalog WHERE id= ?";
+    public static final String FIND_ALL_RESERVED_BOOKS_COPY = "SELECT * FROM book_order";
 }

@@ -1,5 +1,13 @@
 <%@ page import="com.servletProject.librarySystem.domen.UserOrdersTransferObject" %>
 <%@ page import="java.util.List" %>
+<%@ page import="static com.oracle.jrockit.jfr.ContentType.Address" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>Book catalog</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+
 <body class="w3-light-grey">
 <div class="w3-container w3-blue-grey w3-opacity w3-right-align">
     <h1>Library system</h1>
@@ -15,6 +23,7 @@
             <th>Genre</th>
             <th>Publication</th>
             <th> </th>
+            <th> </th>
         </tr>
 
         <%
@@ -28,6 +37,12 @@
                                             "<td>" + book.getBookAuthor() + "</td>\n" +
                                             "<td>" + book.getGenre() + "</td>\n" +
                                             "<td>" + book.getYearOfPublication() + "</td>\n" +
+                                            "<td>" + "<div>\n" +
+                                            "    <form id=\"submitform\" action=\"/order-cancel\" method=\"post\">\n" +
+                                            "            <input type=\"hidden\" name=\"book_copy_id\" value=" + book.getUniqueId() + "><br/>\n" +
+                                            "        <button type=\"submit\"  class=\"w3-btn w3-ripple w3-teal\">Cancel order</button>\n" +
+                                            "    </form>\n" +
+                                            "</div>" + "</td>\n" +
                                             "<td>" + "<div>\n" +
                                             "    <form id=\"submitform\" action=\"/order-cancel\" method=\"post\">\n" +
                                             "            <input type=\"hidden\" name=\"book_copy_id\" value=" + book.getUniqueId() + "><br/>\n" +
@@ -52,3 +67,4 @@
     <button class="w3-btn w3-round-large" onclick="location.href='/'">Back to main</button>
 </div>
 </body>
+</html>

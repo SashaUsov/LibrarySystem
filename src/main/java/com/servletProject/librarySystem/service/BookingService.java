@@ -3,6 +3,7 @@ package com.servletProject.librarySystem.service;
 import com.servletProject.librarySystem.dao.BookingDao;
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
+import com.servletProject.librarySystem.domen.OnlineOrderBook;
 import com.servletProject.librarySystem.domen.UserOrdersTransferObject;
 import com.servletProject.librarySystem.utils.BookingUtil;
 
@@ -29,13 +30,30 @@ public class BookingService {
         }
     }
 
-    public List<UserOrdersTransferObject> getListOfReservedBooks(long userId) throws SQLException {
+    public List<UserOrdersTransferObject> getListOfReservedBooksByUser(long userId) throws SQLException {
         try {
             TransactionManager.beginTransaction();
+            Long[] allBooksCopyByReaderId = bookingDao.findAllReservedBooksCopyByReaderId(userId);
             List<UserOrdersTransferObject> reservedBooks = new ArrayList<>();
-            Long[] allBooksCopyByReaderId = bookingDao.findAllBooksCopyByReaderId(userId);
             if (allBooksCopyByReaderId.length > 0) {
-                BookingUtil.getReaderOrders(reservedBooks, allBooksCopyByReaderId, bookingDao, userId);
+                BookingUtil.getReaderOrdersByReaderId(reservedBooks, allBooksCopyByReaderId, bookingDao, userId);
+            }
+            return reservedBooks;
+        } catch (SQLException e) {
+            TransactionManager.rollBackTransaction();
+            throw e;
+        } finally {
+            TransactionManager.commitTransaction();
+        }
+    }
+
+    public List<UserOrdersTransferObject> getListOfAllReservedBooks() throws SQLException {
+        try {
+            TransactionManager.beginTransaction();
+            List<OnlineOrderBook> reservedBooksCopy= bookingDao.findAllReservedBooksCopy();
+            List<UserOrdersTransferObject> reservedBooks = new ArrayList<>();
+            if (!reservedBooksCopy.isEmpty()) {
+                BookingUtil.getReaderOrdersByReaderId(reservedBooks, reservedBooksCopy, bookingDao);
             }
             return reservedBooks;
         } catch (SQLException e) {

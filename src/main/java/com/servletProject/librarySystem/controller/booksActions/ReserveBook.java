@@ -3,9 +3,9 @@ package com.servletProject.librarySystem.controller.booksActions;
 import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.domen.UserOrdersTransferObject;
 import com.servletProject.librarySystem.service.BookingService;
+import com.servletProject.librarySystem.utils.BookingUtil;
 import com.servletProject.librarySystem.utils.QueryResponseUtility;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -48,14 +48,8 @@ public class ReserveBook extends HttpServlet {
         UserEntity user = (UserEntity) session.getAttribute("user");
         final long userId = user.getId();
         try {
-            List<UserOrdersTransferObject> listOfReservedBooks = bookingService.getListOfReservedBooks(userId);
-            if (listOfReservedBooks != null && !listOfReservedBooks.isEmpty()) {
-                session.setAttribute("list_of_reserved_books", listOfReservedBooks);
-                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/my-orders");
-                requestDispatcher.forward(request, response);
-            } else {
-                QueryResponseUtility.sendMessage(request, response, session, "You have no pending orders.");
-            }
+            List<UserOrdersTransferObject> listOfReservedBooks = bookingService.getListOfReservedBooksByUser(userId);
+            BookingUtil.getReserveListAnswer(listOfReservedBooks, request, response, session, "/user-orders");
         } catch (SQLException e) {
             response.setStatus(500);
         }

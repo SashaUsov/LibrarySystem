@@ -22,9 +22,9 @@ public class LibrarianService {
         List<UserOrdersTransferObject> reservedBooks = new ArrayList<>();
         if (user != null) {
             long userId = user.getId();
-            Long[] allBooksCopyByReaderId = bookingDao.findAllBooksCopyByReaderId(userId);
+            Long[] allBooksCopyByReaderId = bookingDao.findAllReservedBooksCopyByReaderId(userId);
             if (allBooksCopyByReaderId.length > 0) {
-                BookingUtil.getReaderOrders(reservedBooks, allBooksCopyByReaderId, bookingDao, userId);
+                BookingUtil.getReaderOrdersByReaderId(reservedBooks, allBooksCopyByReaderId, bookingDao, userId);
             }
         }
         return reservedBooks;

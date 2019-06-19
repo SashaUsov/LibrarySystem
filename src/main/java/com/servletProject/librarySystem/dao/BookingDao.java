@@ -5,6 +5,7 @@ import com.servletProject.librarySystem.dao.transactionManager.TransactionManage
 import com.servletProject.librarySystem.dao.transactionManager.WrapConnection;
 import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
+import com.servletProject.librarySystem.domen.OnlineOrderBook;
 import com.servletProject.librarySystem.utils.DaoUtil;
 import com.servletProject.librarySystem.utils.DomainModelUtil;
 import lombok.NonNull;
@@ -64,7 +65,7 @@ public class BookingDao {
         }
     }
 
-    public Long[] findAllBooksCopyByReaderId(long readerId) throws SQLException {
+    public Long[] findAllReservedBooksCopyByReaderId(long readerId) throws SQLException {
         try (WrapConnection connection = TransactionManager.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(BookOrderDaoQueries.FIND_ALL_RESERVED_BOOKS_COPY_BY_READER_ID);
             preparedStatement.setLong(1, readerId);
@@ -97,6 +98,17 @@ public class BookingDao {
                 List<Map<String, String>> booksMaps = DaoUtil.getBooksMaps(resultSet);
                 assert booksMaps != null;
                 return booksMaps.stream().map(DomainModelUtil::createBookFromMap).collect(Collectors.toList());
+            } else throw new SQLException();
+        }
+    }
+
+    public List<OnlineOrderBook> findAllReservedBooksCopy() throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(BookOrderDaoQueries.FIND_ALL_RESERVED_BOOKS_COPY);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                List<OnlineOrderBook> orderBookList = DaoUtil.getAllOrders(resultSet);
+                return orderBookList;
             } else throw new SQLException();
         }
     }
