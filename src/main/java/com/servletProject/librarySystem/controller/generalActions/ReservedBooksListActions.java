@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/reserve-data")
-public class LibrarianActions extends HttpServlet {
+public class ReservedBooksListActions extends HttpServlet {
     private final BookingService bookingService = new BookingService();
     private final LibrarianService librarianService = new LibrarianService();
 

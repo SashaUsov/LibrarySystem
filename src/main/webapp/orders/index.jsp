@@ -44,9 +44,10 @@
                                             "    </form>\n" +
                                             "</div>" + "</td>\n" +
                                             "<td>" + "<div>\n" +
-                                            "    <form id=\"submitform\" action=\"/order-cancel\" method=\"post\">\n" +
+                                            "    <form id=\"submitform2\" action=\"/complete/order\" method=\"post\">\n" +
                                             "            <input type=\"hidden\" name=\"book_copy_id\" value=" + book.getUniqueId() + "><br/>\n" +
-                                            "        <button type=\"submit\"  class=\"w3-btn w3-ripple w3-teal\">Cancel order</button>\n" +
+                                            "            <input type=\"hidden\" name=\"reader_id\" value=" + book.getUserId() + "><br/>\n" +
+                                            "        <button type=\"submit\"  class=\"w3-btn w3-ripple w3-teal\">Give book</button>\n" +
                                             "    </form>\n" +
                                             "</div>" + "</td>\n" +
                                             "</tr>");

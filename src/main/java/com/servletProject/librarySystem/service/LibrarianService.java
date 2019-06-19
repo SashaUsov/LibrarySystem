@@ -38,8 +38,17 @@ public class LibrarianService {
         }
     }
 
-    public void giveBookToTheReader(Long bookCopyId, Long userId, Long librarianId) {
-
+    public void giveBookToTheReader(Long bookCopyId, Long userId, Long librarianId) throws SQLException {
+        try {
+            TransactionManager.beginTransaction();
+            librarianDao.deleteOrderByCopyIdAndUserId(bookCopyId, userId);
+            librarianDao.giveBookToTheReader(bookCopyId, userId, librarianId);
+        } catch (SQLException | NullPointerException e) {
+            TransactionManager.rollBackTransaction();
+            throw e;
+        } finally {
+            TransactionManager.commitTransaction();
+        }
     }
 
     public void cancelOrder(Long bookCopyId) throws SQLException {
