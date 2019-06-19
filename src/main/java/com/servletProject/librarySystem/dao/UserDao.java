@@ -31,6 +31,23 @@ public class UserDao {
         }
     }
 
+    public UserEntity findUserByEmail(String mail) throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(UserEntityDaoQueries.FIND_USER_BY_EMAIL);
+            preparedStatement.setString(1, mail);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            UserEntity user = null;
+
+            if (resultSet.next()) {
+                user = DomainModelUtil.createUserEntity(resultSet);
+                return user;
+            } else {
+                return null;
+            }
+
+        }
+    }
+
     public UserEntity findUserByNickName(String nickName) throws SQLException {
         try (WrapConnection connection = TransactionManager.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(UserEntityDaoQueries.FIND_USER_BY_NICK_NAME);

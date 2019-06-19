@@ -20,6 +20,7 @@
         <th>Book author</th>
         <th>Genre</th>
         <th>Publication</th>
+        <th> </th>
     </tr>
     <%
         if (request != null) {
@@ -36,6 +37,12 @@
                                         "<td>" + book.getGenre() + "</td>\n" +
                                         "<td>" + book.getYearOfPublication() + "</td>\n" +
                                         "<td>" +
+                                        "<td>" + "<div>\n" +
+                                        "    <form id=\"submitform\" action=\"/order-cancel\" method=\"post\">\n" +
+                                        "            <input type=\"hidden\" name=\"copy_id\" value=" + book.getUniqueId() + "><br/>\n" +
+                                        "        <button type=\"submit\"  class=\"w3-btn w3-ripple w3-teal\">Cancel order</button>\n" +
+                                        "    </form>\n" +
+                                        "</div>" + "</td>\n" +
                                         "</tr>");
                 }
             }

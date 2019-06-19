@@ -26,7 +26,7 @@ public class DaoUtil {
 
     private static List<Map<String, String>> createBookCatalog(ResultSet resultSet) throws SQLException {
         List<Map<String, String>> bookCatalod = new ArrayList<>();
-        while (resultSet.next()) {
+        do {
             Map<String, String> book = new HashMap<>();
             book.put("id", String.valueOf(resultSet.getLong("id")));
             book.put("bookTitle", resultSet.getString("book_title"));
@@ -36,7 +36,7 @@ public class DaoUtil {
             book.put("totalAmount", String.valueOf(resultSet.getLong("total_amount")));
 
             bookCatalod.add(book);
-        }
+        } while (resultSet.next());
         return bookCatalod;
     }
 

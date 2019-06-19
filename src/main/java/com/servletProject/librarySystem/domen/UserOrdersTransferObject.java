@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class UserOrdersTransferObject {
     private Long uniqueId;
+    private Long userId;
     private String bookTitle;
     private String bookAuthor;
     private int yearOfPublication;

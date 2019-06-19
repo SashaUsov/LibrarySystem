@@ -27,6 +27,9 @@
                 for (String role : roles) {
                     if ("ADMIN".equals(role)) out.println("<button class=\"w3-btn w3-hover-green w3-round-large\" " +
                                                                   "onclick=\"location.href='/admin'\">Admin page</button>");
+                    if ("LIBRARIAN".equals(role) || "ADMIN".equals(role))
+                        out.println("<button class=\"w3-btn w3-hover-green w3-round-large\" " +
+                                                                  "onclick=\"location.href='/\"/reserved-books\"'\">Reserved books</button>");
                 }
             }
         %>

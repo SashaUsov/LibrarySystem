@@ -78,7 +78,7 @@ public class BookingDao {
     public Long[] findAllOrderedBookFromCatalog(Long[] copyIdList) throws SQLException {
         try (WrapConnection connection = TransactionManager.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(BookOrderDaoQueries.FIND_ALL_BOOKS_ID_BY_COPY_ID);
-            final Array sqlArray = connection.createArrayOf("bigint", copyIdList);
+            final Array sqlArray = connection.createArrayOf("int8", copyIdList);
             preparedStatement.setArray(1, sqlArray);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -94,7 +94,8 @@ public class BookingDao {
             preparedStatement.setLong(1, bookId);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                @NonNull List<Map<String, String>> booksMaps = DaoUtil.getBooksMaps(resultSet);
+                List<Map<String, String>> booksMaps = DaoUtil.getBooksMaps(resultSet);
+                assert booksMaps != null;
                 return booksMaps.stream().map(DomainModelUtil::createBookFromMap).collect(Collectors.toList());
             } else throw new SQLException();
         }

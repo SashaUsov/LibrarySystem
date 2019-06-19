@@ -31,6 +31,7 @@ public class BookCatalogAction extends HttpServlet {
             saveBook(request, response);
         } else {
             response.setStatus(422);
+            assert request != null;
             @SuppressWarnings("unchecked") HttpSession session = request.getSession();
             QueryResponseUtility.sendMessage(request, response, session, "Something went wrong :(");
         }

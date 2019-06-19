@@ -40,3 +40,5 @@ databaseChangeLog:
         file: liquibase/changelog/20190610T1932_drop_period_column_in_completed_orders_table.yaml
     - include:
         file: liquibase/changelog/20190610T1935_drop_columns_in_archive_book_usage_table.yaml
+    - include:
+        file: liquibase/changelog/20190618T1854_create_completed_orders_table_sequence.yaml

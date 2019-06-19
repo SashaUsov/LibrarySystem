@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebFilter("/book/catalog")
+@WebFilter({"/book/catalog", "/reserve-data"})
 public class BookCatalogPageFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

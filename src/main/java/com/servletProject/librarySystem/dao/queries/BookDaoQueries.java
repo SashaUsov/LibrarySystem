@@ -18,8 +18,6 @@ public class BookDaoQueries {
 
     public static final String FIND_TOTAL_AMOUNT_BY_BOOK_ID = "SELECT total_amount FROM book_catalog WHERE id= ?";
 
-    public static final String DELETE_BOOK_COPY_BY_COPY_ID = "DELETE FROM copies_of_books WHERE id= ?";
-
     public static final String FIND_ALL_BOOK_FROM_CATALOG = "SELECT * FROM book_catalog";
 
     public static final String FIND_ALL_BOOK_COPY = "SELECT * FROM copies_of_books WHERE id_book= ?";

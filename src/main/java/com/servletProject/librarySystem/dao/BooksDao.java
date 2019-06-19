@@ -8,6 +8,7 @@ import com.servletProject.librarySystem.utils.DaoUtil;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -70,8 +71,11 @@ public class BooksDao {
     public List<Map<String, String>> getAllBook() throws SQLException {
         try (WrapConnection connection = TransactionManager.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(BookDaoQueries.FIND_ALL_BOOK_FROM_CATALOG);
-            final ResultSet resultSet = preparedStatement.executeQuery();
-            List<Map<String, String>> bookCatalog = DaoUtil.getBooksMaps(resultSet);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Map<String, String>> bookCatalog = new ArrayList<>();
+            if (resultSet.next()) {
+                bookCatalog = DaoUtil.getBooksMaps(resultSet);
+            }
             return bookCatalog;
         }
     }
