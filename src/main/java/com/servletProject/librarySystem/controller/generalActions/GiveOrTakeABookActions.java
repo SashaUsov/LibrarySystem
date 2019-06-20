@@ -37,6 +37,20 @@ public class GiveOrTakeABookActions extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        try {
+            Long copyId = Long.valueOf(request.getParameter("order_book_copy_id"));
+            Long userId = Long.valueOf(request.getParameter("order_user_id"));
+            String bookCondition = request.getParameter("book_condition");
+            if (bookCondition != null && !bookCondition.isEmpty()) {
+                librarianService.returnBookToTheCatalog(userId, copyId, bookCondition);
+                response.setStatus(201);
+                QueryResponseUtility.sendMessage(request, response,
+                                                 request.getSession(), "Book is successfully returned to the catalog");
+            } else {
+                response.setStatus(400);
+            }
+        } catch (SQLException e) {
+            response.setStatus(500);
+        }
     }
 }

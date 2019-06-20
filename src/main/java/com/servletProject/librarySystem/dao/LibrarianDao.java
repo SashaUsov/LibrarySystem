@@ -68,4 +68,35 @@ public class LibrarianDao {
         }
         return completedOrders;
     }
+
+    public void putBookInUsageArchive(Long copyId, Long readerId, String condition) throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(LibrarianDaoQueries.PUT_THE_BOOK_IN_USAGE_ARCHIVE);
+            long id = DaoUtil.getNextUserId(LibrarianDaoQueries.GET_NEXT_USAGE_ID);
+
+            preparedStatement.setLong(1, id);
+            preparedStatement.setLong(2, readerId);
+            preparedStatement.setLong(3, copyId);
+            preparedStatement.setString(4, condition);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public void updateAvailabilityAndConditionOfCopy(Long copyId, String condition, boolean availability) throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(LibrarianDaoQueries.UPDATE_BOOK_COPY_INFO);
+            preparedStatement.setBoolean(1, availability);
+            preparedStatement.setString(2, condition);
+            preparedStatement.setLong(3, copyId);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public void deleteFromCompletedOrdersByCopyId(Long copyId) throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(LibrarianDaoQueries.DELETE_COMPLETED_ORDER_BY_COPY_ID);
+            preparedStatement.setLong(1, copyId);
+            preparedStatement.executeUpdate();
+        }
+    }
 }

@@ -130,7 +130,38 @@ public class LibrarianService {
         }
     }
 
-    public void returnBookToTheCatalog(Long readerId, Long copyId, String condition) {
+    public void returnBookToTheCatalog(Long readerId, Long copyId, String condition) throws SQLException {
+        try {
+            TransactionManager.beginTransaction();
+            librarianDao.putBookInUsageArchive(copyId, readerId, condition);
+            librarianDao.deleteFromCompletedOrdersByCopyId(copyId);
+            updateCopyOfBookInfo(copyId, condition);
+        } catch (SQLException | NullPointerException e) {
+            TransactionManager.rollBackTransaction();
+            throw e;
+        } finally {
+            TransactionManager.commitTransaction();
+        }
+    }
 
+    private void updateCopyOfBookInfo(Long copyId, String condition) throws SQLException {
+        boolean availability = isAvailability(condition);
+        librarianDao.updateAvailabilityAndConditionOfCopy(copyId, condition, availability);
+    }
+
+    private boolean isAvailability(String condition) {
+        boolean b = true;
+        switch (condition) {
+            case "good":
+                b = true;
+                break;
+            case "bad":
+                b = true;
+                break;
+            case "unusable":
+                b = false;
+                break;
+        }
+        return b;
     }
 }
