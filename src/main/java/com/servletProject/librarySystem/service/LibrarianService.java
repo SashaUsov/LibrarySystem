@@ -89,6 +89,23 @@ public class LibrarianService {
         }
     }
 
+    public List<UserOrdersTransferObject> getListOfAllCompletedOrders() throws SQLException {
+        try {
+            TransactionManager.beginTransaction();
+            List<UserOrdersTransferObject> reservedBooks = new ArrayList<>();
+            List<CompletedOrders> completedOrders = librarianDao.findAllCompletedOrders();
+            if (completedOrders != null && !completedOrders.isEmpty()) {
+                findAllOrderParameters(reservedBooks, completedOrders);
+            }
+            return reservedBooks;
+        } catch (SQLException | NullPointerException e) {
+            TransactionManager.rollBackTransaction();
+            throw e;
+        } finally {
+            TransactionManager.commitTransaction();
+        }
+    }
+
     private void createCompletedOrdersList(List<UserOrdersTransferObject> reservedBooks, long userId) throws SQLException {
         List<CompletedOrders> completedOrders = librarianDao.findAllCompletedOrdersCopyIdByUserId(userId);
         if (completedOrders != null && !completedOrders.isEmpty()) {

@@ -13,4 +13,6 @@ public class LibrarianDaoQueries {
                                                        "VALUES (?, ?, ?, ?)";
 
     public static final String FIND_ALL_COMPLETED_ORDERS_BY_READER_ID = "SELECT * FROM completed_orders WHERE id_reader= ?";
+
+    public static final String FIND_ALL_COMPLETED_ORDERS = "SELECT * FROM completed_orders";
 }

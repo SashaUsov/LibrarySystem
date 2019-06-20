@@ -49,11 +49,23 @@ public class LibrarianDao {
             PreparedStatement preparedStatement = connection.prepareStatement(LibrarianDaoQueries.FIND_ALL_COMPLETED_ORDERS_BY_READER_ID);
             preparedStatement.setLong(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<CompletedOrders> completedOrders = new ArrayList<>();
-            if (resultSet.next()) {
-                completedOrders = DaoUtil.createCompletedOrders(resultSet);
-            }
-            return completedOrders;
+            return getCompletedOrdersList(resultSet);
         }
+    }
+
+    public List<CompletedOrders> findAllCompletedOrders() throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(LibrarianDaoQueries.FIND_ALL_COMPLETED_ORDERS);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return getCompletedOrdersList(resultSet);
+        }
+    }
+
+    private List<CompletedOrders> getCompletedOrdersList(ResultSet resultSet) throws SQLException {
+        List<CompletedOrders> completedOrders = new ArrayList<>();
+        if (resultSet.next()) {
+            completedOrders = DaoUtil.createCompletedOrders(resultSet);
+        }
+        return completedOrders;
     }
 }

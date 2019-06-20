@@ -3,9 +3,9 @@ package com.servletProject.librarySystem.controller.generalActions;
 import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.domen.UserOrdersTransferObject;
 import com.servletProject.librarySystem.service.LibrarianService;
+import com.servletProject.librarySystem.utils.GeneralActionsHelper;
 import com.servletProject.librarySystem.utils.QueryResponseUtility;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -61,12 +61,6 @@ public class CompletedOrdersController extends HttpServlet{
                                               HttpSession session, String readerEmail, String path)
             throws SQLException, ServletException, IOException {
         List<UserOrdersTransferObject> listOfCompletedOrders = librarianService.getListOfBooksHeldByReader(readerEmail);
-        if (listOfCompletedOrders != null && !listOfCompletedOrders.isEmpty()) {
-            session.setAttribute("list_of_completed_orders", listOfCompletedOrders);
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher(path);
-            requestDispatcher.forward(request, response);
-        } else {
-            QueryResponseUtility.sendMessage(request, response, session, "The user is currently not reading books.");
-        }
+        GeneralActionsHelper.giveAnswer(listOfCompletedOrders, session, request, response, path);
     }
 }
