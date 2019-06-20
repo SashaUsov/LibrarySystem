@@ -38,7 +38,16 @@
                                             "<td>" + book.getYearOfPublication() + "</td>\n" +
                                             "<td>" + "<div>\n" +
                                             "    <form id=\"submitform\" action=\"/complete/order\" method=\"get\">\n" +
-                                            "            <input type=\"hidden\" name=\"book_order_copy_id\" value=" + book.getUniqueId() + "><br/>\n" +
+                                            "            <input type=\"hidden\" name=\"order_book_copy_id\" value=" + book.getUniqueId() + "><br/>\n" +
+                                            "            <input type=\"hidden\" name=\"order_user_id\" value=" + book.getUserId() + "><br/>\n" +
+                                                            "<label>Book condition:\n" +
+                                            "                    <input type=\"text\" name=\"book_condition\" list=\"condition\"><br/>\n" +
+                                            "                </label>" +
+                                                        "<datalist id=\"condition\">\n" +
+                                            "                <option>good</option>\n" +
+                                            "                <option>bad</option>\n" +
+                                            "                <option>unusable</option>\n" +
+                                            "            </datalist>" +
                                             "        <button type=\"submit\"  class=\"w3-btn w3-ripple w3-teal\">Return book</button>\n" +
                                             "    </form>\n" +
                                             "</div>" + "</td>\n" +

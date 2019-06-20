@@ -1,0 +1,10 @@
+databaseChangeLog:
+
+    - changeSet:
+        id: sequence_on_archive_book_usage_table_sequence
+        author: sashaVosu
+        changes:
+        - createSequence:
+            incrementBy: 1
+            sequenceName: seq_archive_book_usage_id
+            startValue: 1
