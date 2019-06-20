@@ -13,12 +13,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
 
-public class LiquibaseRun {
+class LiquibaseRun {
     private static Properties dbProps;
 
     private static void loadPropertyFile() {
         try (InputStream in = LiquibaseRun.class.getClassLoader().getResourceAsStream("db.properties")) {
-            dbProps  = new Properties();
+            dbProps = new Properties();
             dbProps.load(in);
         } catch (IOException e) {
             e.printStackTrace();

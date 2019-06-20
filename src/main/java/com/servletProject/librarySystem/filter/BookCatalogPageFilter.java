@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.util.List;
 
 @WebFilter({"/book/catalog", "/reserve-data", "/reserved-books",
-           "/orders", "/complete/order", "/all-orders",
-           "/all/completed"})
+        "/orders", "/complete/order", "/all-orders",
+        "/all/completed"})
 public class BookCatalogPageFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

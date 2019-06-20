@@ -27,7 +27,7 @@ public class DomainModelUtil {
     }
 
     public static BookCatalog createBookFromMap(Map<String, String> book) {
-        BookCatalog bookCatalog= new BookCatalog();
+        BookCatalog bookCatalog = new BookCatalog();
         bookCatalog.setId(Long.valueOf(book.get("id")));
         bookCatalog.setBookAuthor(book.get("bookAuthor"));
         bookCatalog.setBookTitle(book.get("bookTitle"));

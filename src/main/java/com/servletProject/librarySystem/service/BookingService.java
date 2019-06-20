@@ -50,7 +50,7 @@ public class BookingService {
     public List<UserOrdersTransferObject> getListOfAllReservedBooks() throws SQLException {
         try {
             TransactionManager.beginTransaction();
-            List<OnlineOrderBook> reservedBooksCopy= bookingDao.findAllReservedBooksCopy();
+            List<OnlineOrderBook> reservedBooksCopy = bookingDao.findAllReservedBooksCopy();
             List<UserOrdersTransferObject> reservedBooks = new ArrayList<>();
             if (!reservedBooksCopy.isEmpty()) {
                 BookingUtil.getReaderOrdersByReaderId(reservedBooks, reservedBooksCopy, bookingDao);

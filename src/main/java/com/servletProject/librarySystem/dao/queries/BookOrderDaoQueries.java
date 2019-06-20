@@ -4,9 +4,6 @@ public class BookOrderDaoQueries {
 
     public static final String GET_NEXT_ORDER_ID = "SELECT nextval('seq_book_order_id')";
 
-    public static final String FIND_AVAILABILITY_OF_BOOK_COPY_BY_COPY_ID =
-            "SELECT availability FROM copies_of_books WHERE id= ?";
-
     public static final String UPDATE_AVAILABILITY_OF_BOOK_COPY =
             "UPDATE copies_of_books SET availability= ? WHERE id= ?";
 
@@ -20,5 +17,6 @@ public class BookOrderDaoQueries {
     public static final String FIND_ALL_BOOKS_ID_BY_COPY_ID = "SELECT id_book FROM copies_of_books WHERE id = ANY (?::int8[])";
 
     public static final String FIND_BOOK_BY_ID = "SELECT * FROM book_catalog WHERE id= ?";
+
     public static final String FIND_ALL_RESERVED_BOOKS_COPY = "SELECT * FROM book_order";
 }

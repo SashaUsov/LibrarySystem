@@ -27,7 +27,6 @@ public class UserDao {
             } else {
                 return null;
             }
-
         }
     }
 
@@ -44,7 +43,6 @@ public class UserDao {
             } else {
                 return null;
             }
-
         }
     }
 

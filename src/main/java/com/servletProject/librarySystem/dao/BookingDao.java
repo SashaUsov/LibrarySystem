@@ -8,7 +8,6 @@ import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.domen.OnlineOrderBook;
 import com.servletProject.librarySystem.utils.DaoUtil;
 import com.servletProject.librarySystem.utils.DomainModelUtil;
-import lombok.NonNull;
 
 import java.sql.Array;
 import java.sql.PreparedStatement;
@@ -19,17 +18,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class BookingDao {
-
-    public boolean isAvailable(long id) throws SQLException {
-        try (WrapConnection connection = TransactionManager.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(BookOrderDaoQueries.FIND_AVAILABILITY_OF_BOOK_COPY_BY_COPY_ID);
-            preparedStatement.setLong(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getBoolean("availability");
-            } else throw new SQLException();
-        }
-    }
 
     public void updateAvailabilityOfCopy(boolean availability, long id) throws SQLException {
         try (WrapConnection connection = TransactionManager.getConnection()) {

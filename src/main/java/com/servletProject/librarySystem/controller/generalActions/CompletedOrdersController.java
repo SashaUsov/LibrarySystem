@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/orders/complete")
-public class CompletedOrdersController extends HttpServlet{
+public class CompletedOrdersController extends HttpServlet {
     private final LibrarianService librarianService = new LibrarianService();
 
     @Override
@@ -43,7 +43,7 @@ public class CompletedOrdersController extends HttpServlet{
             final HttpSession session = request.getSession();
             try {
                 UserEntity user = (UserEntity) session.getAttribute("user");
-                if(user != null) {
+                if (user != null) {
                     final String mail = user.getMail();
                     getCompletedOrdersListByUser(request, response, session, mail, "/my-library");
                 } else {

@@ -16,11 +16,14 @@ public class QueryResponseUtility {
         long accessLevel = 0;
         for (String role : roles) {
             switch (role) {
-                case "USER" : accessLevel++;
+                case "USER":
+                    accessLevel++;
                     break;
-                case "ADMIN" : accessLevel++;
+                case "ADMIN":
+                    accessLevel++;
                     break;
-                case "LIBRARIAN" : accessLevel++;
+                case "LIBRARIAN":
+                    accessLevel++;
                     break;
             }
         }
@@ -37,7 +40,7 @@ public class QueryResponseUtility {
     }
 
     public static void sendMessage(ServletRequest request, ServletResponse response,
-                                       HttpSession session, String message)
+                                   HttpSession session, String message)
             throws ServletException, IOException {
         session.setAttribute("message", message);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/messagepage");
