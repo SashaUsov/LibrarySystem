@@ -14,7 +14,7 @@
 </div>
 
 <div class="w3-container w3-center w3-green">
-    <h2>My pending orders</h2>
+    <h2>My library</h2>
 
     <table class="w3-table-all">
         <tr class="w3-blue">
@@ -22,26 +22,19 @@
             <th>Book author</th>
             <th>Genre</th>
             <th>Publication</th>
-            <th> </th>
         </tr>
 
         <%
             if (request != null) {
-                final List<UserOrdersTransferObject> reservedBooks = (List<UserOrdersTransferObject>) request
-                        .getSession().getAttribute("list_of_reserved_books");
-                if (reservedBooks != null && !reservedBooks.isEmpty()) {
-                    for (UserOrdersTransferObject book : reservedBooks) {
+                final List<UserOrdersTransferObject> listOfCompletedOrders = (List<UserOrdersTransferObject>) request
+                        .getSession().getAttribute("list_of_completed_orders");
+                if (listOfCompletedOrders != null && !listOfCompletedOrders.isEmpty()) {
+                    for (UserOrdersTransferObject book : listOfCompletedOrders) {
                         out.println("<tr>\n" +
                                             "<td>" + book.getBookTitle() + "</td>\n" +
                                             "<td>" + book.getBookAuthor() + "</td>\n" +
                                             "<td>" + book.getGenre() + "</td>\n" +
                                             "<td>" + book.getYearOfPublication() + "</td>\n" +
-                                            "<td>" + "<div>\n" +
-                                            "    <form id=\"submitform\" action=\"/order-cancel\" method=\"post\">\n" +
-                                            "            <input type=\"hidden\" name=\"book_copy_id\" value=" + book.getUniqueId() + "><br/>\n" +
-                                            "        <button type=\"submit\"  class=\"w3-btn w3-ripple w3-teal\">Cancel order</button>\n" +
-                                            "    </form>\n" +
-                                            "</div>" + "</td>\n" +
                                             "</tr>");
                     }
                 }

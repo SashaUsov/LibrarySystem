@@ -28,7 +28,7 @@ public class BookingUtil {
         }
     }
 
-    private static void createOrdersTransferObject(List<UserOrdersTransferObject> reservedBooks, Long uniqueId,
+    public static void createOrdersTransferObject(List<UserOrdersTransferObject> reservedBooks, Long uniqueId,
                                                   Long bookId, BookingDao bookingDao, Long userId)
             throws SQLException {
         List<BookCatalog> book = bookingDao.findAllBooksParametersIn(bookId);

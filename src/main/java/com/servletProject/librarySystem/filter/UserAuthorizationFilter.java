@@ -12,7 +12,7 @@ import java.util.List;
 
 @WebFilter(urlPatterns = {"/userpage", "/books", "/booking", "/detail", "/workwithbooks",
         "/book/search-by-title", "/book/search-by-author", "/book/search-by-genre",
-        "/user-orders", "/order-cancel"})
+        "/user-orders", "/order-cancel", "/my-library", "/orders/complete"})
 public class UserAuthorizationFilter implements Filter {
 
     @Override

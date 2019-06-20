@@ -2,13 +2,17 @@ package com.servletProject.librarySystem.utils;
 
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.dao.transactionManager.WrapConnection;
+import com.servletProject.librarySystem.domen.CompletedOrders;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.domen.OnlineOrderBook;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DaoUtil {
@@ -58,7 +62,7 @@ public class DaoUtil {
     }
 
     public static List<CopiesOfBooks> returnAvailableBooks(List<CopiesOfBooks> bookList) {
-        return bookList.stream().filter(book -> book.isAvailability() == true).collect(Collectors.toList());
+        return bookList.stream().filter(CopiesOfBooks::isAvailability).collect(Collectors.toList());
     }
 
     public static Long[] getAllBooksId(ResultSet resultSet, String columnName) throws SQLException {
@@ -80,5 +84,18 @@ public class DaoUtil {
             booksIdList.add(onlineOrderBook);
         } while (resultSet.next());
         return booksIdList;
+    }
+
+    public static List<CompletedOrders> createCompletedOrders(ResultSet resultSet) throws SQLException {
+        List<CompletedOrders> ordersList = new ArrayList<>();
+        do {
+            CompletedOrders completedOrders = new CompletedOrders();
+            completedOrders.setId(resultSet.getLong("id"));
+            completedOrders.setIdReader(resultSet.getLong("id_reader"));
+            completedOrders.setIdLibrarian(resultSet.getLong("id_librarian"));
+            completedOrders.setIdBook(resultSet.getLong("id_book"));
+            ordersList.add(completedOrders);
+        } while (resultSet.next());
+        return ordersList;
     }
 }

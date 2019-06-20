@@ -11,4 +11,6 @@ public class LibrarianDaoQueries {
 
     public static final String GIVE_BOOK_TO_THE_USER = "INSERT INTO completed_orders (id, id_reader, id_librarian, id_book)" +
                                                        "VALUES (?, ?, ?, ?)";
+
+    public static final String FIND_ALL_COMPLETED_ORDERS_BY_READER_ID = "SELECT * FROM completed_orders WHERE id_reader= ?";
 }

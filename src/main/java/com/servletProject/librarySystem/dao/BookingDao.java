@@ -71,8 +71,7 @@ public class BookingDao {
             preparedStatement.setLong(1, readerId);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                Long[] copyIdList = DaoUtil.getAllBooksId(resultSet, "book_copy_id");
-                return copyIdList;
+                return DaoUtil.getAllBooksId(resultSet, "book_copy_id");
             } else throw new SQLException();
         }
     }
@@ -83,8 +82,7 @@ public class BookingDao {
             preparedStatement.setArray(1, sqlArray);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                Long[] orderedBooksIdList = DaoUtil.getAllBooksId(resultSet, "id_book");
-                return orderedBooksIdList;
+                return DaoUtil.getAllBooksId(resultSet, "id_book");
             } else throw new SQLException();
         }
     }
@@ -107,8 +105,7 @@ public class BookingDao {
             PreparedStatement preparedStatement = connection.prepareStatement(BookOrderDaoQueries.FIND_ALL_RESERVED_BOOKS_COPY);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                List<OnlineOrderBook> orderBookList = DaoUtil.getAllOrders(resultSet);
-                return orderBookList;
+                return DaoUtil.getAllOrders(resultSet);
             } else throw new SQLException();
         }
     }

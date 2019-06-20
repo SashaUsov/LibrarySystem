@@ -55,6 +55,9 @@
         out.println("<form id=\"submitform\" action=\"/booking\" method=\"get\">\n" +
                             "<button type=\"submit\"  class=\"w3-btn w3-ripple w3-teal\">To my orders pending</button>\n"+
                             "</form>\n");
+        out.println("<form id=\"submitform2\" action=\"/orders/complete\" method=\"post\">\n" +
+                            "<button type=\"submit\"  class=\"w3-btn w3-ripple w3-teal\">My reading library</button>\n"+
+                            "</form>\n");
         out.println("<button class=\"w3-btn w3-block w3-red w3-left-align\" onclick=\"location.href='/logout/exit'\">Logout</button>\n");
     }
 %>

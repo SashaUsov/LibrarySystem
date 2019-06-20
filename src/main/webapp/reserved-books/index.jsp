@@ -30,6 +30,16 @@
             </form>
         </div>
     </div>
+    <div class="w3-bar w3-padding-large w3-padding-24">
+        <div>
+            <form id="submitform3" action="/orders/complete" method="get">
+                <label>Reader email:
+                    <input type="text" name="reader_email"><br/>
+                </label>
+                <button type="submit" class="w3-btn w3-ripple w3-teal">Completed orders by reader email</button>
+            </form>
+        </div>
+    </div>
 </div>
 <br>
 

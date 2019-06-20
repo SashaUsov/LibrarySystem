@@ -3,10 +3,14 @@ package com.servletProject.librarySystem.dao;
 import com.servletProject.librarySystem.dao.queries.LibrarianDaoQueries;
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.dao.transactionManager.WrapConnection;
+import com.servletProject.librarySystem.domen.CompletedOrders;
 import com.servletProject.librarySystem.utils.DaoUtil;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LibrarianDao {
 
@@ -37,6 +41,19 @@ public class LibrarianDao {
             preparedStatement.setLong(3, librarianId);
             preparedStatement.setLong(4, copyId);
             preparedStatement.executeUpdate();
+        }
+    }
+
+    public List<CompletedOrders> findAllCompletedOrdersCopyIdByUserId(long userId) throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(LibrarianDaoQueries.FIND_ALL_COMPLETED_ORDERS_BY_READER_ID);
+            preparedStatement.setLong(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<CompletedOrders> completedOrders = new ArrayList<>();
+            if (resultSet.next()) {
+                completedOrders = DaoUtil.createCompletedOrders(resultSet);
+            }
+            return completedOrders;
         }
     }
 }

@@ -29,6 +29,8 @@ public class GiveOrTakeABookActions extends HttpServlet {
                 QueryResponseUtility.sendMessage(request, response, session, "Order completed successfully!");
             } catch (SQLException e) {
                 response.setStatus(500);
+            } catch (NullPointerException e) {
+                QueryResponseUtility.redirectOnAuthorization(request, response);
             }
         }
     }
