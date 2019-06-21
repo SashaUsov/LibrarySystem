@@ -7,6 +7,7 @@ import com.servletProject.librarySystem.domen.UserEntity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DomainModelUtil {
@@ -64,5 +65,16 @@ public class DomainModelUtil {
                 .append(" ")
                 .append(resultSet.getString("last_name"));
         return name.toString();
+    }
+
+    public static List<CopiesOfBooks> createCopyBookCatalog(List<CopiesOfBooks> catalog, List<Map<String, String>> booksCopy) throws SQLException {
+        if (booksCopy != null) {
+            for (Map<String, String> oneBook : booksCopy) {
+                catalog.add(DomainModelUtil.createBookCopyFromMap(oneBook));
+            }
+            return DaoUtil.returnAvailableBooks(catalog);
+        } else {
+            throw new SQLException("No copies of the book were found. :(");
+        }
     }
 }

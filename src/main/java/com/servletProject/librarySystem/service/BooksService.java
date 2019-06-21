@@ -51,23 +51,12 @@ public class BooksService {
         try {
             TransactionManager.beginTransaction();
             List<Map<String, String>> booksCopy = booksDao.getAllBookCopy(bookId);
-            return createCopyBookCatalog(catalog, booksCopy);
+            return DomainModelUtil.createCopyBookCatalog(catalog, booksCopy);
         } catch (SQLException | NullPointerException e) {
             TransactionManager.rollBackTransaction();
             throw e;
         } finally {
             TransactionManager.commitTransaction();
-        }
-    }
-
-    private List<CopiesOfBooks> createCopyBookCatalog(List<CopiesOfBooks> catalog, List<Map<String, String>> booksCopy) throws SQLException {
-        if (booksCopy != null) {
-            for (Map<String, String> oneBook : booksCopy) {
-                catalog.add(DomainModelUtil.createBookCopyFromMap(oneBook));
-            }
-            return DaoUtil.returnAvailableBooks(catalog);
-        } else {
-            throw new SQLException("No copies of the book were found. :(");
         }
     }
 

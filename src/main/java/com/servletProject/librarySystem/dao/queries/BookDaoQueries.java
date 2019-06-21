@@ -27,4 +27,7 @@ public class BookDaoQueries {
     public static final String FIND_ALL_BOOK_BY_BOOK_AUTHOR = "SELECT * FROM book_catalog WHERE book_author LIKE ?";
 
     public static final String FIND_ALL_BOOK_BY_BOOK_GENRE = "SELECT * FROM book_catalog WHERE genre LIKE ?";
+
+    public static final String FIND_ALL_BOOK_COPY_BY_AVAILABILITY_AND_CONDITION =
+            "SELECT * FROM copies_of_books WHERE availability= ? AND book_condition= ?";
 }

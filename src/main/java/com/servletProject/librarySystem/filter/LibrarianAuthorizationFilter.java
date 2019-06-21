@@ -12,8 +12,9 @@ import java.util.List;
 
 @WebFilter({"/book/catalog", "/reserve-data", "/librarian-page",
         "/orders", "/complete/order", "/all-orders",
-        "/all/completed", "/archive"})
-public class BookCatalogPageFilter implements Filter {
+        "/all/completed", "/archive", "/books/unusable",
+        "/unusable-list"})
+public class LibrarianAuthorizationFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 

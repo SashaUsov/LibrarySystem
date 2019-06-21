@@ -1,6 +1,7 @@
 package com.servletProject.librarySystem.service;
 
 import com.servletProject.librarySystem.dao.BookingDao;
+import com.servletProject.librarySystem.dao.BooksDao;
 import com.servletProject.librarySystem.dao.LibrarianDao;
 import com.servletProject.librarySystem.dao.UserDao;
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
@@ -17,6 +18,7 @@ public class LibrarianService {
     private final UserDao userDao = new UserDao();
     private final BookingDao bookingDao = new BookingDao();
     private final LibrarianDao librarianDao = new LibrarianDao();
+    private final BooksDao booksDao = new BooksDao();
 
     public List<UserOrdersTransferObject> getAllReservedBooksByUser(String email) throws SQLException {
         try {
@@ -137,6 +139,21 @@ public class LibrarianService {
             }
             return userArchive;
         } catch (SQLException | NullPointerException e) {
+            TransactionManager.rollBackTransaction();
+            throw e;
+        } finally {
+            TransactionManager.commitTransaction();
+        }
+    }
+
+    public List<CopiesOfBooks> unusableConditionBooksList() throws SQLException {
+        try {
+            TransactionManager.beginTransaction();
+            List<CopiesOfBooks> unusableBooks = booksDao.findBooksInUnusableCondition();
+            if (unusableBooks != null && !unusableBooks.isEmpty()) {
+                return unusableBooks;
+            } else throw new SQLException();
+        } catch (SQLException e) {
             TransactionManager.rollBackTransaction();
             throw e;
         } finally {

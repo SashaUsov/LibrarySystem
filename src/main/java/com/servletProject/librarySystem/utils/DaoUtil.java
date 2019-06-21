@@ -62,7 +62,7 @@ public class DaoUtil {
         } else return null;
     }
 
-    public static List<CopiesOfBooks> returnAvailableBooks(List<CopiesOfBooks> bookList) {
+    static List<CopiesOfBooks> returnAvailableBooks(List<CopiesOfBooks> bookList) {
         return bookList.stream().filter(CopiesOfBooks::isAvailability).collect(Collectors.toList());
     }
 

@@ -3,7 +3,9 @@ package com.servletProject.librarySystem.dao;
 import com.servletProject.librarySystem.dao.queries.BookDaoQueries;
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.dao.transactionManager.WrapConnection;
+import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.utils.DaoUtil;
+import com.servletProject.librarySystem.utils.DomainModelUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -135,5 +137,24 @@ public class BooksDao {
                 return bookCopy;
             } else return null;
         }
+    }
+
+    public List<CopiesOfBooks> findBooksInUnusableCondition() throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(BookDaoQueries
+                                                                                      .FIND_ALL_BOOK_COPY_BY_AVAILABILITY_AND_CONDITION);
+            preparedStatement.setBoolean(1, true);
+            preparedStatement.setString(2, "unusable");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return getCopiesOfBooksCatalog(resultSet);
+        }
+    }
+
+    private List<CopiesOfBooks> getCopiesOfBooksCatalog(ResultSet resultSet) throws SQLException {
+        List<Map<String, String>> bookCopy = DaoUtil.createBooksCopy(resultSet);
+        if (bookCopy != null && !bookCopy.isEmpty()) {
+            List<CopiesOfBooks> copiesOfBooksList = new ArrayList<>();
+            return DomainModelUtil.createCopyBookCatalog(copiesOfBooksList, bookCopy);
+        } else return null;
     }
 }

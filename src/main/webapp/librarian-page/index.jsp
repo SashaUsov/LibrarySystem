@@ -38,6 +38,14 @@
     </div>
     <div class="w3-bar w3-padding-large w3-padding-24">
         <div>
+            <form id="submitform7" action="/books/unusable" method="get">
+                <input type="hidden"><br/>
+                <button type="submit" class="w3-btn w3-ripple w3-teal">Unusable books list</button>
+            </form>
+        </div>
+    </div>
+    <div class="w3-bar w3-padding-large w3-padding-24">
+        <div>
             <form id="submitform2" action="/reserve-data" method="post">
                 <label>Reader email:
                     <input type="text" name="user_email"><br/>
