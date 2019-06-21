@@ -103,6 +103,14 @@ public class LibrarianDao {
         }
     }
 
+    public List<ArchiveBookUsage> findAllUsageBooksArchive() throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(LibrarianDaoQueries.FIND_ALL_ARCHIVE_BOOK_USAGE);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return getArchiveBookUsage(resultSet);
+        }
+    }
+
     private List<CompletedOrders> getCompletedOrdersList(ResultSet resultSet) throws SQLException {
         List<CompletedOrders> completedOrders = new ArrayList<>();
         if (resultSet.next()) {

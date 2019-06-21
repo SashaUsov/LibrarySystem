@@ -127,6 +127,47 @@ public class LibrarianService {
         }
     }
 
+    public List<ArchiveBookTransferObject> getListOfAllArchiveUsage() throws SQLException {
+        try {
+            TransactionManager.beginTransaction();
+            List<ArchiveBookTransferObject> userArchive = new ArrayList<>();
+            List<ArchiveBookUsage> booksArchive = librarianDao.findAllUsageBooksArchive();
+            if (booksArchive != null && !booksArchive.isEmpty()) {
+                createFullArchive(userArchive, booksArchive);
+            }
+            return userArchive;
+        } catch (SQLException | NullPointerException e) {
+            TransactionManager.rollBackTransaction();
+            throw e;
+        } finally {
+            TransactionManager.commitTransaction();
+        }
+    }
+
+    private void createFullArchive(List<ArchiveBookTransferObject> userArchive, List<ArchiveBookUsage> booksArchive) throws SQLException {
+        Long[] copyIdList = booksArchive.stream().map(ArchiveBookUsage::getIdCopiesBook).toArray(Long[]::new);
+        Long[] allOrderedBookFromCatalog = bookingDao.findAllOrderedBookFromCatalog(copyIdList);
+        if (allOrderedBookFromCatalog != null && allOrderedBookFromCatalog.length > 0) {
+            findFullArchiveParameters(userArchive, booksArchive, copyIdList, allOrderedBookFromCatalog);
+        }
+    }
+
+    private void findFullArchiveParameters(List<ArchiveBookTransferObject> userArchive, List<ArchiveBookUsage> booksArchive,
+                                           Long[] copyIdList, Long[] allOrderedBookFromCatalog) throws SQLException {
+        Map<Long, Long> collect = booksArchive.stream()
+                .collect(Collectors.toMap(ArchiveBookUsage::getIdCopiesBook, ArchiveBookUsage::getIdReader));
+        for (int i = 0; i < allOrderedBookFromCatalog.length; i++) {
+            fillFullListOfArchiveUsage(userArchive, copyIdList[i], allOrderedBookFromCatalog[i], collect.get(copyIdList[i]));
+        }
+    }
+
+    private void fillFullListOfArchiveUsage(List<ArchiveBookTransferObject> userArchive, Long key,
+                                            Long bookId, Long userId) throws SQLException {
+        String name = userDao.findFullUserName(userId);
+        BookingUtil.createArchiveBookTransferObject(userArchive, key, bookId,
+                                                    bookingDao, userId, name);
+    }
+
     private void createArchiveBookUsage(UserEntity user, List<ArchiveBookTransferObject> userArchive) throws SQLException {
         long userId = user.getId();
         String name = user.getFirstName() + " " + user.getLastName();

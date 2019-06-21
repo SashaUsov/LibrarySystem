@@ -23,10 +23,23 @@ public class BooksArchiveLibrarianActions extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (request != null) {
-            final HttpSession session = request.getSession();
             try {
                 String readerEmail = request.getParameter("email");
-                getArchiveBookUsageListByUser(request, response, session, readerEmail, "/archive-list");
+                getArchiveBookUsageListByUser(request, response, request.getSession(), readerEmail, "/archive-list");
+            } catch (SQLException e) {
+                response.setStatus(500);
+            } catch (NullPointerException e) {
+                QueryResponseUtility.redirectOnAuthorization(request, response);
+            }
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        if (request != null) {
+            try {
+                getFullArchiveBookUsageList(request, response, request.getSession(), "/archive-list");
             } catch (SQLException e) {
                 response.setStatus(500);
             } catch (NullPointerException e) {
@@ -39,6 +52,13 @@ public class BooksArchiveLibrarianActions extends HttpServlet {
                                                HttpSession session, String readerEmail, String path)
             throws SQLException, ServletException, IOException {
         List<ArchiveBookTransferObject> listOfCompletedOrders = librarianService.getListOfArciveUsageByUser(readerEmail);
+        GeneralActionsHelper.giveAnswerToArchiveBookUsage(listOfCompletedOrders, session, request, response, path);
+    }
+
+    private void getFullArchiveBookUsageList(HttpServletRequest request, HttpServletResponse response,
+                                             HttpSession session, String path)
+            throws SQLException, ServletException, IOException {
+        List<ArchiveBookTransferObject> listOfCompletedOrders = librarianService.getListOfAllArchiveUsage();
         GeneralActionsHelper.giveAnswerToArchiveBookUsage(listOfCompletedOrders, session, request, response, path);
     }
 }

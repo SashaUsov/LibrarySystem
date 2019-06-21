@@ -24,4 +24,6 @@ public class LibrarianDaoQueries {
     public static final String UPDATE_BOOK_COPY_INFO = "UPDATE copies_of_books SET availability= ?, book_condition= ? WHERE id= ?";
 
     public static final String FIND_ALL_ARCHIVE_BOOK_USAGE_BY_USER_ID = "SELECT * FROM archive_book_usage WHERE id_reader= ?";
+
+    public static final String FIND_ALL_ARCHIVE_BOOK_USAGE = "SELECT * FROM archive_book_usage";
 }

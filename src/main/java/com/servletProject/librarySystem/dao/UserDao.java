@@ -79,6 +79,22 @@ public class UserDao {
         }
     }
 
+    public String findFullUserName(Long userId) throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(UserEntityDaoQueries.FIND_FULL_USER_NAME_BY_ID);
+            preparedStatement.setLong(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            String name;
+
+            if (resultSet.next()) {
+                name = DomainModelUtil.createFullUserName(resultSet);
+                return name;
+            } else {
+                return "";
+            }
+        }
+    }
+
     private long getNextUserId() throws SQLException {
             return DaoUtil.getNextUserId(UserEntityDaoQueries.GET_NEXT_ID);
     }

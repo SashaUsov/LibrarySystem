@@ -11,4 +11,6 @@ public class UserEntityDaoQueries {
                                             "password, mail, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     public static final String GET_NEXT_ID = "SELECT nextval('seq_user_id')";
+
+    public static final String FIND_FULL_USER_NAME_BY_ID = "SELECT first_name, last_name FROM user_entity WHERE id= ?";
 }

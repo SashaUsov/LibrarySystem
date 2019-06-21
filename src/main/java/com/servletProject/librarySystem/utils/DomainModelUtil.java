@@ -57,4 +57,12 @@ public class DomainModelUtil {
 
         return book;
     }
+
+    public static String createFullUserName(ResultSet resultSet) throws SQLException {
+        StringBuilder name = new StringBuilder();
+        name.append(resultSet.getString("first_name"))
+                .append(" ")
+                .append(resultSet.getString("last_name"));
+        return name.toString();
+    }
 }
