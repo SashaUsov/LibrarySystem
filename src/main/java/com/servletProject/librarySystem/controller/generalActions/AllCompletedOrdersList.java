@@ -23,7 +23,7 @@ public class AllCompletedOrdersList extends HttpServlet {
         HttpSession session = req.getSession();
         try {
             List<UserOrdersTransferObject> listOfAllCompletedOrders = librarianService.getListOfAllCompletedOrders();
-            GeneralActionsHelper.giveAnswer(listOfAllCompletedOrders, session, req, resp, "/all-orders");
+            GeneralActionsHelper.giveAnswerToCompletedOrders(listOfAllCompletedOrders, session, req, resp, "/all-orders");
         } catch (SQLException e) {
             resp.setStatus(500);
         }

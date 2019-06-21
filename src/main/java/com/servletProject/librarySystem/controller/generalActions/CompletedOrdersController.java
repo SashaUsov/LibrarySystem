@@ -61,6 +61,6 @@ public class CompletedOrdersController extends HttpServlet {
                                               HttpSession session, String readerEmail, String path)
             throws SQLException, ServletException, IOException {
         List<UserOrdersTransferObject> listOfCompletedOrders = librarianService.getListOfBooksHeldByReader(readerEmail);
-        GeneralActionsHelper.giveAnswer(listOfCompletedOrders, session, request, response, path);
+        GeneralActionsHelper.giveAnswerToCompletedOrders(listOfCompletedOrders, session, request, response, path);
     }
 }

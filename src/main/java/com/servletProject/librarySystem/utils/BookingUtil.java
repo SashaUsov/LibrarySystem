@@ -1,6 +1,7 @@
 package com.servletProject.librarySystem.utils;
 
 import com.servletProject.librarySystem.dao.BookingDao;
+import com.servletProject.librarySystem.domen.ArchiveBookTransferObject;
 import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.domen.OnlineOrderBook;
 import com.servletProject.librarySystem.domen.UserOrdersTransferObject;
@@ -67,5 +68,22 @@ public class BookingUtil {
         } else {
             QueryResponseUtility.sendMessage(request, response, session, "There are no pending orders.");
         }
+    }
+
+    public static void createArchiveBookTransferObject(List<ArchiveBookTransferObject> userArchive, Long uniqueId,
+                                                       Long bookId, BookingDao bookingDao,
+                                                       Long userId, String name) throws SQLException {
+        List<BookCatalog> book = bookingDao.findAllBooksParametersIn(bookId);
+        BookCatalog bookCatalog = book.get(0);
+        ArchiveBookTransferObject uOTO = new ArchiveBookTransferObject();
+        uOTO.setUniqueId(uniqueId);
+        uOTO.setUserId(userId);
+        uOTO.setBookTitle(bookCatalog.getBookTitle());
+        uOTO.setBookAuthor(bookCatalog.getBookAuthor());
+        uOTO.setGenre(bookCatalog.getGenre());
+        uOTO.setYearOfPublication(bookCatalog.getYearOfPublication());
+        uOTO.setName(name);
+
+        userArchive.add(uOTO);
     }
 }

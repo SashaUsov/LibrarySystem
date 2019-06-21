@@ -60,7 +60,7 @@ public class BookingDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 return DaoUtil.getAllBooksId(resultSet, "book_copy_id");
-            } else throw new SQLException();
+            } else return new Long[0];
         }
     }
     public Long[] findAllOrderedBookFromCatalog(Long[] copyIdList) throws SQLException {

@@ -3,6 +3,7 @@ package com.servletProject.librarySystem.dao;
 import com.servletProject.librarySystem.dao.queries.LibrarianDaoQueries;
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.dao.transactionManager.WrapConnection;
+import com.servletProject.librarySystem.domen.ArchiveBookUsage;
 import com.servletProject.librarySystem.domen.CompletedOrders;
 import com.servletProject.librarySystem.utils.DaoUtil;
 
@@ -61,14 +62,6 @@ public class LibrarianDao {
         }
     }
 
-    private List<CompletedOrders> getCompletedOrdersList(ResultSet resultSet) throws SQLException {
-        List<CompletedOrders> completedOrders = new ArrayList<>();
-        if (resultSet.next()) {
-            completedOrders = DaoUtil.createCompletedOrders(resultSet);
-        }
-        return completedOrders;
-    }
-
     public void putBookInUsageArchive(Long copyId, Long readerId, String condition) throws SQLException {
         try (WrapConnection connection = TransactionManager.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(LibrarianDaoQueries.PUT_THE_BOOK_IN_USAGE_ARCHIVE);
@@ -98,5 +91,31 @@ public class LibrarianDao {
             preparedStatement.setLong(1, copyId);
             preparedStatement.executeUpdate();
         }
+    }
+
+    public List<ArchiveBookUsage> findAllUsageBooksByUserId(long userId) throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(LibrarianDaoQueries.
+                                                                                      FIND_ALL_ARCHIVE_BOOK_USAGE_BY_USER_ID);
+            preparedStatement.setLong(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return getArchiveBookUsage(resultSet);
+        }
+    }
+
+    private List<CompletedOrders> getCompletedOrdersList(ResultSet resultSet) throws SQLException {
+        List<CompletedOrders> completedOrders = new ArrayList<>();
+        if (resultSet.next()) {
+            completedOrders = DaoUtil.createCompletedOrders(resultSet);
+        }
+        return completedOrders;
+    }
+
+    private List<ArchiveBookUsage> getArchiveBookUsage(ResultSet resultSet) throws SQLException {
+        List<ArchiveBookUsage> archiveBookUsages = new ArrayList<>();
+        if (resultSet.next()) {
+            archiveBookUsages = DaoUtil.createArchiveUsage(resultSet);
+        }
+        return archiveBookUsages;
     }
 }

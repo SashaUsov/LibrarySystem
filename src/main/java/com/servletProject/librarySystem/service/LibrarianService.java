@@ -4,9 +4,7 @@ import com.servletProject.librarySystem.dao.BookingDao;
 import com.servletProject.librarySystem.dao.LibrarianDao;
 import com.servletProject.librarySystem.dao.UserDao;
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
-import com.servletProject.librarySystem.domen.CompletedOrders;
-import com.servletProject.librarySystem.domen.UserEntity;
-import com.servletProject.librarySystem.domen.UserOrdersTransferObject;
+import com.servletProject.librarySystem.domen.*;
 import com.servletProject.librarySystem.utils.BookingUtil;
 
 import java.sql.SQLException;
@@ -34,14 +32,6 @@ public class LibrarianService {
             throw e;
         } finally {
             TransactionManager.commitTransaction();
-        }
-    }
-
-    private void findAllWaitingReservedCopyByUser(UserEntity user, List<UserOrdersTransferObject> reservedBooks) throws SQLException {
-        long userId = user.getId();
-        Long[] allBooksCopyByReaderId = bookingDao.findAllReservedBooksCopyByReaderId(userId);
-        if (allBooksCopyByReaderId.length > 0) {
-            BookingUtil.getReaderOrdersByReaderId(reservedBooks, allBooksCopyByReaderId, bookingDao, userId);
         }
     }
 
@@ -106,6 +96,76 @@ public class LibrarianService {
         }
     }
 
+    public void returnBookToTheCatalog(Long readerId, Long copyId, String condition) throws SQLException {
+        try {
+            TransactionManager.beginTransaction();
+            librarianDao.putBookInUsageArchive(copyId, readerId, condition);
+            librarianDao.deleteFromCompletedOrdersByCopyId(copyId);
+            updateCopyOfBookInfo(copyId, condition);
+        } catch (SQLException | NullPointerException e) {
+            TransactionManager.rollBackTransaction();
+            throw e;
+        } finally {
+            TransactionManager.commitTransaction();
+        }
+    }
+
+    public List<ArchiveBookTransferObject> getListOfArciveUsageByUser(String email) throws SQLException {
+        try {
+            TransactionManager.beginTransaction();
+            UserEntity user = userDao.findUserByEmail(email);
+            List<ArchiveBookTransferObject> userArchive = new ArrayList<>();
+            if (user != null) {
+                createArchiveBookUsage(user, userArchive);
+            }
+            return userArchive;
+        } catch (SQLException | NullPointerException e) {
+            TransactionManager.rollBackTransaction();
+            throw e;
+        } finally {
+            TransactionManager.commitTransaction();
+        }
+    }
+
+    private void createArchiveBookUsage(UserEntity user, List<ArchiveBookTransferObject> userArchive) throws SQLException {
+        long userId = user.getId();
+        String name = user.getFirstName() + " " + user.getLastName();
+        List<ArchiveBookUsage> booksArchive = librarianDao.findAllUsageBooksByUserId(userId);
+        if (booksArchive != null && !booksArchive.isEmpty()) {
+            findAllArchiveParameters(userArchive, booksArchive, name);
+        }
+    }
+
+    private void findAllArchiveParameters(List<ArchiveBookTransferObject> userArchive,
+                                          List<ArchiveBookUsage> booksArchive,
+                                          String name) throws SQLException {
+        Long[] copyIdList = booksArchive.stream().map(ArchiveBookUsage::getIdCopiesBook).toArray(Long[]::new);
+        Long[] allOrderedBookFromCatalog = bookingDao.findAllOrderedBookFromCatalog(copyIdList);
+        if (allOrderedBookFromCatalog != null && allOrderedBookFromCatalog.length > 0) {
+            fillTheListOfArchiveUsage(userArchive, booksArchive, copyIdList, allOrderedBookFromCatalog, name);
+        }
+    }
+
+    private void fillTheListOfArchiveUsage(List<ArchiveBookTransferObject> userArchive,
+                                           List<ArchiveBookUsage> booksArchive, Long[] copyIdList,
+                                           Long[] allOrderedBookFromCatalog, String name)
+            throws SQLException {
+        Map<Long, Long> collect = booksArchive.stream()
+                .collect(Collectors.toMap(ArchiveBookUsage::getIdCopiesBook, ArchiveBookUsage::getIdReader));
+        for (int i = 0; i < allOrderedBookFromCatalog.length; i++) {
+            BookingUtil.createArchiveBookTransferObject(userArchive, copyIdList[i], allOrderedBookFromCatalog[i],
+                                                        bookingDao, collect.get(copyIdList[i]), name);
+        }
+    }
+
+    private void findAllWaitingReservedCopyByUser(UserEntity user, List<UserOrdersTransferObject> reservedBooks) throws SQLException {
+        long userId = user.getId();
+        Long[] allBooksCopyByReaderId = bookingDao.findAllReservedBooksCopyByReaderId(userId);
+        if (allBooksCopyByReaderId.length > 0) {
+            BookingUtil.getReaderOrdersByReaderId(reservedBooks, allBooksCopyByReaderId, bookingDao, userId);
+        }
+    }
+
     private void createCompletedOrdersList(List<UserOrdersTransferObject> reservedBooks, long userId) throws SQLException {
         List<CompletedOrders> completedOrders = librarianDao.findAllCompletedOrdersCopyIdByUserId(userId);
         if (completedOrders != null && !completedOrders.isEmpty()) {
@@ -127,20 +187,6 @@ public class LibrarianService {
         for (int i = 0; i < allOrderedBookFromCatalog.length; i++) {
             BookingUtil.createOrdersTransferObject(reservedBooks, copyIdList[i], allOrderedBookFromCatalog[i],
                                                    bookingDao, collect.get(copyIdList[i]));
-        }
-    }
-
-    public void returnBookToTheCatalog(Long readerId, Long copyId, String condition) throws SQLException {
-        try {
-            TransactionManager.beginTransaction();
-            librarianDao.putBookInUsageArchive(copyId, readerId, condition);
-            librarianDao.deleteFromCompletedOrdersByCopyId(copyId);
-            updateCopyOfBookInfo(copyId, condition);
-        } catch (SQLException | NullPointerException e) {
-            TransactionManager.rollBackTransaction();
-            throw e;
-        } finally {
-            TransactionManager.commitTransaction();
         }
     }
 

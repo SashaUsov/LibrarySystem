@@ -2,6 +2,7 @@ package com.servletProject.librarySystem.utils;
 
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.dao.transactionManager.WrapConnection;
+import com.servletProject.librarySystem.domen.ArchiveBookUsage;
 import com.servletProject.librarySystem.domen.CompletedOrders;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.domen.OnlineOrderBook;
@@ -97,5 +98,18 @@ public class DaoUtil {
             ordersList.add(completedOrders);
         } while (resultSet.next());
         return ordersList;
+    }
+
+    public static List<ArchiveBookUsage> createArchiveUsage(ResultSet resultSet) throws SQLException {
+        List<ArchiveBookUsage> archiveBookUsages = new ArrayList<>();
+        do {
+            ArchiveBookUsage usage = new ArchiveBookUsage();
+            usage.setId(resultSet.getLong("id"));
+            usage.setIdReader(resultSet.getLong("id_reader"));
+            usage.setIdCopiesBook(resultSet.getLong("id_copies_book"));
+            usage.setBookCondition(resultSet.getString("book_condition"));
+            archiveBookUsages.add(usage);
+        } while (resultSet.next());
+        return archiveBookUsages;
     }
 }
