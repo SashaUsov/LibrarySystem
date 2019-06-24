@@ -1,10 +1,10 @@
 package com.servletProject.librarySystem.service;
 
+import com.servletProject.librarySystem.dao.BookingDao;
 import com.servletProject.librarySystem.dao.BooksDao;
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
-import com.servletProject.librarySystem.utils.DaoUtil;
 import com.servletProject.librarySystem.utils.DomainModelUtil;
 
 import java.sql.SQLException;
@@ -14,6 +14,7 @@ import java.util.Map;
 
 public class BooksService {
     private final BooksDao booksDao = new BooksDao();
+    private final BookingDao bookingDao = new BookingDao();
 
     public void saveBook(Map<String, String> paramMap) throws SQLException {
         try {
@@ -97,6 +98,26 @@ public class BooksService {
             TransactionManager.beginTransaction();
             List<Map<String, String>> bookCatalog = booksDao.findBookByGenre(bookGenre);
             return createBookCatalog(catalog, bookCatalog);
+        } catch (SQLException | NullPointerException e) {
+            TransactionManager.rollBackTransaction();
+            throw e;
+        } finally {
+            TransactionManager.commitTransaction();
+        }
+    }
+
+    public void deleteUnusableBookCopy(Long copyId) throws SQLException {
+        try {
+            TransactionManager.beginTransaction();
+            CopiesOfBooks copyOfBook = bookingDao.findBookCopyByCopyIdAndAvailability(copyId);
+            if (copyOfBook == null) {
+                throw new SQLException();
+            } else {
+                booksDao.deleteFromArchive(copyId);
+                Long bookIdByBookCopyId = booksDao.findBookIdByBookCopyId(copyId);
+                booksDao.deleteCopyById(copyId);
+                booksDao.decrementBookTotalAmount(bookIdByBookCopyId);
+            }
         } catch (SQLException | NullPointerException e) {
             TransactionManager.rollBackTransaction();
             throw e;

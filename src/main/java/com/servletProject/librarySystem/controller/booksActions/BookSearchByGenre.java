@@ -35,16 +35,17 @@ public class BookSearchByGenre extends HttpServlet {
     private void findBookByTitle(HttpServletRequest request, HttpServletResponse response, String bookGenre)
             throws ServletException, IOException {
         List<BookCatalog> booksByGenre;
+        final HttpSession session = request.getSession();
         if (!"".equals(bookGenre) && bookGenre != null) {
-            ifBookGenrePresent(request, response, bookGenre);
+            ifBookGenrePresent(request, response, session, bookGenre);
         } else {
             response.setStatus(422);
-            final HttpSession session = request.getSession();
             QueryResponseUtility.sendMessage(request, response, session, "Enter the book genre");
         }
     }
 
-    private void ifBookGenrePresent(HttpServletRequest request, HttpServletResponse response, String bookGenre) throws ServletException, IOException {
+    private void ifBookGenrePresent(HttpServletRequest request, HttpServletResponse response,
+                                    HttpSession session, String bookGenre) throws ServletException, IOException {
         List<BookCatalog> booksByGenre;
         try {
             booksByGenre = booksService.getAllBookByGenre(bookGenre);
@@ -54,7 +55,7 @@ public class BookSearchByGenre extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
             response.setStatus(500);
-            throw new DataIsNotCorrectException("Book not found!");
+            QueryResponseUtility.sendMessage(request, response, session, "Book not found");
         }
     }
 

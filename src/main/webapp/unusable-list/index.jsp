@@ -37,8 +37,8 @@
                                             "<td>" + book.getBookCondition() + "</td>\n" +
                                             "<td>" + book.isAvailability() + "</td>\n" +
                                             "<td>" + "<div>\n" +
-                                            "    <form id=\"submitform\" action=\"/order-cancel\" method=\"post\">\n" +
-                                            "            <input type=\"hidden\" name=\"/books/unusable\" value=" + book.getId() + "><br/>\n" +
+                                            "    <form id=\"submitform\" action=\"/books/unusable\" method=\"post\">\n" +
+                                            "            <input type=\"hidden\" name=\"unusable_id\" value=" + book.getId() + "><br/>\n" +
                                             "        <button type=\"submit\"  class=\"w3-btn w3-ripple w3-teal\">Delete unusable book</button>\n" +
                                             "    </form>\n" +
                                             "</div>" + "</td>\n" +

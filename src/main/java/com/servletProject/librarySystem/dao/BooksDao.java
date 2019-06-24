@@ -61,15 +61,6 @@ public class BooksDao {
         }
     }
 
-    private void incrementBookTotalAmount(long bookId) throws SQLException {
-        try (WrapConnection connection = TransactionManager.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(BookDaoQueries.UPDATE_INCREMENT_BOOK_TOTAL_AMOUNT);
-
-            preparedStatement.setLong(1, bookId);
-            preparedStatement.executeUpdate();
-        }
-    }
-
     public List<Map<String, String>> getAllBook() throws SQLException {
         try (WrapConnection connection = TransactionManager.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(BookDaoQueries.FIND_ALL_BOOK_FROM_CATALOG);
@@ -92,39 +83,6 @@ public class BooksDao {
 
     public List<Map<String, String>> findBookByGenre(String genre) throws SQLException {
         return findBookBy(BookDaoQueries.FIND_ALL_BOOK_BY_BOOK_GENRE, genre);
-    }
-
-    private List<Map<String, String>> findBookBy(String sql, String text) throws SQLException {
-        try (WrapConnection connection = TransactionManager.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, text);
-            final ResultSet resultSet = preparedStatement.executeQuery();
-            List<Map<String, String>> bookCatalog = DaoUtil.getBooksMaps(resultSet);
-            return bookCatalog;
-        }
-    }
-
-    private void decrementBookTotalAmount(long bookId) throws SQLException {
-
-        try (WrapConnection connection = TransactionManager.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(BookDaoQueries.UPDATE_DECREMENT_BOOK_TOTAL_AMOUNT);
-
-            preparedStatement.setLong(1, bookId);
-            preparedStatement.executeUpdate();
-        }
-    }
-
-    private Long findTotalAmountByBookId(long bookId) throws SQLException {
-        try (WrapConnection connection = TransactionManager.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(BookDaoQueries.FIND_TOTAL_AMOUNT_BY_BOOK_ID);
-            preparedStatement.setLong(1, bookId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            long totalAmount = 0;
-            if (resultSet.next()) {
-                totalAmount = resultSet.getLong("id");
-            }
-            return totalAmount;
-        }
     }
 
     public List<Map<String, String>> getAllBookCopy(long id) throws SQLException {
@@ -150,11 +108,74 @@ public class BooksDao {
         }
     }
 
+    public void deleteCopyById(long id) throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(BookDaoQueries
+                                                                                      .DELETE_BOOK_COPY_BY_ID_AND_AVAILABILITY);
+            preparedStatement.setLong(1, id);
+            preparedStatement.setBoolean(2, true);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public void decrementBookTotalAmount(long bookId) throws SQLException {
+
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(BookDaoQueries.UPDATE_DECREMENT_BOOK_TOTAL_AMOUNT);
+
+            preparedStatement.setLong(1, bookId);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public void deleteFromArchive(long bookId) throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(BookDaoQueries
+                                                                                      .DELETE_FROM_ARCHIVE_BY_USER_ID_AND_COPY_ID);
+            preparedStatement.setLong(1, bookId);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public Long findBookIdByBookCopyId(long copyId) throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(BookDaoQueries.FIND_BOOK_ID_BY_BOOK_COPY_ID);
+            preparedStatement.setLong(1, copyId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                long id = resultSet.getLong("id_book");
+                return id;
+            } else {
+                return null;
+            }
+        }
+    }
+
     private List<CopiesOfBooks> getCopiesOfBooksCatalog(ResultSet resultSet) throws SQLException {
         List<Map<String, String>> bookCopy = DaoUtil.createBooksCopy(resultSet);
         if (bookCopy != null && !bookCopy.isEmpty()) {
             List<CopiesOfBooks> copiesOfBooksList = new ArrayList<>();
             return DomainModelUtil.createCopyBookCatalog(copiesOfBooksList, bookCopy);
         } else return null;
+    }
+
+    private void incrementBookTotalAmount(long bookId) throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(BookDaoQueries.UPDATE_INCREMENT_BOOK_TOTAL_AMOUNT);
+
+            preparedStatement.setLong(1, bookId);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    private List<Map<String, String>> findBookBy(String sql, String text) throws SQLException {
+        try (WrapConnection connection = TransactionManager.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, text);
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            List<Map<String, String>> bookCatalog = DaoUtil.getBooksMaps(resultSet);
+            return bookCatalog;
+        }
     }
 }
