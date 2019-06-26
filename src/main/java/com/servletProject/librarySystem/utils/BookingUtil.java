@@ -1,10 +1,10 @@
 package com.servletProject.librarySystem.utils;
 
 import com.servletProject.librarySystem.dao.BookingDao;
-import com.servletProject.librarySystem.domen.dto.ArchiveBookTransferObject;
+import com.servletProject.librarySystem.domen.dto.archiveBookUsage.ArchiveBookModel;
 import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.domen.OnlineOrderBook;
-import com.servletProject.librarySystem.domen.dto.UserOrdersTransferObject;
+import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderBookModel;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class BookingUtil {
 
-    public static void getReaderOrdersByReaderId(List<UserOrdersTransferObject> reservedBooks, Long[] allBooksCopyByReaderId,
+    public static void getReaderOrdersByReaderId(List<OnlineOrderBookModel> reservedBooks, Long[] allBooksCopyByReaderId,
                                                  BookingDao bookingDao, Long userId)
             throws SQLException {
         Long[] allOrderedBooksFromCatalog = bookingDao.findAllOrderedBookFromCatalog(allBooksCopyByReaderId);
@@ -29,12 +29,12 @@ public class BookingUtil {
         }
     }
 
-    public static void createOrdersTransferObject(List<UserOrdersTransferObject> reservedBooks, Long uniqueId,
+    public static void createOrdersTransferObject(List<OnlineOrderBookModel> reservedBooks, Long uniqueId,
                                                   Long bookId, BookingDao bookingDao, Long userId)
             throws SQLException {
         List<BookCatalog> book = bookingDao.findAllBooksParametersIn(bookId);
         BookCatalog bookCatalog = book.get(0);
-        UserOrdersTransferObject uOTO = new UserOrdersTransferObject();
+        OnlineOrderBookModel uOTO = new OnlineOrderBookModel();
         uOTO.setUniqueId(uniqueId);
         uOTO.setUserId(userId);
         uOTO.setBookTitle(bookCatalog.getBookTitle());
@@ -45,7 +45,7 @@ public class BookingUtil {
         reservedBooks.add(uOTO);
     }
 
-    public static void getReaderOrdersByReaderId(List<UserOrdersTransferObject> reservedBooks, List<OnlineOrderBook> orderBooks,
+    public static void getReaderOrdersByReaderId(List<OnlineOrderBookModel> reservedBooks, List<OnlineOrderBook> orderBooks,
                                                  BookingDao bookingDao)
             throws SQLException {
         Long[] copyIdArray = orderBooks.stream().map(OnlineOrderBook::getIdBookCopy).toArray(Long[]::new);
@@ -58,7 +58,7 @@ public class BookingUtil {
         }
     }
 
-    public static void getReserveListAnswer(List<UserOrdersTransferObject> listOfReservedBooks, ServletRequest request,
+    public static void getReserveListAnswer(List<OnlineOrderBookModel> listOfReservedBooks, ServletRequest request,
                                             ServletResponse response, HttpSession session, String path)
             throws ServletException, IOException {
         if (listOfReservedBooks != null && !listOfReservedBooks.isEmpty()) {
@@ -70,12 +70,12 @@ public class BookingUtil {
         }
     }
 
-    public static void createArchiveBookTransferObject(List<ArchiveBookTransferObject> userArchive, Long uniqueId,
+    public static void createArchiveBookTransferObject(List<ArchiveBookModel> userArchive, Long uniqueId,
                                                        Long bookId, BookingDao bookingDao,
                                                        Long userId, String name) throws SQLException {
         List<BookCatalog> book = bookingDao.findAllBooksParametersIn(bookId);
         BookCatalog bookCatalog = book.get(0);
-        ArchiveBookTransferObject uOTO = new ArchiveBookTransferObject();
+        ArchiveBookModel uOTO = new ArchiveBookModel();
         uOTO.setUniqueId(uniqueId);
         uOTO.setUserId(userId);
         uOTO.setBookTitle(bookCatalog.getBookTitle());

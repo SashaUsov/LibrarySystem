@@ -1,7 +1,7 @@
-<%@ page import="com.servletProject.librarySystem.domen.dto.UserOrdersTransferObject" %>
+<%@ page import="com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderBookModel" %>
 <%@ page import="java.util.List" %>
 <%@ page import="static com.oracle.jrockit.jfr.ContentType.Address" %>
-<%@ page import="com.servletProject.librarySystem.domen.dto.ArchiveBookTransferObject" %>
+<%@ page import="com.servletProject.librarySystem.domen.dto.archiveBookUsage.ArchiveBookModel" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -29,10 +29,10 @@
 
         <%
             if (request != null) {
-                final List<ArchiveBookTransferObject> archiveBookTransferObjects = (List<ArchiveBookTransferObject>) request
+                final List<ArchiveBookModel> archiveBookModels = (List<ArchiveBookModel>) request
                         .getSession().getAttribute("list_of_archive_book");
-                if (archiveBookTransferObjects != null && !archiveBookTransferObjects.isEmpty()) {
-                    for (ArchiveBookTransferObject book : archiveBookTransferObjects) {
+                if (archiveBookModels != null && !archiveBookModels.isEmpty()) {
+                    for (ArchiveBookModel book : archiveBookModels) {
                         out.println("<tr>\n" +
                                             "<td>" + book.getUniqueId() + "</td>\n" +
                                             "<td>" + book.getBookTitle() + "</td>\n" +

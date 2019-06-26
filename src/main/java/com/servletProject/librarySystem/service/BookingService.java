@@ -4,7 +4,7 @@ import com.servletProject.librarySystem.dao.BookingDao;
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.domen.OnlineOrderBook;
-import com.servletProject.librarySystem.domen.dto.UserOrdersTransferObject;
+import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderBookModel;
 import com.servletProject.librarySystem.utils.BookingUtil;
 import org.springframework.stereotype.Service;
 
@@ -32,11 +32,11 @@ public class BookingService {
         }
     }
 
-    public List<UserOrdersTransferObject> getListOfReservedBooksByUser(long userId) throws SQLException {
+    public List<OnlineOrderBookModel> getListOfReservedBooksByUser(long userId) throws SQLException {
         try {
             TransactionManager.beginTransaction();
             Long[] allBooksCopyByReaderId = bookingDao.findAllReservedBooksCopyByReaderId(userId);
-            List<UserOrdersTransferObject> reservedBooks = new ArrayList<>();
+            List<OnlineOrderBookModel> reservedBooks = new ArrayList<>();
             if (allBooksCopyByReaderId.length > 0) {
                 BookingUtil.getReaderOrdersByReaderId(reservedBooks, allBooksCopyByReaderId, bookingDao, userId);
             }
@@ -49,11 +49,11 @@ public class BookingService {
         }
     }
 
-    public List<UserOrdersTransferObject> getListOfAllReservedBooks() throws SQLException {
+    public List<OnlineOrderBookModel> getListOfAllReservedBooks() throws SQLException {
         try {
             TransactionManager.beginTransaction();
             List<OnlineOrderBook> reservedBooksCopy = bookingDao.findAllReservedBooksCopy();
-            List<UserOrdersTransferObject> reservedBooks = new ArrayList<>();
+            List<OnlineOrderBookModel> reservedBooks = new ArrayList<>();
             if (!reservedBooksCopy.isEmpty()) {
                 BookingUtil.getReaderOrdersByReaderId(reservedBooks, reservedBooksCopy, bookingDao);
             }

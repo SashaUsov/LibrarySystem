@@ -1,8 +1,8 @@
 package com.servletProject.librarySystem.utils;
 
-import com.servletProject.librarySystem.domen.dto.ArchiveBookTransferObject;
+import com.servletProject.librarySystem.domen.dto.archiveBookUsage.ArchiveBookModel;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
-import com.servletProject.librarySystem.domen.dto.UserOrdersTransferObject;
+import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderBookModel;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class GeneralActionsHelper {
-    public static void giveAnswerToCompletedOrders(List<UserOrdersTransferObject> listOfAllCompletedOrders, HttpSession session,
+    public static void giveAnswerToCompletedOrders(List<OnlineOrderBookModel> listOfAllCompletedOrders, HttpSession session,
                                                    HttpServletRequest req, HttpServletResponse resp, String path)
             throws ServletException, IOException {
         if(listOfAllCompletedOrders != null && !listOfAllCompletedOrders.isEmpty()) {
@@ -25,7 +25,7 @@ public class GeneralActionsHelper {
         }
     }
 
-    public static void giveAnswerToArchiveBookUsage(List<ArchiveBookTransferObject> listOfAllCompletedOrders, HttpSession session,
+    public static void giveAnswerToArchiveBookUsage(List<ArchiveBookModel> listOfAllCompletedOrders, HttpSession session,
                                                     HttpServletRequest req, HttpServletResponse resp, String path)
             throws ServletException, IOException {
         if(listOfAllCompletedOrders != null && !listOfAllCompletedOrders.isEmpty()) {
