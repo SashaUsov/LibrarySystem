@@ -6,12 +6,14 @@ import com.servletProject.librarySystem.dao.transactionManager.TransactionManage
 import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.utils.DomainModelUtil;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class BooksService {
     private final BooksDao booksDao = new BooksDao();
     private final BookingDao bookingDao = new BookingDao();

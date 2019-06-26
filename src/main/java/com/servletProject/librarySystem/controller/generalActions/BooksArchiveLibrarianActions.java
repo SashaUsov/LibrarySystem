@@ -1,6 +1,6 @@
 package com.servletProject.librarySystem.controller.generalActions;
 
-import com.servletProject.librarySystem.domen.ArchiveBookTransferObject;
+import com.servletProject.librarySystem.domen.dto.ArchiveBookTransferObject;
 import com.servletProject.librarySystem.service.LibrarianService;
 import com.servletProject.librarySystem.utils.GeneralActionsHelper;
 import com.servletProject.librarySystem.utils.QueryResponseUtility;

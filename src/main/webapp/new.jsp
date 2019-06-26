@@ -1,4 +1,4 @@
-<%@ page import="com.servletProject.librarySystem.domen.UserOrdersTransferObject" %>
+<%@ page import="com.servletProject.librarySystem.domen.dto.UserOrdersTransferObject" %>
 <%@ page import="java.util.List" %>
 <body class="w3-light-grey">
 <div class="w3-container w3-blue-grey w3-opacity w3-right-align">

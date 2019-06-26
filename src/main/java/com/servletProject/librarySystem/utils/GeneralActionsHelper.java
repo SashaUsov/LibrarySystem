@@ -1,8 +1,8 @@
 package com.servletProject.librarySystem.utils;
 
-import com.servletProject.librarySystem.domen.ArchiveBookTransferObject;
+import com.servletProject.librarySystem.domen.dto.ArchiveBookTransferObject;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
-import com.servletProject.librarySystem.domen.UserOrdersTransferObject;
+import com.servletProject.librarySystem.domen.dto.UserOrdersTransferObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

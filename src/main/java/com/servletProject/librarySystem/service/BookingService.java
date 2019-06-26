@@ -4,13 +4,15 @@ import com.servletProject.librarySystem.dao.BookingDao;
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.domen.OnlineOrderBook;
-import com.servletProject.librarySystem.domen.UserOrdersTransferObject;
+import com.servletProject.librarySystem.domen.dto.UserOrdersTransferObject;
 import com.servletProject.librarySystem.utils.BookingUtil;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class BookingService {
     private BookingDao bookingDao = new BookingDao();
 

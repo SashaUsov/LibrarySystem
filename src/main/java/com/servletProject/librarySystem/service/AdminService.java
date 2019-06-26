@@ -4,10 +4,12 @@ import com.servletProject.librarySystem.dao.UserDao;
 import com.servletProject.librarySystem.dao.UserRoleDao;
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.domen.UserEntity;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public class AdminService {
     private UserDao userDao = new UserDao();
     private UserRoleDao userRoleDao = new UserRoleDao();

@@ -1,7 +1,7 @@
 package com.servletProject.librarySystem.controller.booksActions;
 
 import com.servletProject.librarySystem.domen.UserEntity;
-import com.servletProject.librarySystem.domen.UserOrdersTransferObject;
+import com.servletProject.librarySystem.domen.dto.UserOrdersTransferObject;
 import com.servletProject.librarySystem.service.BookingService;
 import com.servletProject.librarySystem.utils.BookingUtil;
 import com.servletProject.librarySystem.utils.QueryResponseUtility;

@@ -6,7 +6,10 @@ import com.servletProject.librarySystem.dao.LibrarianDao;
 import com.servletProject.librarySystem.dao.UserDao;
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.domen.*;
+import com.servletProject.librarySystem.domen.dto.ArchiveBookTransferObject;
+import com.servletProject.librarySystem.domen.dto.UserOrdersTransferObject;
 import com.servletProject.librarySystem.utils.BookingUtil;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Service
 public class LibrarianService {
     private final UserDao userDao = new UserDao();
     private final BookingDao bookingDao = new BookingDao();

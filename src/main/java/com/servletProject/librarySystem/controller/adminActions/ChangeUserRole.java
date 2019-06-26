@@ -2,10 +2,11 @@ package com.servletProject.librarySystem.controller.adminActions;
 
 import com.servletProject.librarySystem.service.AdminService;
 import lombok.SneakyThrows;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +14,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet("/admin/action")
+@RestController
+@RequestMapping("/admin/action")
 public class ChangeUserRole extends HttpServlet {
     private AdminService adminService = new AdminService();
 
@@ -41,7 +43,7 @@ public class ChangeUserRole extends HttpServlet {
             if (adminService.isUserExist(id)) {
                 String role = request.getParameter("role");
                 adminService.removeUserRole(id, role);
-                sendAnswer(request, resp, session, "Role successfully revoked");
+                sendAnswer(request, resp, session, "Roles successfully revoked");
             } else {
                 sendAnswer(request, resp, session, "User already has this role");
             }

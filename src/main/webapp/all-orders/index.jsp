@@ -1,4 +1,4 @@
-<%@ page import="com.servletProject.librarySystem.domen.UserOrdersTransferObject" %>
+<%@ page import="com.servletProject.librarySystem.domen.dto.UserOrdersTransferObject" %>
 <%@ page import="java.util.List" %>
 <%@ page import="static com.oracle.jrockit.jfr.ContentType.Address" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

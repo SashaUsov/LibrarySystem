@@ -6,11 +6,13 @@ import com.servletProject.librarySystem.dao.transactionManager.TransactionManage
 import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.exception.AuthorisationException;
 import com.servletProject.librarySystem.exception.ClientAlreadyExistsException;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class UserService {
     private UserDao userDao = new UserDao();
     private UserRoleDao userRoleDao = new UserRoleDao();

@@ -14,52 +14,52 @@ import java.util.Map;
 
 public class UserDao {
 
-    public UserEntity findUserById(long id) throws SQLException {
-        try (WrapConnection connection = TransactionManager.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(UserEntityDaoQueries.FIND_USER_BY_ID);
-            preparedStatement.setLong(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            UserEntity user = null;
+//    public UserEntity findUserById(long id) throws SQLException {
+//        try (WrapConnection connection = TransactionManager.getConnection()) {
+//            PreparedStatement preparedStatement = connection.prepareStatement(UserEntityDaoQueries.FIND_USER_BY_ID);
+//            preparedStatement.setLong(1, id);
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//            UserEntity user = null;
+//
+//            if (resultSet.next()) {
+//                user = DomainModelUtil.createUserEntity(resultSet);
+//                return user;
+//            } else {
+//                return null;
+//            }
+//        }
+//    }
 
-            if (resultSet.next()) {
-                user = DomainModelUtil.createUserEntity(resultSet);
-                return user;
-            } else {
-                return null;
-            }
-        }
-    }
+//    public UserEntity findUserByEmail(String mail) throws SQLException {
+//        try (WrapConnection connection = TransactionManager.getConnection()) {
+//            PreparedStatement preparedStatement = connection.prepareStatement(UserEntityDaoQueries.FIND_USER_BY_EMAIL);
+//            preparedStatement.setString(1, mail);
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//            UserEntity user = null;
+//
+//            if (resultSet.next()) {
+//                user = DomainModelUtil.createUserEntity(resultSet);
+//                return user;
+//            } else {
+//                return null;
+//            }
+//        }
+//    }
 
-    public UserEntity findUserByEmail(String mail) throws SQLException {
-        try (WrapConnection connection = TransactionManager.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(UserEntityDaoQueries.FIND_USER_BY_EMAIL);
-            preparedStatement.setString(1, mail);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            UserEntity user = null;
-
-            if (resultSet.next()) {
-                user = DomainModelUtil.createUserEntity(resultSet);
-                return user;
-            } else {
-                return null;
-            }
-        }
-    }
-
-    public UserEntity findUserByNickName(String nickName) throws SQLException {
-        try (WrapConnection connection = TransactionManager.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(UserEntityDaoQueries.FIND_USER_BY_NICK_NAME);
-            preparedStatement.setString(1, nickName);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            UserEntity user = null;
-
-            if (resultSet.next()) {
-                user = DomainModelUtil.createUserEntity(resultSet);
-                user.setPassword(resultSet.getString("password"));
-            }
-            return user;
-        }
-    }
+//    public UserEntity findUserByNickName(String nickName) throws SQLException {
+//        try (WrapConnection connection = TransactionManager.getConnection()) {
+//            PreparedStatement preparedStatement = connection.prepareStatement(UserEntityDaoQueries.FIND_USER_BY_NICK_NAME);
+//            preparedStatement.setString(1, nickName);
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//            UserEntity user = null;
+//
+//            if (resultSet.next()) {
+//                user = DomainModelUtil.createUserEntity(resultSet);
+//                user.setPassword(resultSet.getString("password"));
+//            }
+//            return user;
+//        }
+//    }
 
     public UserEntity save(Map<String, String> paramMap) throws SQLException {
         try (WrapConnection connection = TransactionManager.getConnection()) {
@@ -79,21 +79,21 @@ public class UserDao {
         }
     }
 
-    public String findFullUserName(Long userId) throws SQLException {
-        try (WrapConnection connection = TransactionManager.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(UserEntityDaoQueries.FIND_FULL_USER_NAME_BY_ID);
-            preparedStatement.setLong(1, userId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            String name;
-
-            if (resultSet.next()) {
-                name = DomainModelUtil.createFullUserName(resultSet);
-                return name;
-            } else {
-                return "";
-            }
-        }
-    }
+//    public String findFullUserName(Long userId) throws SQLException {
+//        try (WrapConnection connection = TransactionManager.getConnection()) {
+//            PreparedStatement preparedStatement = connection.prepareStatement(UserEntityDaoQueries.FIND_FULL_USER_NAME_BY_ID);
+//            preparedStatement.setLong(1, userId);
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//            String name;
+//
+//            if (resultSet.next()) {
+//                name = DomainModelUtil.createFullUserName(resultSet);
+//                return name;
+//            } else {
+//                return "";
+//            }
+//        }
+//    }
 
     private long getNextUserId() throws SQLException {
             return DaoUtil.getNextUserId(UserEntityDaoQueries.GET_NEXT_ID);
