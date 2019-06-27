@@ -17,15 +17,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class BookingService {
+public class BookingControllerService {
 
     private final CopiesOfBooksService copiesOfBooksService;
     private final OnlineOrderBookService orderBookService;
     private final BookCatalogService bookCatalogService;
 
-    public BookingService(CopiesOfBooksService copiesOfBooksService,
-                          OnlineOrderBookService orderBookService,
-                          BookCatalogService bookCatalogService) {
+    public BookingControllerService(CopiesOfBooksService copiesOfBooksService,
+                                    OnlineOrderBookService orderBookService,
+                                    BookCatalogService bookCatalogService) {
         this.copiesOfBooksService = copiesOfBooksService;
         this.orderBookService = orderBookService;
         this.bookCatalogService = bookCatalogService;

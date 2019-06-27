@@ -1,7 +1,7 @@
 package com.servletProject.librarySystem.controller.generalActions;
 
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
-import com.servletProject.librarySystem.service.BookingService;
+import com.servletProject.librarySystem.service.BookingControllerService;
 import com.servletProject.librarySystem.service.LibrarianService;
 import com.servletProject.librarySystem.utils.BookingUtil;
 
@@ -17,7 +17,7 @@ import java.util.List;
 
 @WebServlet("/reserve-data")
 public class ReservedBooksListActions extends HttpServlet {
-    private final BookingService bookingService = new BookingService(copiesOfBooksService, orderBookService, bookCatalogService);
+    private final BookingControllerService bookingControllerService = new BookingControllerService(copiesOfBooksService, orderBookService, bookCatalogService);
     private final LibrarianService librarianService = new LibrarianService();
 
     @Override
@@ -25,7 +25,7 @@ public class ReservedBooksListActions extends HttpServlet {
         if (request != null) {
             final HttpSession session = request.getSession();
             try {
-                List<OnlineOrderModel> listOfReservedBooks = bookingService.getListOfAllReservedBooks();
+                List<OnlineOrderModel> listOfReservedBooks = bookingControllerService.getListOfAllReservedBooks();
                 BookingUtil.getReserveListAnswer(listOfReservedBooks, request, response, session, "/orders");
             } catch (SQLException e) {
                 response.setStatus(500);

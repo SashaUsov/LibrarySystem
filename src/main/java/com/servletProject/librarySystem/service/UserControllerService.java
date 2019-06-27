@@ -1,51 +1,41 @@
 package com.servletProject.librarySystem.service;
 
 import com.servletProject.librarySystem.converter.UserEntityConverter;
-import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.domen.Role;
 import com.servletProject.librarySystem.domen.Roles;
 import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.domen.dto.userEntity.CreateUserEntityModel;
-import com.servletProject.librarySystem.domen.dto.userEntity.UserEntityModel;
-import com.servletProject.librarySystem.exception.AuthorisationException;
-import com.servletProject.librarySystem.exception.ClientAlreadyExistsException;
-import com.servletProject.librarySystem.repository.UserRepository;
-import com.servletProject.librarySystem.repository.UserRoleRepository;
+import com.servletProject.librarySystem.service.data.RoleService;
+import com.servletProject.librarySystem.service.data.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
-public class UserService {
-    private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
+public class UserControllerService {
+    private final RoleService roleService;
+    private final UserService userService;
 
-    public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository) {
-        this.userRepository = userRepository;
-        this.userRoleRepository = userRoleRepository;
+    public UserControllerService(RoleService roleService,
+                                 UserService userService) {
+        this.roleService = roleService;
+        this.userService = userService;
     }
 
     @Transactional
     public void save(CreateUserEntityModel model) throws SQLException {
 
-        Optional<UserEntity> userEntity = userRepository.findOneByMail(model.getMail());
-        userEntity.ifPresent(entity -> {
-            throw new ClientAlreadyExistsException("Client with this nick name already exists");
-        });
+        userService.checkIfTheUserExists(model.getMail());
 
         UserEntity entity = UserEntityConverter.toEntity(model);
         entity.setPermissionToOrder(true);
         entity.setLogin(false);
 
         Role role = createUserRole(entity);
-        userRoleRepository.save(role);
+        roleService.save(role);
 
-        userRepository.save(entity);
+        userService.save(entity);
     }
 
     private Role createUserRole(UserEntity entity) {

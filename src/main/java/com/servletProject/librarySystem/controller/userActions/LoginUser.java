@@ -1,7 +1,7 @@
 package com.servletProject.librarySystem.controller.userActions;
 
 import com.servletProject.librarySystem.domen.UserEntity;
-import com.servletProject.librarySystem.service.UserService;
+import com.servletProject.librarySystem.service.UserControllerService;
 import com.servletProject.librarySystem.utils.WorkWithHttpRequestUtil;
 
 import javax.servlet.RequestDispatcher;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 @WebServlet("/login/enter")
 public class LoginUser extends HttpServlet {
-    private UserService userService = new UserService(userRepository, userRoleRepository);
+    private UserControllerService userControllerService = new UserControllerService(userRepository, userRoleRepository, userService);
     private Map<String, String> paramMap = new HashMap<>();
     private List<String> paramList = Arrays.asList("nick_name", "password");
 
@@ -27,7 +27,7 @@ public class LoginUser extends HttpServlet {
         if (request != null) {
             WorkWithHttpRequestUtil.getAllParam(request, paramList, paramMap);
             try {
-                UserEntity user = userService.login(paramMap);
+                UserEntity user = userControllerService.login(paramMap);
                 if (user != null) {
                     ifLoginSuccessful(request, response, user);
                 }

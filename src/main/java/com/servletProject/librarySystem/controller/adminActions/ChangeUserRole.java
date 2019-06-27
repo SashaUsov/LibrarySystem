@@ -1,6 +1,6 @@
 package com.servletProject.librarySystem.controller.adminActions;
 
-import com.servletProject.librarySystem.service.data.AdminService;
+import com.servletProject.librarySystem.service.AdminControllerService;
 import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +17,7 @@ import java.sql.SQLException;
 @RestController
 @RequestMapping("/admin/action")
 public class ChangeUserRole extends HttpServlet {
-    private AdminService adminService = new AdminService(userRepository, userRoleRepository);
+    private AdminControllerService adminControllerService = new AdminControllerService(userRepository, userRoleRepository);
 
     @SneakyThrows
     @Override
@@ -26,7 +26,7 @@ public class ChangeUserRole extends HttpServlet {
         if (request != null) {
             long id = Long.valueOf(request.getParameter("user_id"));
             HttpSession session = request.getSession();
-            if (adminService.isUserExist(id)) {
+            if (adminControllerService.isUserExist(id)) {
                 addNewUserRole(request, resp, id, session);
             } else {
                 sendAnswer(request, resp, session, "User already has this role");
@@ -40,9 +40,9 @@ public class ChangeUserRole extends HttpServlet {
         if (request != null) {
             long id = Long.valueOf(request.getParameter("user_id"));
             HttpSession session = request.getSession();
-            if (adminService.isUserExist(id)) {
+            if (adminControllerService.isUserExist(id)) {
                 String role = request.getParameter("role");
-                adminService.removeUserRole(id, role);
+                adminControllerService.removeUserRole(id, role);
                 sendAnswer(request, resp, session, "Roles successfully revoked");
             } else {
                 sendAnswer(request, resp, session, "User already has this role");
@@ -60,7 +60,7 @@ public class ChangeUserRole extends HttpServlet {
 
     private void addNewUserRole(HttpServletRequest request, HttpServletResponse resp, long id, HttpSession session) throws SQLException, ServletException, IOException {
         String role = request.getParameter("role");
-        adminService.addUserRole(id, role);
+        adminControllerService.addUserRole(id, role);
         session.setAttribute("message", "User role added successfully");
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/messagepage");
         requestDispatcher.forward(request, resp);

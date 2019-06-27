@@ -2,7 +2,7 @@ package com.servletProject.librarySystem.controller.booksActions;
 
 import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
-import com.servletProject.librarySystem.service.BookingService;
+import com.servletProject.librarySystem.service.BookingControllerService;
 import com.servletProject.librarySystem.utils.BookingUtil;
 import com.servletProject.librarySystem.utils.QueryResponseUtility;
 
@@ -19,7 +19,7 @@ import java.util.List;
 
 @WebServlet("/booking")
 public class ReserveBook extends HttpServlet {
-    private final BookingService bookingService = new BookingService(copiesOfBooksService, orderBookService, bookCatalogService);
+    private final BookingControllerService bookingControllerService = new BookingControllerService(copiesOfBooksService, orderBookService, bookCatalogService);
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -30,7 +30,7 @@ public class ReserveBook extends HttpServlet {
         Long copyId = Long.valueOf(request.getParameter("book_copy_id"));
         if (copyId != null) {
             try {
-                bookingService.reserveABook(copyId, readerId);
+                bookingControllerService.reserveABook(copyId, readerId);
                 response.setStatus(202);
                 QueryResponseUtility.sendMessage(request, response, session, "Book successfully reserved!");
             } catch (SQLException e) {
@@ -48,7 +48,7 @@ public class ReserveBook extends HttpServlet {
         UserEntity user = (UserEntity) session.getAttribute("user");
         final long userId = user.getId();
         try {
-            List<OnlineOrderModel> listOfReservedBooks = bookingService.getListOfReservedBooksByUser(userId);
+            List<OnlineOrderModel> listOfReservedBooks = bookingControllerService.getListOfReservedBooksByUser(userId);
             BookingUtil.getReserveListAnswer(listOfReservedBooks, request, response, session, "/user-orders");
         } catch (SQLException e) {
             response.setStatus(500);

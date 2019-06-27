@@ -2,7 +2,7 @@ package com.servletProject.librarySystem.controller.userActions;
 
 import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
-import com.servletProject.librarySystem.service.UserService;
+import com.servletProject.librarySystem.service.UserControllerService;
 import com.servletProject.librarySystem.utils.WorkWithHttpRequestUtil;
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -21,7 +21,7 @@ import java.util.Map;
 
 @WebServlet("/registration/to-register")
 public class RegisterUser extends HttpServlet {
-    private UserService userService = new UserService(userRepository, userRoleRepository);
+    private UserControllerService userControllerService = new UserControllerService(userRepository, userRoleRepository, userService);
     private Map<String, String> paramMap = new HashMap<>();
     private List<String> paramList = Arrays.asList("first_name", "last_name", "nick_name",
                                                    "password", "mail", "address");
@@ -37,7 +37,7 @@ public class RegisterUser extends HttpServlet {
             response.setStatus(422);
         } else {
             try {
-                UserEntity saveUser = userService.save(paramMap);
+                UserEntity saveUser = userControllerService.save(paramMap);
                 saveUser.setLogin(true);
                 ifSaveSuccessfully(request, response, saveUser);
             } catch (SQLException e) {
