@@ -2,7 +2,7 @@ package com.servletProject.librarySystem.controller.booksActions;
 
 import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
-import com.servletProject.librarySystem.service.BooksService;
+import com.servletProject.librarySystem.service.BookCatalogService;
 import com.servletProject.librarySystem.utils.QueryResponseUtility;
 
 import javax.servlet.RequestDispatcher;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @WebServlet("/book/search-by-author")
 public class BookSearchByAuthor extends HttpServlet {
-    private final BooksService booksService = new BooksService();
+    private final BookCatalogService bookCatalogService = new BookCatalogService(bookRepository, copiesOfBooksRepository);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -48,7 +48,7 @@ public class BookSearchByAuthor extends HttpServlet {
     private void ifBookAuthorPresent(HttpServletRequest request, HttpServletResponse response, String bookAuthor) throws ServletException, IOException {
         List<BookCatalog> bookByAuthor;
         try {
-            bookByAuthor = booksService.getAllBookByAuthor(bookAuthor);
+            bookByAuthor = bookCatalogService.getAllBookByAuthor(bookAuthor);
             if (bookByAuthor != null && !bookByAuthor.isEmpty()) {
                 ifBooksExist(request, response, bookByAuthor);
             }

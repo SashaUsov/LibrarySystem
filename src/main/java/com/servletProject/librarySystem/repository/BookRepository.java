@@ -8,16 +8,17 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<BookCatalog, Long> {
 
-    Long findIdByBookTitle(String bookTitle);
+    Optional<BookCatalog> findOneByBookTitle(String bookTitle);
 
-    BookCatalog findOneByBookTitleContaining(String title);
+    List<BookCatalog> findAllByBookTitleContaining(String title);
 
-    BookCatalog findOneByBookAuthorContaining(String author);
+    List<BookCatalog> findAllByBookAuthorContaining(String author);
 
-    BookCatalog findOneByGenreContaining(String genre);
+    List<BookCatalog> findAllByGenreContaining(String genre);
 
     @Modifying
     @Query(value = "UPDATE book_catalog bc SET bc.total_amount= bc.total_amount-1 WHERE bc.id=: id",

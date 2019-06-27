@@ -1,5 +1,5 @@
 <%@ page import="com.servletProject.librarySystem.domen.BookCatalog" %>
-<%@ page import="com.servletProject.librarySystem.service.BooksService" %>
+<%@ page import="com.servletProject.librarySystem.service.BookCatalogService" %>
 <%@ page import="java.util.List" %>
 <%@ page import="static com.oracle.jrockit.jfr.ContentType.Address" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -28,8 +28,8 @@
         </tr>
 
         <%
-            BooksService booksService = new BooksService();
-            final List<BookCatalog> allBook = booksService.getAllBook();
+            BookCatalogService bookCatalogService = new BookCatalogService(bookRepository, copiesOfBooksRepository);
+            final List<BookCatalog> allBook = bookCatalogService.getAllBook();
             if (allBook != null && !allBook.isEmpty()) {
                 for (BookCatalog book : allBook) {
                     final long id = book.getId();

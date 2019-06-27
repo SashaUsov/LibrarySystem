@@ -21,7 +21,7 @@ import java.util.Map;
 
 @WebServlet("/registration/to-register")
 public class RegisterUser extends HttpServlet {
-    private UserService userService = new UserService();
+    private UserService userService = new UserService(userRepository, userRoleRepository);
     private Map<String, String> paramMap = new HashMap<>();
     private List<String> paramList = Arrays.asList("first_name", "last_name", "nick_name",
                                                    "password", "mail", "address");

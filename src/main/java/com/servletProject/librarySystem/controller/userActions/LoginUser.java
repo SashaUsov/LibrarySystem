@@ -17,7 +17,7 @@ import java.util.Map;
 
 @WebServlet("/login/enter")
 public class LoginUser extends HttpServlet {
-    private UserService userService = new UserService();
+    private UserService userService = new UserService(userRepository, userRoleRepository);
     private Map<String, String> paramMap = new HashMap<>();
     private List<String> paramList = Arrays.asList("nick_name", "password");
 

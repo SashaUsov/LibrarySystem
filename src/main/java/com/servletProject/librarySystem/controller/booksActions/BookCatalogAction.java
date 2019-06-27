@@ -1,6 +1,6 @@
 package com.servletProject.librarySystem.controller.booksActions;
 
-import com.servletProject.librarySystem.service.BooksService;
+import com.servletProject.librarySystem.service.BookCatalogService;
 import com.servletProject.librarySystem.utils.QueryResponseUtility;
 import com.servletProject.librarySystem.utils.WorkWithHttpRequestUtil;
 
@@ -20,7 +20,7 @@ import java.util.Map;
 
 @WebServlet("/books/catalog")
 public class BookCatalogAction extends HttpServlet {
-    private final BooksService booksService = new BooksService();
+    private final BookCatalogService bookCatalogService = new BookCatalogService(bookRepository, copiesOfBooksRepository);
     private Map<String, String> paramMap = new HashMap<>();
     private List<String> paramList = Arrays.asList("book_title", "book_author", "publication", "genre");
 
@@ -40,7 +40,7 @@ public class BookCatalogAction extends HttpServlet {
     private void saveBook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         WorkWithHttpRequestUtil.getAllParam(request, paramList, paramMap);
         try {
-            booksService.saveBook(paramMap);
+            bookCatalogService.saveBook(paramMap);
             response.setStatus(202);
             HttpSession session = request.getSession();
             QueryResponseUtility.sendMessage(request, response, session, "Book successfully added to catalog!");

@@ -1,5 +1,5 @@
 <%@ page import="com.servletProject.librarySystem.domen.CopiesOfBooks" %>
-<%@ page import="com.servletProject.librarySystem.service.BooksService" %>
+<%@ page import="com.servletProject.librarySystem.service.BookCatalogService" %>
 <%@ page import="java.util.List" %>
 <%@ page import="static com.oracle.jrockit.jfr.ContentType.Address" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -25,8 +25,8 @@
     <%
         if (request != null) {
             long book_id = Long.valueOf(request.getParameter("book_id"));
-            BooksService booksService = new BooksService();
-            List<CopiesOfBooks> bookCopy = booksService.getAllBookCopy(book_id);
+            BookCatalogService bookCatalogService = new BookCatalogService(bookRepository, copiesOfBooksRepository);
+            List<CopiesOfBooks> bookCopy = bookCatalogService.getAllBookCopy(book_id);
             out.println("<div class=\"w3-container w3-center w3-green\">\n" +
                                 "            <h2>Copies of the book</h2>\n" +
                                 "        </div>");
