@@ -38,7 +38,12 @@ public class UserEntity {
     @Column(name = "address")
     private String address;
 
-    @OneToMany(mappedBy = "user_role", fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role")}
+    )
     private List<Role> roles = new ArrayList<>();
 
     @Column(name = "permission_to_order")

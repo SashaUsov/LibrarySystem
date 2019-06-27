@@ -1,6 +1,6 @@
 package com.servletProject.librarySystem.controller.adminActions;
 
-import com.servletProject.librarySystem.service.AdminService;
+import com.servletProject.librarySystem.service.data.AdminService;
 import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +17,7 @@ import java.sql.SQLException;
 @RestController
 @RequestMapping("/admin/action")
 public class ChangeUserRole extends HttpServlet {
-    private AdminService adminService = new AdminService();
+    private AdminService adminService = new AdminService(userRepository, userRoleRepository);
 
     @SneakyThrows
     @Override

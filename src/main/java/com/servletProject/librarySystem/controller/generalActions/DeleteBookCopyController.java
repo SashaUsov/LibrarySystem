@@ -1,7 +1,7 @@
 package com.servletProject.librarySystem.controller.generalActions;
 
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
-import com.servletProject.librarySystem.service.BookCatalogService;
+import com.servletProject.librarySystem.service.data.BookCatalogService;
 import com.servletProject.librarySystem.service.LibrarianService;
 import com.servletProject.librarySystem.utils.GeneralActionsHelper;
 import com.servletProject.librarySystem.utils.QueryResponseUtility;

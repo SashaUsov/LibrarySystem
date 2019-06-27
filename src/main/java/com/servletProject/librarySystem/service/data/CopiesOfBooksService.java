@@ -1,4 +1,4 @@
-package com.servletProject.librarySystem.service;
+package com.servletProject.librarySystem.service.data;
 
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.exception.ThereAreNoBooksFoundException;

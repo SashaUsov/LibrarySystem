@@ -2,7 +2,7 @@ package com.servletProject.librarySystem.controller.booksActions;
 
 import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
-import com.servletProject.librarySystem.service.BookCatalogService;
+import com.servletProject.librarySystem.service.data.BookCatalogService;
 import com.servletProject.librarySystem.utils.QueryResponseUtility;
 
 import javax.servlet.RequestDispatcher;

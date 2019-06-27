@@ -1,4 +1,4 @@
-package com.servletProject.librarySystem.service;
+package com.servletProject.librarySystem.service.data;
 
 import com.servletProject.librarySystem.converter.BookCatalogConverter;
 import com.servletProject.librarySystem.domen.BookCatalog;
@@ -8,6 +8,7 @@ import com.servletProject.librarySystem.repository.BookRepository;
 import com.servletProject.librarySystem.repository.CopiesOfBooksRepository;
 import com.servletProject.librarySystem.utils.copiesOfBooksUtil.CreateCopiesOfBooksEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class BookCatalogService {
         this.copiesOfBooksRepository = copiesOfBooksRepository;
     }
 
+    @Transactional
     public void saveBook(CreateBookCatalogModel model) {
         String bookTitle = model.getBookTitle().trim();
         Optional<BookCatalog> entity = bookRepository.findOneByBookTitle(bookTitle);
