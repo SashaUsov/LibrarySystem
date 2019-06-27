@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class OnlineOrderBookModel {
+public class OnlineOrderModel {
 
     private Long uniqueId;
     private Long userId;

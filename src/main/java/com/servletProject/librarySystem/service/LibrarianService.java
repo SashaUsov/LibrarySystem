@@ -7,7 +7,7 @@ import com.servletProject.librarySystem.dao.UserDao;
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.domen.*;
 import com.servletProject.librarySystem.domen.dto.archiveBookUsage.ArchiveBookModel;
-import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderBookModel;
+import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
 import com.servletProject.librarySystem.utils.BookingUtil;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +24,11 @@ public class LibrarianService {
     private final LibrarianDao librarianDao = new LibrarianDao();
     private final BooksDao booksDao = new BooksDao();
 
-    public List<OnlineOrderBookModel> getAllReservedBooksByUser(String email) throws SQLException {
+    public List<OnlineOrderModel> getAllReservedBooksByUser(String email) throws SQLException {
         try {
             TransactionManager.beginTransaction();
             UserEntity user = userDao.findUserByEmail(email);
-            List<OnlineOrderBookModel> reservedBooks = new ArrayList<>();
+            List<OnlineOrderModel> reservedBooks = new ArrayList<>();
             if (user != null) {
                 findAllWaitingReservedCopyByUser(user, reservedBooks);
             }
@@ -67,11 +67,11 @@ public class LibrarianService {
         }
     }
 
-    public List<OnlineOrderBookModel> getListOfBooksHeldByReader(String email) throws SQLException {
+    public List<OnlineOrderModel> getListOfBooksHeldByReader(String email) throws SQLException {
         try {
             TransactionManager.beginTransaction();
             UserEntity user = userDao.findUserByEmail(email);
-            List<OnlineOrderBookModel> reservedBooks = new ArrayList<>();
+            List<OnlineOrderModel> reservedBooks = new ArrayList<>();
             if (user != null) {
                 long userId = user.getId();
                 createCompletedOrdersList(reservedBooks, userId);
@@ -85,10 +85,10 @@ public class LibrarianService {
         }
     }
 
-    public List<OnlineOrderBookModel> getListOfAllCompletedOrders() throws SQLException {
+    public List<OnlineOrderModel> getListOfAllCompletedOrders() throws SQLException {
         try {
             TransactionManager.beginTransaction();
-            List<OnlineOrderBookModel> reservedBooks = new ArrayList<>();
+            List<OnlineOrderModel> reservedBooks = new ArrayList<>();
             List<CompletedOrders> completedOrders = librarianDao.findAllCompletedOrders();
             if (completedOrders != null && !completedOrders.isEmpty()) {
                 findAllOrderParameters(reservedBooks, completedOrders);
@@ -220,7 +220,7 @@ public class LibrarianService {
         }
     }
 
-    private void findAllWaitingReservedCopyByUser(UserEntity user, List<OnlineOrderBookModel> reservedBooks) throws SQLException {
+    private void findAllWaitingReservedCopyByUser(UserEntity user, List<OnlineOrderModel> reservedBooks) throws SQLException {
         long userId = user.getId();
         Long[] allBooksCopyByReaderId = bookingDao.findAllReservedBooksCopyByReaderId(userId);
         if (allBooksCopyByReaderId.length > 0) {
@@ -228,14 +228,14 @@ public class LibrarianService {
         }
     }
 
-    private void createCompletedOrdersList(List<OnlineOrderBookModel> reservedBooks, long userId) throws SQLException {
+    private void createCompletedOrdersList(List<OnlineOrderModel> reservedBooks, long userId) throws SQLException {
         List<CompletedOrders> completedOrders = librarianDao.findAllCompletedOrdersCopyIdByUserId(userId);
         if (completedOrders != null && !completedOrders.isEmpty()) {
             findAllOrderParameters(reservedBooks, completedOrders);
         }
     }
 
-    private void findAllOrderParameters(List<OnlineOrderBookModel> reservedBooks, List<CompletedOrders> completedOrders) throws SQLException {
+    private void findAllOrderParameters(List<OnlineOrderModel> reservedBooks, List<CompletedOrders> completedOrders) throws SQLException {
         Long[] copyIdList = completedOrders.stream().map(CompletedOrders::getIdBook).toArray(Long[]::new);
         Long[] allOrderedBookFromCatalog = bookingDao.findAllOrderedBookFromCatalog(copyIdList);
         if (allOrderedBookFromCatalog != null && allOrderedBookFromCatalog.length > 0) {
@@ -243,7 +243,7 @@ public class LibrarianService {
         }
     }
 
-    private void fillTheListOfCompletedOrders(List<OnlineOrderBookModel> reservedBooks, List<CompletedOrders> completedOrders, Long[] copyIdList, Long[] allOrderedBookFromCatalog) throws SQLException {
+    private void fillTheListOfCompletedOrders(List<OnlineOrderModel> reservedBooks, List<CompletedOrders> completedOrders, Long[] copyIdList, Long[] allOrderedBookFromCatalog) throws SQLException {
         Map<Long, Long> collect = completedOrders.stream()
                 .collect(Collectors.toMap(CompletedOrders::getIdBook, CompletedOrders::getIdReader));
         for (int i = 0; i < allOrderedBookFromCatalog.length; i++) {

@@ -6,7 +6,7 @@ import com.servletProject.librarySystem.domen.dto.bookCatalog.CreateBookCatalogM
 import com.servletProject.librarySystem.exception.ThereAreNoBooksFoundException;
 import com.servletProject.librarySystem.repository.BookRepository;
 import com.servletProject.librarySystem.repository.CopiesOfBooksRepository;
-import com.servletProject.librarySystem.utils.copiesOfBooksUtil.CreateCopiesOfBooksEntity;
+import com.servletProject.librarySystem.utils.CreateEntityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,10 +29,10 @@ public class BookCatalogService {
         Optional<BookCatalog> entity = bookRepository.findOneByBookTitle(bookTitle);
         if (!entity.isPresent()) {
             BookCatalog book = bookRepository.save(BookCatalogConverter.toEntity(model));
-            copiesOfBooksRepository.save(CreateCopiesOfBooksEntity.createEntity(book));
+            copiesOfBooksRepository.save(CreateEntityUtil.createCopiesOfBooksEntity(book));
         } else {
             final BookCatalog bookCatalog = entity.get();
-            copiesOfBooksRepository.save(CreateCopiesOfBooksEntity.createEntity(bookCatalog));
+            copiesOfBooksRepository.save(CreateEntityUtil.createCopiesOfBooksEntity(bookCatalog));
             bookRepository.incrementBookTotalAmount(bookCatalog.getId());
         }
     }
@@ -62,6 +62,13 @@ public class BookCatalogService {
         List<BookCatalog> book = bookRepository.findAllByGenreContaining(genre);
         if (!book.isEmpty()) {
             return book;
+        } else throw new ThereAreNoBooksFoundException("No books found");
+    }
+
+    public List<BookCatalog> findAllById(List<Long> idList) {
+        List<BookCatalog> catalogList = bookRepository.findAllById(idList);
+        if (!catalogList.isEmpty()) {
+            return catalogList;
         } else throw new ThereAreNoBooksFoundException("No books found");
     }
 }

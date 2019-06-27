@@ -25,7 +25,7 @@ public interface CopiesOfBooksRepository extends JpaRepository<CopiesOfBooks, Lo
 
     Optional<CopiesOfBooks> findOneByIdAndAAndAvailabilityTrue(Long idCopy);
 
-    List<Long> findIdBookByIdIn(Collection<Long> idCopyList);
+    List<CopiesOfBooks> findAllByIdIn(Collection<Long> idCopyList);
 
     @Modifying
     @Query(value = "UPDATE copies_of_books cb SET cb.availability=: availability, cb.book_condition=: condition WHERE cb.id=: id",

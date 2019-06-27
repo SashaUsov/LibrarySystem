@@ -1,7 +1,7 @@
 package com.servletProject.librarySystem.controller.booksActions;
 
 import com.servletProject.librarySystem.domen.UserEntity;
-import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderBookModel;
+import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
 import com.servletProject.librarySystem.service.BookingService;
 import com.servletProject.librarySystem.utils.BookingUtil;
 import com.servletProject.librarySystem.utils.QueryResponseUtility;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @WebServlet("/booking")
 public class ReserveBook extends HttpServlet {
-    private final BookingService bookingService = new BookingService();
+    private final BookingService bookingService = new BookingService(copiesOfBooksService, orderBookService, bookCatalogService);
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -48,7 +48,7 @@ public class ReserveBook extends HttpServlet {
         UserEntity user = (UserEntity) session.getAttribute("user");
         final long userId = user.getId();
         try {
-            List<OnlineOrderBookModel> listOfReservedBooks = bookingService.getListOfReservedBooksByUser(userId);
+            List<OnlineOrderModel> listOfReservedBooks = bookingService.getListOfReservedBooksByUser(userId);
             BookingUtil.getReserveListAnswer(listOfReservedBooks, request, response, session, "/user-orders");
         } catch (SQLException e) {
             response.setStatus(500);

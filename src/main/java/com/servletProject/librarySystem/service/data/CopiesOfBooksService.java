@@ -48,6 +48,23 @@ public class CopiesOfBooksService {
         }
     }
 
+    public boolean ifPresent(Long idCopy) {
+        Optional<CopiesOfBooks> copiesOfBooks = copiesOfBooksRepository.findOneByIdAndAAndAvailabilityTrue(idCopy);
+        return copiesOfBooks.isPresent();
+    }
+
+    public void updateAvailabilityOfCopy(boolean availability, Long copyId){
+        copiesOfBooksRepository.updateupdateAvailabilityById(copyId, availability);
+    }
+
+    public List<CopiesOfBooks> findAllById(List<Long> copyIdList) {
+        List<CopiesOfBooks> copiesOfBooksList = copiesOfBooksRepository.findAllByIdIn(copyIdList);
+        if (copiesOfBooksList != null && !copiesOfBooksList.isEmpty()) {
+            return copiesOfBooksList;
+        } else throw new ThereAreNoBooksFoundException("We could not find any copies of the book");
+//
+    }
+
     private void ifCopyPresent(CopiesOfBooks copiesOfBooks) {
         archiveBookUsageRepository.deleteAllByIdCopiesBook(copiesOfBooks.getId());
         Long idBook = copiesOfBooksRepository.findIdBookById(copiesOfBooks.getId());

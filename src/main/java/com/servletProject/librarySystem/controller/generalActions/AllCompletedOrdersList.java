@@ -1,6 +1,6 @@
 package com.servletProject.librarySystem.controller.generalActions;
 
-import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderBookModel;
+import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
 import com.servletProject.librarySystem.service.LibrarianService;
 import com.servletProject.librarySystem.utils.GeneralActionsHelper;
 
@@ -22,7 +22,7 @@ public class AllCompletedOrdersList extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         try {
-            List<OnlineOrderBookModel> listOfAllCompletedOrders = librarianService.getListOfAllCompletedOrders();
+            List<OnlineOrderModel> listOfAllCompletedOrders = librarianService.getListOfAllCompletedOrders();
             GeneralActionsHelper.giveAnswerToCompletedOrders(listOfAllCompletedOrders, session, req, resp, "/all-orders");
         } catch (SQLException e) {
             resp.setStatus(500);

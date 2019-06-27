@@ -1,4 +1,4 @@
-<%@ page import="com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderBookModel" %>
+<%@ page import="com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel" %>
 <%@ page import="java.util.List" %>
 <body class="w3-light-grey">
 <div class="w3-container w3-blue-grey w3-opacity w3-right-align">
@@ -19,10 +19,10 @@
 
         <%
             if (request != null) {
-                final List<OnlineOrderBookModel> reservedBooks = (List<OnlineOrderBookModel>) request
+                final List<OnlineOrderModel> reservedBooks = (List<OnlineOrderModel>) request
                         .getSession().getAttribute("list_of_reserved_books");
                 if (reservedBooks != null && !reservedBooks.isEmpty()) {
-                    for (OnlineOrderBookModel book : reservedBooks) {
+                    for (OnlineOrderModel book : reservedBooks) {
                         out.println("<tr>\n" +
                                             "<td>" + book.getBookTitle() + "</td>\n" +
                                             "<td>" + book.getBookAuthor() + "</td>\n" +
