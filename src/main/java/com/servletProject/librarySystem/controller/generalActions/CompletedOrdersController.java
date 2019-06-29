@@ -2,7 +2,7 @@ package com.servletProject.librarySystem.controller.generalActions;
 
 import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
-import com.servletProject.librarySystem.service.LibrarianService;
+import com.servletProject.librarySystem.service.LibrarianControllerService;
 import com.servletProject.librarySystem.utils.GeneralActionsHelper;
 import com.servletProject.librarySystem.utils.QueryResponseUtility;
 
@@ -18,7 +18,7 @@ import java.util.List;
 
 @WebServlet("/orders/complete")
 public class CompletedOrdersController extends HttpServlet {
-    private final LibrarianService librarianService = new LibrarianService();
+    private final LibrarianControllerService librarianControllerService = new LibrarianControllerService(userService, copiesOfBooksService, orderBookService, bookCatalogService, completedOrdersService);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -60,7 +60,7 @@ public class CompletedOrdersController extends HttpServlet {
     private void getCompletedOrdersListByUser(HttpServletRequest request, HttpServletResponse response,
                                               HttpSession session, String readerEmail, String path)
             throws SQLException, ServletException, IOException {
-        List<OnlineOrderModel> listOfCompletedOrders = librarianService.getListOfBooksHeldByReader(readerEmail);
+        List<OnlineOrderModel> listOfCompletedOrders = librarianControllerService.getListOfCompletedOrdersByReader(readerEmail);
         GeneralActionsHelper.giveAnswerToCompletedOrders(listOfCompletedOrders, session, request, response, path);
     }
 }

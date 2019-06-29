@@ -2,7 +2,7 @@ package com.servletProject.librarySystem.controller.generalActions;
 
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.service.data.BookCatalogService;
-import com.servletProject.librarySystem.service.LibrarianService;
+import com.servletProject.librarySystem.service.LibrarianControllerService;
 import com.servletProject.librarySystem.utils.GeneralActionsHelper;
 import com.servletProject.librarySystem.utils.QueryResponseUtility;
 
@@ -17,14 +17,14 @@ import java.util.List;
 
 @WebServlet("/books/unusable")
 public class DeleteBookCopyController extends HttpServlet {
-    private final LibrarianService librarianService = new LibrarianService();
+    private final LibrarianControllerService librarianControllerService = new LibrarianControllerService(userService, copiesOfBooksService, orderBookService, bookCatalogService, completedOrdersService);
     private final BookCatalogService bookCatalogService = new BookCatalogService(bookRepository, copiesOfBooksRepository);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req != null) {
             try {
-                final List<CopiesOfBooks> copiesOfBooksList = librarianService.unusableConditionBooksList();
+                final List<CopiesOfBooks> copiesOfBooksList = librarianControllerService.unusableConditionBooksList();
                 GeneralActionsHelper.giveAnswerToUnusableRequest(copiesOfBooksList, req.getSession(), req, resp, "/unusable-list");
             } catch (SQLException e) {
                 resp.setStatus(500);

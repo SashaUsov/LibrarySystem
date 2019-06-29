@@ -19,7 +19,7 @@ import java.util.List;
 
 @WebServlet("/booking")
 public class ReserveBook extends HttpServlet {
-    private final BookingControllerService bookingControllerService = new BookingControllerService(copiesOfBooksService, orderBookService, bookCatalogService);
+    private final BookingControllerService bookingControllerService = new BookingControllerService(copiesOfBooksService, orderBookService, bookCatalogService, onlineOrderUtil);
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -48,7 +48,7 @@ public class ReserveBook extends HttpServlet {
         UserEntity user = (UserEntity) session.getAttribute("user");
         final long userId = user.getId();
         try {
-            List<OnlineOrderModel> listOfReservedBooks = bookingControllerService.getListOfReservedBooksByUser(userId);
+            List<OnlineOrderModel> listOfReservedBooks = bookingControllerService.getListOfReservedBooksByUserId(userId);
             BookingUtil.getReserveListAnswer(listOfReservedBooks, request, response, session, "/user-orders");
         } catch (SQLException e) {
             response.setStatus(500);

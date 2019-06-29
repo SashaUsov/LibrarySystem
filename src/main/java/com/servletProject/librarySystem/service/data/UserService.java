@@ -39,4 +39,11 @@ public class UserService {
             return user.get();
         } else throw new UserNotFoundException("The user you are looking for does not exist.");
     }
+
+    public Long getUserIdByEmail(String email) {
+        Optional<UserEntity> user = userRepository.findOneByMail(email);
+        if (user.isPresent()) {
+            return user.get().getId();
+        } else throw new UserNotFoundException("The user you are looking for does not exist.");
+    }
 }

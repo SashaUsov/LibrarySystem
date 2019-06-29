@@ -1,6 +1,6 @@
 package com.servletProject.librarySystem.controller.booksActions;
 
-import com.servletProject.librarySystem.service.LibrarianService;
+import com.servletProject.librarySystem.service.LibrarianControllerService;
 import com.servletProject.librarySystem.utils.QueryResponseUtility;
 
 import javax.servlet.ServletException;
@@ -13,14 +13,14 @@ import java.sql.SQLException;
 
 @WebServlet("/order-cancel")
 public class CancelOrderAction extends HttpServlet {
-    private final LibrarianService librarianService = new LibrarianService();
+    private final LibrarianControllerService librarianControllerService = new LibrarianControllerService(userService, copiesOfBooksService, orderBookService, bookCatalogService, completedOrdersService);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
             Long copyId = Long.valueOf(req.getParameter("copy_id"));
         if (copyId != null) {
             try {
-                librarianService.cancelOrder(copyId);
+                librarianControllerService.cancelOrder(copyId);
                 QueryResponseUtility.sendMessage(req,resp, req.getSession(), "Order canceled successfully!");
             } catch (SQLException e) {
                 QueryResponseUtility.sendMessage(req,resp, req.getSession(), "Something went wrong :(");

@@ -1,12 +1,14 @@
 package com.servletProject.librarySystem.service.data;
 
 import com.servletProject.librarySystem.domen.OnlineOrderBook;
+import com.servletProject.librarySystem.exception.OrderNotExistException;
 import com.servletProject.librarySystem.exception.ThereAreNoBooksFoundException;
 import com.servletProject.librarySystem.repository.OnlineOrderBookRepository;
 import com.servletProject.librarySystem.utils.CreateEntityUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OnlineOrderBookService {
@@ -33,5 +35,23 @@ public class OnlineOrderBookService {
         if (!orderBookList.isEmpty()) {
             return orderBookList;
         } else throw new ThereAreNoBooksFoundException("We could not find any order");
+    }
+
+    public void deleteOrderByCopyIdAndUserId(Long bookCopyId, Long userId) {
+        if (isOrderExist(bookCopyId, userId)) {
+            orderBookRepository.removeByIdBookCopyAndIAndIdUser(bookCopyId, userId);
+        } else throw new OrderNotExistException("The order you are looking for does not exist.");
+    }
+
+    private boolean isOrderExist(Long bookCopyId, Long userId) {
+        Optional<OnlineOrderBook> orderBook = orderBookRepository.findOneByIdUserAndIdBookCopy(userId, bookCopyId);
+        return orderBook.isPresent();
+    }
+
+    public void cancelOrder(Long idCopy) {
+        Optional<OnlineOrderBook> orderBook = orderBookRepository.findOneByIdBookCopy(idCopy);
+        if (orderBook.isPresent()) {
+            orderBookRepository.delete(orderBook.get());
+        } else throw new OrderNotExistException("The order you are looking for does not exist.");
     }
 }

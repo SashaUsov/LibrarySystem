@@ -1,15 +1,14 @@
 package com.servletProject.librarySystem.service;
 
-import com.servletProject.librarySystem.dao.BookingDao;
-import com.servletProject.librarySystem.dao.BooksDao;
-import com.servletProject.librarySystem.dao.LibrarianDao;
-import com.servletProject.librarySystem.dao.UserDao;
 import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.domen.*;
 import com.servletProject.librarySystem.domen.dto.archiveBookUsage.ArchiveBookModel;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
+import com.servletProject.librarySystem.service.data.*;
 import com.servletProject.librarySystem.utils.BookingUtil;
+import com.servletProject.librarySystem.utils.CreateEntityUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,88 +17,79 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class LibrarianService {
-    private final UserDao userDao = new UserDao();
-    private final BookingDao bookingDao = new BookingDao();
-    private final LibrarianDao librarianDao = new LibrarianDao();
-    private final BooksDao booksDao = new BooksDao();
+public class LibrarianControllerService {
+    private final UserService userService;
+    private final CopiesOfBooksService copiesOfBooksService;
+    private final OnlineOrderBookService orderBookService;
+    private final BookCatalogService bookCatalogService;
+    private final CompletedOrdersService completedOrdersService;
 
-    public List<OnlineOrderModel> getAllReservedBooksByUser(String email) throws SQLException {
-        try {
-            TransactionManager.beginTransaction();
-            UserEntity user = userDao.findUserByEmail(email);
-            List<OnlineOrderModel> reservedBooks = new ArrayList<>();
-            if (user != null) {
-                findAllWaitingReservedCopyByUser(user, reservedBooks);
-            }
-            return reservedBooks;
-        } catch (SQLException | NullPointerException e) {
-            TransactionManager.rollBackTransaction();
-            throw e;
-        } finally {
-            TransactionManager.commitTransaction();
-        }
+    public LibrarianControllerService(UserService userService, CopiesOfBooksService copiesOfBooksService,
+                                      OnlineOrderBookService orderBookService, BookCatalogService bookCatalogService,
+                                      CompletedOrdersService completedOrdersService) {
+        this.userService = userService;
+        this.copiesOfBooksService = copiesOfBooksService;
+        this.orderBookService = orderBookService;
+        this.bookCatalogService = bookCatalogService;
+        this.completedOrdersService = completedOrdersService;
     }
 
-    public void giveBookToTheReader(Long bookCopyId, Long userId, Long librarianId) throws SQLException {
-        try {
-            TransactionManager.beginTransaction();
-            librarianDao.deleteOrderByCopyIdAndUserId(bookCopyId, userId);
-            librarianDao.giveBookToTheReader(bookCopyId, userId, librarianId);
-        } catch (SQLException | NullPointerException e) {
-            TransactionManager.rollBackTransaction();
-            throw e;
-        } finally {
-            TransactionManager.commitTransaction();
-        }
+/*    Extract in BookingControllerService
+    public List<OnlineOrderModel> getAllReservedBooksByUser(String email) {
+        Long userId = userService.getUserIdByEmail(email);
+        return ordersUtil.getListOfReservedBooksByUserId(userId);
+
+    }*/
+
+    @Transactional
+    public void giveBookToTheReader(Long bookCopyId, Long userId, Long librarianId) {
+        orderBookService.deleteOrderByCopyIdAndUserId(bookCopyId, userId);
+        completedOrdersService.saveOrder(userId, librarianId, bookCopyId);
     }
 
-    public void cancelOrder(Long bookCopyId) throws SQLException {
-        try {
-            TransactionManager.beginTransaction();
-            librarianDao.deleteFromOrderTable(bookCopyId);
-            bookingDao.updateAvailabilityOfCopy(true, bookCopyId);
-        } catch (SQLException | NullPointerException e) {
-            TransactionManager.rollBackTransaction();
-            throw e;
-        } finally {
-            TransactionManager.commitTransaction();
-        }
+    @Transactional
+    public void cancelOrder(Long bookCopyId) {
+            orderBookService.cancelOrder(bookCopyId);
+            copiesOfBooksService.updateAvailabilityOfCopy(true, bookCopyId);
     }
 
-    public List<OnlineOrderModel> getListOfBooksHeldByReader(String email) throws SQLException {
-        try {
-            TransactionManager.beginTransaction();
-            UserEntity user = userDao.findUserByEmail(email);
-            List<OnlineOrderModel> reservedBooks = new ArrayList<>();
-            if (user != null) {
-                long userId = user.getId();
-                createCompletedOrdersList(reservedBooks, userId);
-            }
-            return reservedBooks;
-        } catch (SQLException | NullPointerException e) {
-            TransactionManager.rollBackTransaction();
-            throw e;
-        } finally {
-            TransactionManager.commitTransaction();
-        }
+    public List<OnlineOrderModel> getListOfCompletedOrdersByReader(String email) {
+            Long idUser = userService.getUserIdByEmail(email);
+        List<CompletedOrders> completedOrders = completedOrdersService.findAllByUserId(idUser);
+        return prepareListOfCompletedOrders(completedOrders);
     }
 
-    public List<OnlineOrderModel> getListOfAllCompletedOrders() throws SQLException {
-        try {
-            TransactionManager.beginTransaction();
-            List<OnlineOrderModel> reservedBooks = new ArrayList<>();
-            List<CompletedOrders> completedOrders = librarianDao.findAllCompletedOrders();
-            if (completedOrders != null && !completedOrders.isEmpty()) {
-                findAllOrderParameters(reservedBooks, completedOrders);
-            }
-            return reservedBooks;
-        } catch (SQLException | NullPointerException e) {
-            TransactionManager.rollBackTransaction();
-            throw e;
-        } finally {
-            TransactionManager.commitTransaction();
-        }
+    public List<OnlineOrderModel> getListOfAllCompletedOrders() {
+        List<CompletedOrders> completedOrders = completedOrdersService.findAllCompletedOrders();
+        return prepareListOfCompletedOrders(completedOrders);
+    }
+
+    private List<OnlineOrderModel> prepareListOfCompletedOrders(List<CompletedOrders> completedOrders) {
+        List<Long> ordersList = getBookCopyIdFromCompletedOrdersList(completedOrders);
+        List<CopiesOfBooks> copyBookList = copiesOfBooksService.findAllById(ordersList);
+        List<Long> bookIdList = getBookIdFromBookCopyList(copyBookList);
+        List<BookCatalog> bookCatalogList = bookCatalogService.findAllById(bookIdList);
+
+        return CreateEntityUtil
+                .createCompletedOrdersEntityList(copyBookList, bookCatalogList, completedOrders);
+    }
+
+    private List<Long> getBookIdFromBookCopyList(List<CopiesOfBooks> copyBookList) {
+        return copyBookList.stream()
+                .map(CopiesOfBooks::getIdBook)
+                .collect(Collectors.toList());
+    }
+
+    private List<Long> getBookCopyIdFromOnlineOrderList(List<OnlineOrderBook> orderBookList) {
+        return orderBookList.stream()
+                .map(OnlineOrderBook::getIdBookCopy)
+                .collect(Collectors.toList());
+    }
+
+    private List<Long> getBookCopyIdFromCompletedOrdersList(List<CompletedOrders> orderBookList) {
+        return orderBookList.stream()
+                .map(CompletedOrders::getIdBook)
+                .collect(Collectors.toList());
     }
 
     public void returnBookToTheCatalog(Long readerId, Long copyId, String condition) throws SQLException {
@@ -116,7 +106,7 @@ public class LibrarianService {
         }
     }
 
-    public List<ArchiveBookModel> getListOfArciveUsageByUser(String email) throws SQLException {
+    public List<ArchiveBookModel> getListOfActiveUsageByUser(String email) throws SQLException {
         try {
             TransactionManager.beginTransaction();
             UserEntity user = userDao.findUserByEmail(email);

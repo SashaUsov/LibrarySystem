@@ -2,7 +2,7 @@ package com.servletProject.librarySystem.controller.generalActions;
 
 import com.servletProject.librarySystem.domen.dto.archiveBookUsage.ArchiveBookModel;
 import com.servletProject.librarySystem.domen.UserEntity;
-import com.servletProject.librarySystem.service.LibrarianService;
+import com.servletProject.librarySystem.service.LibrarianControllerService;
 import com.servletProject.librarySystem.utils.GeneralActionsHelper;
 import com.servletProject.librarySystem.utils.QueryResponseUtility;
 
@@ -18,7 +18,7 @@ import java.util.List;
 
 @WebServlet("/archive/user")
 public class BooksArchiveUserActions extends HttpServlet {
-    private final LibrarianService librarianService = new LibrarianService();
+    private final LibrarianControllerService librarianControllerService = new LibrarianControllerService(userService, copiesOfBooksService, orderBookService, bookCatalogService, completedOrdersService);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -41,7 +41,7 @@ public class BooksArchiveUserActions extends HttpServlet {
     private void getArchiveBookUsageListByUser(HttpServletRequest request, HttpServletResponse response,
                                                HttpSession session, String readerEmail, String path)
             throws SQLException, ServletException, IOException {
-        List<ArchiveBookModel> listOfCompletedOrders = librarianService.getListOfArciveUsageByUser(readerEmail);
+        List<ArchiveBookModel> listOfCompletedOrders = librarianControllerService.getListOfActiveUsageByUser(readerEmail);
         GeneralActionsHelper.giveAnswerToArchiveBookUsage(listOfCompletedOrders, session, request, response, path);
     }
 }

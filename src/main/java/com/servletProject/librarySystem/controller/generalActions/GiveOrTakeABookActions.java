@@ -1,7 +1,7 @@
 package com.servletProject.librarySystem.controller.generalActions;
 
 import com.servletProject.librarySystem.domen.UserEntity;
-import com.servletProject.librarySystem.service.LibrarianService;
+import com.servletProject.librarySystem.service.LibrarianControllerService;
 import com.servletProject.librarySystem.utils.QueryResponseUtility;
 
 import javax.servlet.ServletException;
@@ -15,7 +15,7 @@ import java.sql.SQLException;
 
 @WebServlet("/complete/order")
 public class GiveOrTakeABookActions extends HttpServlet {
-    private final LibrarianService librarianService = new LibrarianService();
+    private final LibrarianControllerService librarianControllerService = new LibrarianControllerService(userService, copiesOfBooksService, orderBookService, bookCatalogService, completedOrdersService);
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -25,7 +25,7 @@ public class GiveOrTakeABookActions extends HttpServlet {
                 Long userId = Long.valueOf(request.getParameter("reader_id"));
                 Long copyId = Long.valueOf(request.getParameter("book_copy_id"));
                 UserEntity user = (UserEntity) session.getAttribute("user");
-                librarianService.giveBookToTheReader(copyId, userId, user.getId());
+                librarianControllerService.giveBookToTheReader(copyId, userId, user.getId());
                 QueryResponseUtility.sendMessage(request, response, session, "Order completed successfully!");
             } catch (SQLException e) {
                 response.setStatus(500);
@@ -42,7 +42,7 @@ public class GiveOrTakeABookActions extends HttpServlet {
             Long userId = Long.valueOf(request.getParameter("order_user_id"));
             String bookCondition = request.getParameter("book_condition");
             if (bookCondition != null && !bookCondition.isEmpty()) {
-                librarianService.returnBookToTheCatalog(userId, copyId, bookCondition);
+                librarianControllerService.returnBookToTheCatalog(userId, copyId, bookCondition);
                 response.setStatus(201);
                 QueryResponseUtility.sendMessage(request, response,
                                                  request.getSession(), "Book is successfully returned to the catalog");
