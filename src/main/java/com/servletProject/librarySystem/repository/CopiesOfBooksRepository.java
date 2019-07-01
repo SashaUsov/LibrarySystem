@@ -14,14 +14,14 @@ public interface CopiesOfBooksRepository extends JpaRepository<CopiesOfBooks, Lo
 
     List<CopiesOfBooks> findAllByIdBook(Long idBook);
 
-    List<CopiesOfBooks> findAllByBookCondition(String condition);
+    List<CopiesOfBooks> findAllByBookConditionAndAvailabilityTrue(String condition);
 
     Long findIdBookById(Long idCopy);
 
     @Modifying
     @Query(value = "UPDATE copies_of_books cb SET cb.availability=: availability WHERE cb.id=: id",
     nativeQuery = true)
-    void updateupdateAvailabilityById(@Param("id") Long idCopy, @Param("availability") boolean availability);
+    void updateAvailabilityById(@Param("id") Long idCopy, @Param("availability") boolean availability);
 
     Optional<CopiesOfBooks> findOneByIdAndAAndAvailabilityTrue(Long idCopy);
 

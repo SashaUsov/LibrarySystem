@@ -18,7 +18,7 @@ import java.util.List;
 @WebServlet("/reserve-data")
 public class ReservedBooksListActions extends HttpServlet {
     private final BookingControllerService bookingControllerService = new BookingControllerService(copiesOfBooksService, orderBookService, bookCatalogService, onlineOrderUtil);
-    private final LibrarianControllerService librarianControllerService = new LibrarianControllerService(userService, copiesOfBooksService, orderBookService, bookCatalogService, completedOrdersService);
+    private final LibrarianControllerService librarianControllerService = new LibrarianControllerService(userService, copiesOfBooksService, orderBookService, bookCatalogService, completedOrdersService, usageService);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

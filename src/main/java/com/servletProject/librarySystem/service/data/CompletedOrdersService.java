@@ -7,6 +7,7 @@ import com.servletProject.librarySystem.utils.CreateEntityUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CompletedOrdersService {
@@ -34,5 +35,11 @@ public class CompletedOrdersService {
         if (!completedOrdersList.isEmpty()) {
             return completedOrdersList;
         } else throw new OrderNotExistException("No books have been taken to read by users..");
+    }
+
+    public void deleteFromCompletedOrdersByCopyId(Long idCopy) {
+        Optional<CompletedOrders> completedOrders = completedOrdersRepository.findOneByIdBook(idCopy);
+        CompletedOrders order = completedOrders.orElseThrow(() -> new OrderNotExistException("Order not found."));
+        completedOrdersRepository.delete(order);
     }
 }

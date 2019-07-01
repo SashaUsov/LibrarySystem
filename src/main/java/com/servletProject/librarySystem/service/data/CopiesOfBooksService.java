@@ -42,7 +42,7 @@ public class CopiesOfBooksService {
     public void deleteUnusableBookCopy(Long copyId){
         Optional<CopiesOfBooks> copiesOfBooks = copiesOfBooksRepository.findOneByIdAndAAndAvailabilityTrue(copyId);
         if(copiesOfBooks.isPresent()) {
-            ifCopyPresent(copiesOfBooks.get());
+            deleteIfCopyPresent(copiesOfBooks.get());
         } else {
             throw new ThereAreNoBooksFoundException("We could not find any copies of the book");
         }
@@ -54,7 +54,7 @@ public class CopiesOfBooksService {
     }
 
     public void updateAvailabilityOfCopy(boolean availability, Long copyId){
-        copiesOfBooksRepository.updateupdateAvailabilityById(copyId, availability);
+        copiesOfBooksRepository.updateAvailabilityById(copyId, availability);
     }
 
     public List<CopiesOfBooks> findAllById(List<Long> copyIdList) {
@@ -65,10 +65,40 @@ public class CopiesOfBooksService {
 //
     }
 
-    private void ifCopyPresent(CopiesOfBooks copiesOfBooks) {
+    private void deleteIfCopyPresent(CopiesOfBooks copiesOfBooks) {
         archiveBookUsageRepository.deleteAllByIdCopiesBook(copiesOfBooks.getId());
         Long idBook = copiesOfBooksRepository.findIdBookById(copiesOfBooks.getId());
         copiesOfBooksRepository.delete(copiesOfBooks);
         bookRepository.decrementBookTotalAmount(idBook);
+    }
+
+    public void updateCopyOfBookInfo(Long copyId, String condition) {
+        if (ifPresent(copyId)) {
+            boolean availability = isAvailability(condition);
+            copiesOfBooksRepository.updateAvailabilityAndConditionOfCopy(copyId, condition, availability);
+        } else throw new ThereAreNoBooksFoundException("Unable to update book status because the book does not exist");
+    }
+
+    public List<CopiesOfBooks> getAllCopyByCondition(String condition) {
+        List<CopiesOfBooks> copiesOfBooks = copiesOfBooksRepository.findAllByBookConditionAndAvailabilityTrue(condition);
+        if (copiesOfBooks != null && !copiesOfBooks.isEmpty()) {
+            return copiesOfBooks;
+        } else throw new ThereAreNoBooksFoundException("No damaged books found.");
+    }
+
+    private boolean isAvailability(String condition) {
+        boolean b = true;
+        switch (condition) {
+            case "good":
+                b = true;
+                break;
+            case "bad":
+                b = true;
+                break;
+            case "unusable":
+                b = false;
+                break;
+        }
+        return b;
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CompletedOrdersRepository extends JpaRepository<CompletedOrders, Long> {
 
@@ -12,4 +13,7 @@ public interface CompletedOrdersRepository extends JpaRepository<CompletedOrders
 
     @Modifying
     void deleteOneByIdBook(Long idBook);
+
+    Optional<CompletedOrders> findOneByIdBook(Long idCopy);
+
 }

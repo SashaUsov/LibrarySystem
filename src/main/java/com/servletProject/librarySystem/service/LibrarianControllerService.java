@@ -1,11 +1,9 @@
 package com.servletProject.librarySystem.service;
 
-import com.servletProject.librarySystem.dao.transactionManager.TransactionManager;
 import com.servletProject.librarySystem.domen.*;
 import com.servletProject.librarySystem.domen.dto.archiveBookUsage.ArchiveBookModel;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
 import com.servletProject.librarySystem.service.data.*;
-import com.servletProject.librarySystem.utils.BookingUtil;
 import com.servletProject.librarySystem.utils.CreateEntityUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,15 +20,18 @@ public class LibrarianControllerService {
     private final OnlineOrderBookService orderBookService;
     private final BookCatalogService bookCatalogService;
     private final CompletedOrdersService completedOrdersService;
+    private final ArchiveBookUsageService usageService;
 
     public LibrarianControllerService(UserService userService, CopiesOfBooksService copiesOfBooksService,
                                       OnlineOrderBookService orderBookService, BookCatalogService bookCatalogService,
-                                      CompletedOrdersService completedOrdersService) {
+                                      CompletedOrdersService completedOrdersService, ArchiveBookUsageService usageService
+    ) {
         this.userService = userService;
         this.copiesOfBooksService = copiesOfBooksService;
         this.orderBookService = orderBookService;
         this.bookCatalogService = bookCatalogService;
         this.completedOrdersService = completedOrdersService;
+        this.usageService = usageService;
     }
 
 /*    Extract in BookingControllerService
@@ -49,12 +49,12 @@ public class LibrarianControllerService {
 
     @Transactional
     public void cancelOrder(Long bookCopyId) {
-            orderBookService.cancelOrder(bookCopyId);
-            copiesOfBooksService.updateAvailabilityOfCopy(true, bookCopyId);
+        orderBookService.cancelOrder(bookCopyId);
+        copiesOfBooksService.updateAvailabilityOfCopy(true, bookCopyId);
     }
 
     public List<OnlineOrderModel> getListOfCompletedOrdersByReader(String email) {
-            Long idUser = userService.getUserIdByEmail(email);
+        Long idUser = userService.getUserIdByEmail(email);
         List<CompletedOrders> completedOrders = completedOrdersService.findAllByUserId(idUser);
         return prepareListOfCompletedOrders(completedOrders);
     }
@@ -80,186 +80,75 @@ public class LibrarianControllerService {
                 .collect(Collectors.toList());
     }
 
-    private List<Long> getBookCopyIdFromOnlineOrderList(List<OnlineOrderBook> orderBookList) {
-        return orderBookList.stream()
-                .map(OnlineOrderBook::getIdBookCopy)
-                .collect(Collectors.toList());
-    }
-
     private List<Long> getBookCopyIdFromCompletedOrdersList(List<CompletedOrders> orderBookList) {
         return orderBookList.stream()
                 .map(CompletedOrders::getIdBook)
                 .collect(Collectors.toList());
     }
 
-    public void returnBookToTheCatalog(Long readerId, Long copyId, String condition) throws SQLException {
-        try {
-            TransactionManager.beginTransaction();
-            librarianDao.putBookInUsageArchive(copyId, readerId, condition);
-            librarianDao.deleteFromCompletedOrdersByCopyId(copyId);
-            updateCopyOfBookInfo(copyId, condition);
-        } catch (SQLException | NullPointerException e) {
-            TransactionManager.rollBackTransaction();
-            throw e;
-        } finally {
-            TransactionManager.commitTransaction();
-        }
+    private List<Long> getBookCopyIdFromArchiveUsageList(List<ArchiveBookUsage> bookUsageList) {
+        return bookUsageList.stream()
+                .map(ArchiveBookUsage::getIdCopiesBook)
+                .collect(Collectors.toList());
     }
 
-    public List<ArchiveBookModel> getListOfActiveUsageByUser(String email) throws SQLException {
-        try {
-            TransactionManager.beginTransaction();
-            UserEntity user = userDao.findUserByEmail(email);
-            List<ArchiveBookModel> userArchive = new ArrayList<>();
-            if (user != null) {
-                createArchiveBookUsage(user, userArchive);
-            }
-            return userArchive;
-        } catch (SQLException | NullPointerException e) {
-            TransactionManager.rollBackTransaction();
-            throw e;
-        } finally {
-            TransactionManager.commitTransaction();
-        }
+    @Transactional
+    public void returnBookToTheCatalog(Long readerId, Long copyId, String condition) {
+        usageService.putBookInUsageArchive(copyId, readerId, condition);
+        completedOrdersService.deleteFromCompletedOrdersByCopyId(copyId);
+        copiesOfBooksService.updateCopyOfBookInfo(copyId, condition);
+
     }
 
-    public List<ArchiveBookModel> getListOfAllArchiveUsage() throws SQLException {
-        try {
-            TransactionManager.beginTransaction();
-            List<ArchiveBookModel> userArchive = new ArrayList<>();
-            List<ArchiveBookUsage> booksArchive = librarianDao.findAllUsageBooksArchive();
-            if (booksArchive != null && !booksArchive.isEmpty()) {
-                createFullArchive(userArchive, booksArchive);
-            }
-            return userArchive;
-        } catch (SQLException | NullPointerException e) {
-            TransactionManager.rollBackTransaction();
-            throw e;
-        } finally {
-            TransactionManager.commitTransaction();
-        }
+    public List<ArchiveBookModel> getListOfActiveUsageByUser(String email) {
+        UserEntity user = userService.getUserByEmail(email);
+        List<ArchiveBookUsage> bookUsageList = usageService.findAllByUserId(user.getId());
+        List<Long> copyIdList = getBookCopyIdFromArchiveUsageList(bookUsageList);
+        List<CopiesOfBooks> copyBookList = copiesOfBooksService.findAllById(copyIdList);
+        List<Long> bookIdList = getBookIdFromBookCopyList(copyBookList);
+        List<BookCatalog> bookCatalogList = bookCatalogService.findAllById(bookIdList);
+
+
+        return CreateEntityUtil.createArchiveBookModelEntityList(copyBookList, bookCatalogList, user);
+    }
+
+    public List<ArchiveBookModel> getListOfAllArchiveUsage() {
+        List<ArchiveBookUsage> allUsageArchive = usageService.findAllUsageArchive();
+        List<Long> copyIdFromArchiveUsageList = getBookCopyIdFromArchiveUsageList(allUsageArchive);
+        List<CopiesOfBooks> copiesOfBooks = copiesOfBooksService.findAllById(copyIdFromArchiveUsageList);
+        List<Long> bookIdList = getBookIdFromBookCopyList(copiesOfBooks);
+        List<BookCatalog> bookCatalogList = bookCatalogService.findAllById(bookIdList);
+        return getArchiveBookModelList(allUsageArchive, copiesOfBooks, bookCatalogList);
     }
 
     public List<CopiesOfBooks> unusableConditionBooksList() throws SQLException {
-        try {
-            TransactionManager.beginTransaction();
-            List<CopiesOfBooks> unusableBooks = booksDao.findBooksInUnusableCondition();
-            if (unusableBooks != null && !unusableBooks.isEmpty()) {
-                return unusableBooks;
-            } else throw new SQLException();
-        } catch (SQLException e) {
-            TransactionManager.rollBackTransaction();
-            throw e;
-        } finally {
-            TransactionManager.commitTransaction();
+        return copiesOfBooksService.getAllCopyByCondition("unusable");
+    }
+
+    private List<ArchiveBookModel> getArchiveBookModelList(List<ArchiveBookUsage> allUsageArchive,
+                                                           List<CopiesOfBooks> copiesOfBooks, List<BookCatalog> bookCatalogList
+    ) {
+        List<ArchiveBookModel> modelList = new ArrayList<>();
+        for (BookCatalog book : bookCatalogList) {
+            ArchiveBookModel model = getArchiveBookModelEntity(allUsageArchive, copiesOfBooks, book);
+            modelList.add(model);
         }
+        return modelList;
     }
 
-    private void createFullArchive(List<ArchiveBookModel> userArchive, List<ArchiveBookUsage> booksArchive) throws SQLException {
-        Long[] copyIdList = booksArchive.stream().map(ArchiveBookUsage::getIdCopiesBook).toArray(Long[]::new);
-        Long[] allOrderedBookFromCatalog = bookingDao.findAllOrderedBookFromCatalog(copyIdList);
-        if (allOrderedBookFromCatalog != null && allOrderedBookFromCatalog.length > 0) {
-            findFullArchiveParameters(userArchive, booksArchive, copyIdList, allOrderedBookFromCatalog);
-        }
-    }
-
-    private void findFullArchiveParameters(List<ArchiveBookModel> userArchive, List<ArchiveBookUsage> booksArchive,
-                                           Long[] copyIdList, Long[] allOrderedBookFromCatalog) throws SQLException {
-        Map<Long, Long> collect = booksArchive.stream()
-                .collect(Collectors.toMap(ArchiveBookUsage::getIdCopiesBook, ArchiveBookUsage::getIdReader));
-        for (int i = 0; i < allOrderedBookFromCatalog.length; i++) {
-            fillFullListOfArchiveUsage(userArchive, copyIdList[i], allOrderedBookFromCatalog[i], collect.get(copyIdList[i]));
-        }
-    }
-
-    private void fillFullListOfArchiveUsage(List<ArchiveBookModel> userArchive, Long key,
-                                            Long bookId, Long userId) throws SQLException {
-        String name = userDao.findFullUserName(userId);
-        BookingUtil.createArchiveBookTransferObject(userArchive, key, bookId,
-                                                    bookingDao, userId, name);
-    }
-
-    private void createArchiveBookUsage(UserEntity user, List<ArchiveBookModel> userArchive) throws SQLException {
-        long userId = user.getId();
-        String name = user.getFirstName() + " " + user.getLastName();
-        List<ArchiveBookUsage> booksArchive = librarianDao.findAllUsageBooksByUserId(userId);
-        if (booksArchive != null && !booksArchive.isEmpty()) {
-            findAllArchiveParameters(userArchive, booksArchive, name);
-        }
-    }
-
-    private void findAllArchiveParameters(List<ArchiveBookModel> userArchive,
-                                          List<ArchiveBookUsage> booksArchive,
-                                          String name) throws SQLException {
-        Long[] copyIdList = booksArchive.stream().map(ArchiveBookUsage::getIdCopiesBook).toArray(Long[]::new);
-        Long[] allOrderedBookFromCatalog = bookingDao.findAllOrderedBookFromCatalog(copyIdList);
-        if (allOrderedBookFromCatalog != null && allOrderedBookFromCatalog.length > 0) {
-            fillTheListOfArchiveUsage(userArchive, booksArchive, copyIdList, allOrderedBookFromCatalog, name);
-        }
-    }
-
-    private void fillTheListOfArchiveUsage(List<ArchiveBookModel> userArchive,
-                                           List<ArchiveBookUsage> booksArchive, Long[] copyIdList,
-                                           Long[] allOrderedBookFromCatalog, String name)
-            throws SQLException {
-        Map<Long, Long> collect = booksArchive.stream()
-                .collect(Collectors.toMap(ArchiveBookUsage::getIdCopiesBook, ArchiveBookUsage::getIdReader));
-        for (int i = 0; i < allOrderedBookFromCatalog.length; i++) {
-            BookingUtil.createArchiveBookTransferObject(userArchive, copyIdList[i], allOrderedBookFromCatalog[i],
-                                                        bookingDao, collect.get(copyIdList[i]), name);
-        }
-    }
-
-    private void findAllWaitingReservedCopyByUser(UserEntity user, List<OnlineOrderModel> reservedBooks) throws SQLException {
-        long userId = user.getId();
-        Long[] allBooksCopyByReaderId = bookingDao.findAllReservedBooksCopyByReaderId(userId);
-        if (allBooksCopyByReaderId.length > 0) {
-            BookingUtil.getReaderOrdersByReaderId(reservedBooks, allBooksCopyByReaderId, bookingDao, userId);
-        }
-    }
-
-    private void createCompletedOrdersList(List<OnlineOrderModel> reservedBooks, long userId) throws SQLException {
-        List<CompletedOrders> completedOrders = librarianDao.findAllCompletedOrdersCopyIdByUserId(userId);
-        if (completedOrders != null && !completedOrders.isEmpty()) {
-            findAllOrderParameters(reservedBooks, completedOrders);
-        }
-    }
-
-    private void findAllOrderParameters(List<OnlineOrderModel> reservedBooks, List<CompletedOrders> completedOrders) throws SQLException {
-        Long[] copyIdList = completedOrders.stream().map(CompletedOrders::getIdBook).toArray(Long[]::new);
-        Long[] allOrderedBookFromCatalog = bookingDao.findAllOrderedBookFromCatalog(copyIdList);
-        if (allOrderedBookFromCatalog != null && allOrderedBookFromCatalog.length > 0) {
-            fillTheListOfCompletedOrders(reservedBooks, completedOrders, copyIdList, allOrderedBookFromCatalog);
-        }
-    }
-
-    private void fillTheListOfCompletedOrders(List<OnlineOrderModel> reservedBooks, List<CompletedOrders> completedOrders, Long[] copyIdList, Long[] allOrderedBookFromCatalog) throws SQLException {
-        Map<Long, Long> collect = completedOrders.stream()
-                .collect(Collectors.toMap(CompletedOrders::getIdBook, CompletedOrders::getIdReader));
-        for (int i = 0; i < allOrderedBookFromCatalog.length; i++) {
-            BookingUtil.createOrdersTransferObject(reservedBooks, copyIdList[i], allOrderedBookFromCatalog[i],
-                                                   bookingDao, collect.get(copyIdList[i]));
-        }
-    }
-
-    private void updateCopyOfBookInfo(Long copyId, String condition) throws SQLException {
-        boolean availability = isAvailability(condition);
-        librarianDao.updateAvailabilityAndConditionOfCopy(copyId, condition, availability);
-    }
-
-    private boolean isAvailability(String condition) {
-        boolean b = true;
-        switch (condition) {
-            case "good":
-                b = true;
-                break;
-            case "bad":
-                b = true;
-                break;
-            case "unusable":
-                b = false;
-                break;
-        }
-        return b;
+    private ArchiveBookModel getArchiveBookModelEntity(List<ArchiveBookUsage> allUsageArchive,
+                                                       List<CopiesOfBooks> copiesOfBooks, BookCatalog book
+    ) {
+        ArchiveBookModel model = new ArchiveBookModel();
+        CopiesOfBooks copy = CreateEntityUtil.getCopiesOfBooksId(copiesOfBooks, book);
+        model.setUniqueId(copy.getId());
+        ArchiveBookUsage archiveBookUsage = CreateEntityUtil.getArchiveBookUsage(allUsageArchive, copy);
+        model.setName(userService.getFullName(archiveBookUsage.getIdReader()));
+        model.setUserId(archiveBookUsage.getIdReader());
+        model.setBookTitle(book.getBookTitle());
+        model.setBookAuthor(book.getBookAuthor());
+        model.setGenre(book.getGenre());
+        model.setYearOfPublication(book.getYearOfPublication());
+        return model;
     }
 }

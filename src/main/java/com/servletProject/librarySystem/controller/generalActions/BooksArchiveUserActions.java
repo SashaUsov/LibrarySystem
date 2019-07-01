@@ -18,7 +18,7 @@ import java.util.List;
 
 @WebServlet("/archive/user")
 public class BooksArchiveUserActions extends HttpServlet {
-    private final LibrarianControllerService librarianControllerService = new LibrarianControllerService(userService, copiesOfBooksService, orderBookService, bookCatalogService, completedOrdersService);
+    private final LibrarianControllerService librarianControllerService = new LibrarianControllerService(userService, copiesOfBooksService, orderBookService, bookCatalogService, completedOrdersService, usageService);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

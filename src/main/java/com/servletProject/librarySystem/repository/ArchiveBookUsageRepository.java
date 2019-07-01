@@ -12,4 +12,5 @@ public interface ArchiveBookUsageRepository extends JpaRepository<ArchiveBookUsa
 
     @Modifying
     void deleteAllByIdCopiesBook(long id);
+
 }
