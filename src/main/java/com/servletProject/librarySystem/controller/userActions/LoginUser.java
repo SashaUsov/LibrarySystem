@@ -17,32 +17,32 @@ import java.util.Map;
 
 @WebServlet("/login/enter")
 public class LoginUser extends HttpServlet {
-    private UserControllerService userControllerService = new UserControllerService(userRepository, userRoleRepository, userService);
-    private Map<String, String> paramMap = new HashMap<>();
-    private List<String> paramList = Arrays.asList("nick_name", "password");
-
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        if (request != null) {
-            WorkWithHttpRequestUtil.getAllParam(request, paramList, paramMap);
-            try {
-                UserEntity user = userControllerService.login(paramMap);
-                if (user != null) {
-                    ifLoginSuccessful(request, response, user);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        }
-
-    private void ifLoginSuccessful(HttpServletRequest request, HttpServletResponse response, UserEntity user) throws ServletException, IOException {
-        user.setLogin(true);
-        user.setPassword(null);
-        HttpSession session = request.getSession();
-        session.setAttribute("user", user);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/");
-        requestDispatcher.forward(request, response);
-    }
+//    private UserControllerService userControllerService = new UserControllerService(userRepository, userRoleRepository, userService);
+//    private Map<String, String> paramMap = new HashMap<>();
+//    private List<String> paramList = Arrays.asList("nick_name", "password");
+//
+//    @Override
+//    public void doPost(HttpServletRequest request, HttpServletResponse response)
+//            throws IOException, ServletException {
+//        if (request != null) {
+//            WorkWithHttpRequestUtil.getAllParam(request, paramList, paramMap);
+//            try {
+//                UserEntity user = userControllerService.login(paramMap);
+//                if (user != null) {
+//                    ifLoginSuccessful(request, response, user);
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        }
+//
+//    private void ifLoginSuccessful(HttpServletRequest request, HttpServletResponse response, UserEntity user) throws ServletException, IOException {
+//        user.setLogin(true);
+//        user.setPassword(null);
+//        HttpSession session = request.getSession();
+//        session.setAttribute("user", user);
+//        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/");
+//        requestDispatcher.forward(request, response);
+//    }
 }

@@ -5,6 +5,7 @@ import com.servletProject.librarySystem.domen.dto.onlineOrderBook.IssueOrderMode
 import com.servletProject.librarySystem.domen.dto.archiveBookUsage.ArchiveBookModel;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.ReturnOrderInCatalogModel;
+import com.servletProject.librarySystem.exception.UserNotFoundException;
 import com.servletProject.librarySystem.service.data.*;
 import com.servletProject.librarySystem.utils.CreateEntityUtil;
 import com.servletProject.librarySystem.utils.OrdersUtil;
@@ -59,9 +60,49 @@ public class LibrarianControllerService {
         return prepareListOfCompletedOrders(completedOrders);
     }
 
+    public List<OnlineOrderModel> getListOfCompletedOrdersByUserId(Long id) {
+        if (userService.isUserExist(id)) {
+            List<CompletedOrders> completedOrders = completedOrdersService.findAllByUserId(id);
+            return prepareListOfCompletedOrders(completedOrders);
+        } else throw new UserNotFoundException("The user you are looking for does not exist.");
+    }
+
     public List<OnlineOrderModel> getListOfAllCompletedOrders() {
         List<CompletedOrders> completedOrders = completedOrdersService.findAllCompletedOrders();
         return prepareListOfCompletedOrders(completedOrders);
+    }
+
+    public List<ArchiveBookModel> getListOfActiveUsageByUser(String email) {
+        UserEntity user = userService.getUserByEmail(email);
+        List<ArchiveBookUsage> bookUsageList = usageService.findAllByUserId(user.getId());
+        List<Long> copyIdList = getBookCopyIdFromArchiveUsageList(bookUsageList);
+        List<CopiesOfBooks> copyBookList = copiesOfBooksService.findAllById(copyIdList);
+        List<Long> bookIdList = OrdersUtil.getBookIdFromBookCopyList(copyBookList);
+        List<BookCatalog> bookCatalogList = bookCatalogService.findAllById(bookIdList);
+
+
+        return CreateEntityUtil.createArchiveBookModelEntityList(copyBookList, bookCatalogList, user);
+    }
+
+    public List<ArchiveBookModel> getListOfAllArchiveUsage() {
+        List<ArchiveBookUsage> allUsageArchive = usageService.findAllUsageArchive();
+        List<Long> copyIdFromArchiveUsageList = getBookCopyIdFromArchiveUsageList(allUsageArchive);
+        List<CopiesOfBooks> copiesOfBooks = copiesOfBooksService.findAllById(copyIdFromArchiveUsageList);
+        List<Long> bookIdList = OrdersUtil.getBookIdFromBookCopyList(copiesOfBooks);
+        List<BookCatalog> bookCatalogList = bookCatalogService.findAllById(bookIdList);
+        return getArchiveBookModelList(allUsageArchive, copiesOfBooks, bookCatalogList);
+    }
+
+    public List<CopiesOfBooks> unusableConditionBooksList() {
+        return copiesOfBooksService.getAllCopyByCondition("unusable");
+    }
+
+    public void cancelOrder(Long idCopy) {
+        orderBookService.cancelOrderLibrarian(idCopy);
+    }
+
+    public void deleteUnusableBookCopy(Long idCopy) {
+        copiesOfBooksService.deleteUnusableBookCopy(idCopy);
     }
 
     private List<OnlineOrderModel> prepareListOfCompletedOrders(List<CompletedOrders> completedOrders) {
@@ -94,32 +135,6 @@ public class LibrarianControllerService {
         usageService.putBookInUsageArchive(copyId, readerId, condition);
         completedOrdersService.deleteFromCompletedOrdersByCopyId(copyId);
         copiesOfBooksService.updateCopyOfBookInfo(copyId, condition);
-
-    }
-
-    public List<ArchiveBookModel> getListOfActiveUsageByUser(String email) {
-        UserEntity user = userService.getUserByEmail(email);
-        List<ArchiveBookUsage> bookUsageList = usageService.findAllByUserId(user.getId());
-        List<Long> copyIdList = getBookCopyIdFromArchiveUsageList(bookUsageList);
-        List<CopiesOfBooks> copyBookList = copiesOfBooksService.findAllById(copyIdList);
-        List<Long> bookIdList = OrdersUtil.getBookIdFromBookCopyList(copyBookList);
-        List<BookCatalog> bookCatalogList = bookCatalogService.findAllById(bookIdList);
-
-
-        return CreateEntityUtil.createArchiveBookModelEntityList(copyBookList, bookCatalogList, user);
-    }
-
-    public List<ArchiveBookModel> getListOfAllArchiveUsage() {
-        List<ArchiveBookUsage> allUsageArchive = usageService.findAllUsageArchive();
-        List<Long> copyIdFromArchiveUsageList = getBookCopyIdFromArchiveUsageList(allUsageArchive);
-        List<CopiesOfBooks> copiesOfBooks = copiesOfBooksService.findAllById(copyIdFromArchiveUsageList);
-        List<Long> bookIdList = OrdersUtil.getBookIdFromBookCopyList(copiesOfBooks);
-        List<BookCatalog> bookCatalogList = bookCatalogService.findAllById(bookIdList);
-        return getArchiveBookModelList(allUsageArchive, copiesOfBooks, bookCatalogList);
-    }
-
-    public List<CopiesOfBooks> unusableConditionBooksList() {
-        return copiesOfBooksService.getAllCopyByCondition("unusable");
     }
 
     private List<ArchiveBookModel> getArchiveBookModelList(List<ArchiveBookUsage> allUsageArchive,
@@ -147,9 +162,5 @@ public class LibrarianControllerService {
         model.setGenre(book.getGenre());
         model.setYearOfPublication(book.getYearOfPublication());
         return model;
-    }
-
-    public void deleteUnusableBookCopy(Long idCopy) {
-        copiesOfBooksService.deleteUnusableBookCopy(idCopy);
     }
 }

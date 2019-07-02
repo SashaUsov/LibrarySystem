@@ -2,6 +2,7 @@ package com.servletProject.librarySystem.service;
 
 import com.servletProject.librarySystem.domen.Role;
 import com.servletProject.librarySystem.domen.UserEntity;
+import com.servletProject.librarySystem.exception.UserNotFoundException;
 import com.servletProject.librarySystem.service.data.RoleService;
 import com.servletProject.librarySystem.service.data.UserService;
 import org.springframework.stereotype.Service;
@@ -23,13 +24,9 @@ public class AdminControllerService {
         this.roleService = roleService;
     }
 
-    public boolean isUserExist(long id) {
-        return userService.isUserExist(id);
-    }
-
     @Transactional
-    public void addUserRole(long id, String newRole) {
-        final UserEntity user = userService.getUserIfExist(id);
+    public void addUserRole(Long id, String newRole) {
+        UserEntity user = userService.getUserIfExist(id);
         Role role = createRole(newRole, user);
         roleService.save(role);
         user.getRoles().add(role);
@@ -37,13 +34,19 @@ public class AdminControllerService {
     }
 
     @Transactional
-    public void removeUserRole(long idUser, String role) {
-        Role userRole = roleService.findOneByUserIdAAndRole(idUser, role);
-        roleService.delete(userRole);
-        saveUserWithoutRole(idUser, role);
+    public void removeUserRole(Long idUser, String role) {
+        if (isUserExist(idUser)) {
+            Role userRole = roleService.findOneByUserIdAAndRole(idUser, role);
+            roleService.delete(userRole);
+            saveUserWithoutRole(idUser, role);
+        } else throw new UserNotFoundException("User not found.");
     }
 
-    private void saveUserWithoutRole(long idUser, String role) {
+    private boolean isUserExist(long id) {
+        return userService.isUserExist(id);
+    }
+
+    private void saveUserWithoutRole(Long idUser, String role) {
         UserEntity user = userService.getUserIfExist(idUser);
         List<Role> roles = user.getRoles().stream()
                 .filter(r -> !role.equals(r.getRole()))

@@ -1,6 +1,7 @@
 package com.servletProject.librarySystem.service;
 
 import com.servletProject.librarySystem.domen.BookCatalog;
+import com.servletProject.librarySystem.domen.CompletedOrders;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.domen.OnlineOrderBook;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
@@ -72,7 +73,7 @@ public class BookingControllerService {
 
     @Transactional
     public void cancelOrder(Long bookCopyId) {
-        orderBookService.cancelOrder(bookCopyId);
+        orderBookService.cancelOrderByReader(bookCopyId);
         copiesOfBooksService.updateAvailabilityOfCopy(true, bookCopyId);
     }
 }
