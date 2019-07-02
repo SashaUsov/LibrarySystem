@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 @Setter
 public class UserEntityModel {
-
     private long id;
     private String firstName;
     private String lastName;
@@ -22,6 +21,5 @@ public class UserEntityModel {
     private List<Role> roles = new ArrayList<>();
     private boolean permissionToOrder;
     private boolean login;
-
 }
 

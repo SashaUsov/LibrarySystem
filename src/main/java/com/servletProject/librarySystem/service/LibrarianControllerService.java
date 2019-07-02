@@ -37,13 +37,6 @@ public class LibrarianControllerService {
         this.usageService = usageService;
     }
 
-/*    Extract in BookingControllerService
-    public List<OnlineOrderModel> getAllReservedBooksByUser(String email) {
-        Long userId = userService.getUserIdByEmail(email);
-        return ordersUtil.getListOfReservedBooksByUserId(userId);
-
-    }*/
-
     @Transactional
     public void giveBookToTheReader(IssueOrderModel model) {
         Long bookCopyId = model.getIdCopy();
@@ -78,8 +71,7 @@ public class LibrarianControllerService {
         List<Long> copyIdList = getBookCopyIdFromArchiveUsageList(bookUsageList);
         List<CopiesOfBooks> copyBookList = copiesOfBooksService.findAllById(copyIdList);
         List<Long> bookIdList = OrdersUtil.getBookIdFromBookCopyList(copyBookList);
-        List<BookCatalog> bookCatalogList = bookCatalogService.findAllById(bookIdList);
-
+        List<BookCatalog> bookCatalogList = bookCatalogService.findAllByIdIn(bookIdList);
 
         return CreateEntityUtil.createArchiveBookModelEntityList(copyBookList, bookCatalogList, user);
     }
@@ -89,7 +81,7 @@ public class LibrarianControllerService {
         List<Long> copyIdFromArchiveUsageList = getBookCopyIdFromArchiveUsageList(allUsageArchive);
         List<CopiesOfBooks> copiesOfBooks = copiesOfBooksService.findAllById(copyIdFromArchiveUsageList);
         List<Long> bookIdList = OrdersUtil.getBookIdFromBookCopyList(copiesOfBooks);
-        List<BookCatalog> bookCatalogList = bookCatalogService.findAllById(bookIdList);
+        List<BookCatalog> bookCatalogList = bookCatalogService.findAllByIdIn(bookIdList);
         return getArchiveBookModelList(allUsageArchive, copiesOfBooks, bookCatalogList);
     }
 
@@ -109,7 +101,7 @@ public class LibrarianControllerService {
         List<Long> ordersList = getBookCopyIdFromCompletedOrdersList(completedOrders);
         List<CopiesOfBooks> copyBookList = copiesOfBooksService.findAllById(ordersList);
         List<Long> bookIdList = OrdersUtil.getBookIdFromBookCopyList(copyBookList);
-        List<BookCatalog> bookCatalogList = bookCatalogService.findAllById(bookIdList);
+        List<BookCatalog> bookCatalogList = bookCatalogService.findAllByIdIn(bookIdList);
 
         return CreateEntityUtil
                 .createCompletedOrdersEntityList(copyBookList, bookCatalogList, completedOrders);

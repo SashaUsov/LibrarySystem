@@ -5,6 +5,7 @@ import com.servletProject.librarySystem.domen.Role;
 import com.servletProject.librarySystem.domen.Roles;
 import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.domen.dto.userEntity.CreateUserEntityModel;
+import com.servletProject.librarySystem.domen.dto.userEntity.UserEntityModel;
 import com.servletProject.librarySystem.service.data.RoleService;
 import com.servletProject.librarySystem.service.data.UserService;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,10 @@ public class UserControllerService {
         roleService.save(role);
 
         userService.save(entity);
+    }
+
+    public UserEntityModel findUser(Long id) {
+        return UserEntityConverter.toModel(userService.getUserIfExist(id));
     }
 
     private Role createUserRole(UserEntity entity) {

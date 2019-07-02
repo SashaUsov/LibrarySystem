@@ -17,7 +17,7 @@ public class AdminController {
 
     @PutMapping("grant/{id_user}/{role}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void grantRole(@PathVariable("id_user")Long id, @PathVariable("role")String role) {
+    public void grantRole(@PathVariable("id_user") Long id, @PathVariable("role") String role) {
         if (isParamExist(id, role)) {
             adminControllerService.addUserRole(id, role);
         } else throw new DataIsNotCorrectException("Check the correctness of the entered data and try again.");
@@ -25,7 +25,7 @@ public class AdminController {
 
     @PutMapping("revoke/{id_user}/{role}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void revokeRole(@PathVariable("id_user")Long id, @PathVariable("role")String role) {
+    public void revokeRole(@PathVariable("id_user") Long id, @PathVariable("role") String role) {
         if (isParamExist(id, role)) {
             adminControllerService.removeUserRole(id, role);
         } else throw new DataIsNotCorrectException("Check the correctness of the entered data and try again.");

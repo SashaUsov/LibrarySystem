@@ -6,6 +6,7 @@ import com.servletProject.librarySystem.domen.dto.onlineOrderBook.ReturnOrderInC
 import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
 import com.servletProject.librarySystem.service.BookingControllerService;
 import com.servletProject.librarySystem.service.LibrarianControllerService;
+import com.servletProject.librarySystem.utils.OrdersUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,24 +54,20 @@ public class LibrarianOrdersActionsController {
 
     @GetMapping("all/{email}")
     public List<OnlineOrderModel> getAllReservedBooksByUserEmail(@PathVariable("email") String email) {
-        if (ifEmailPresent(email)) {
+        if (OrdersUtil.ifEmailPresent(email)) {
             return bookingControllerService.getListOfReservedBooksByUserEmail(email);
         } else throw new DataIsNotCorrectException("Enter the correct email and try again.");
     }
 
     @GetMapping("completed")
     public List<OnlineOrderModel> getAllCompletedOrders() {
-            return librarianControllerService.getListOfAllCompletedOrders();
+        return librarianControllerService.getListOfAllCompletedOrders();
     }
 
     @GetMapping("completed/{email}")
     public List<OnlineOrderModel> getAllCompletedOrdersByEmail(@PathVariable("email") String email) {
-        if (ifEmailPresent(email)) {
+        if (OrdersUtil.ifEmailPresent(email)) {
             return librarianControllerService.getListOfCompletedOrdersByReader(email);
         } else throw new DataIsNotCorrectException("Enter the correct email and try again.");
-    }
-
-    private boolean ifEmailPresent(String email) {
-        return (email != null && !email.isEmpty());
     }
 }

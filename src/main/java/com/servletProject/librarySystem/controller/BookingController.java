@@ -1,9 +1,12 @@
 package com.servletProject.librarySystem.controller;
 
+import com.servletProject.librarySystem.domen.dto.archiveBookUsage.ArchiveBookModel;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
+import com.servletProject.librarySystem.domen.dto.userEntity.UserEntityModel;
 import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
 import com.servletProject.librarySystem.service.BookingControllerService;
 import com.servletProject.librarySystem.service.LibrarianControllerService;
+import com.servletProject.librarySystem.service.UserControllerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,12 +18,15 @@ public class BookingController {
 
     private final BookingControllerService bookingControllerService;
     private final LibrarianControllerService librarianControllerService;
+    private final UserControllerService userControllerService;
 
     public BookingController(BookingControllerService bookingControllerService,
-                             LibrarianControllerService librarianControllerService
+                             LibrarianControllerService librarianControllerService,
+                             UserControllerService userControllerService
     ) {
         this.bookingControllerService = bookingControllerService;
         this.librarianControllerService = librarianControllerService;
+        this.userControllerService = userControllerService;
     }
 
     @PostMapping("{book_copy_id}/{user_id}")
@@ -46,6 +52,14 @@ public class BookingController {
     public List<OnlineOrderModel> getListOfCompletedOrdersByUserId(@PathVariable("id") Long id) {
         if (id != null) {
             return librarianControllerService.getListOfCompletedOrdersByUserId(id);
+        } else throw new DataIsNotCorrectException("Check the correctness of the entered data and try again.");
+    }
+
+    @GetMapping("my-archive/{id}")
+    public List<ArchiveBookModel> getListOfArchiveUsageByUserId(@PathVariable("id") Long id) {
+        if (id != null) {
+            UserEntityModel user = userControllerService.findUser(id);
+            return librarianControllerService.getListOfActiveUsageByUser(user.getMail());
         } else throw new DataIsNotCorrectException("Check the correctness of the entered data and try again.");
     }
 }

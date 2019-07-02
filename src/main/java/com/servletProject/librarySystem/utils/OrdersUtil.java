@@ -19,4 +19,8 @@ public class OrdersUtil {
                 .map(CopiesOfBooks::getIdBook)
                 .collect(Collectors.toList());
     }
+
+    public static boolean ifEmailPresent(String email) {
+        return (email != null && !email.isEmpty());
+    }
 }

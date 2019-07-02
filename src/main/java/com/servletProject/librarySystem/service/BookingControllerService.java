@@ -1,7 +1,6 @@
 package com.servletProject.librarySystem.service;
 
 import com.servletProject.librarySystem.domen.BookCatalog;
-import com.servletProject.librarySystem.domen.CompletedOrders;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.domen.OnlineOrderBook;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
@@ -65,7 +64,7 @@ public class BookingControllerService {
         List<Long> ordersList = OrdersUtil.getBookCopyIdFromOnlineOrderList(orderBookList);
         List<CopiesOfBooks> copyBookList = copiesOfBooksService.findAllById(ordersList);
         List<Long> bookIdList = OrdersUtil.getBookIdFromBookCopyList(copyBookList);
-        List<BookCatalog> bookCatalogList = bookCatalogService.findAllById(bookIdList);
+        List<BookCatalog> bookCatalogList = bookCatalogService.findAllByIdIn(bookIdList);
 
         return CreateEntityUtil
                 .createOnlineOrderModelEntityList(copyBookList, bookCatalogList, orderBookList);

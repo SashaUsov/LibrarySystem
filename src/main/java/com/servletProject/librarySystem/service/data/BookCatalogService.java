@@ -65,8 +65,8 @@ public class BookCatalogService {
         } else throw new ThereAreNoBooksFoundException("No books found");
     }
 
-    public List<BookCatalog> findAllById(List<Long> idList) {
-        List<BookCatalog> catalogList = bookRepository.findAllById(idList);
+    public List<BookCatalog> findAllByIdIn(List<Long> idList) {
+        List<BookCatalog> catalogList = bookRepository.findAllByIdIn(idList);
         if (!catalogList.isEmpty()) {
             return catalogList;
         } else throw new ThereAreNoBooksFoundException("No books found");
