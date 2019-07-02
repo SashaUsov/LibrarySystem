@@ -17,19 +17,4 @@ public class UserEntityConverter {
 
         return entity;
     }
-
-    public static UserEntityModel toModel(UserEntity entity) {
-        UserEntityModel model = new UserEntityModel();
-        model.setId(entity.getId());
-        model.setFirstName(entity.getFirstName());
-        model.setLastName(entity.getLastName());
-        model.setNickName(entity.getNickName());
-        model.setMail(entity.getMail());
-        model.setPermissionToOrder(entity.isPermissionToOrder());
-        model.setAddress(entity.getAddress());
-        model.setLogin(entity.isLogin());
-        model.setRoles(entity.getRoles());
-
-        return model;
-    }
 }

@@ -7,9 +7,9 @@ public class BookCatalogConverter {
 
     public static BookCatalog toEntity(CreateBookCatalogModel model) {
         BookCatalog entity = new BookCatalog();
-        entity.setBookTitle(model.getBookTitle());
-        entity.setBookAuthor(model.getBookAuthor());
-        entity.setGenre(model.getGenre());
+        entity.setBookTitle(model.getBookTitle().trim());
+        entity.setBookAuthor(model.getBookAuthor().trim());
+        entity.setGenre(model.getGenre().trim());
         entity.setYearOfPublication(model.getYearOfPublication());
         entity.setTotalAmount(1);
 

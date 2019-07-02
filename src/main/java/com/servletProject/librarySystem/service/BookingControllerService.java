@@ -69,5 +69,11 @@ public class BookingControllerService {
         return CreateEntityUtil
                 .createOnlineOrderModelEntityList(copyBookList, bookCatalogList, orderBookList);
     }
+
+    @Transactional
+    public void cancelOrder(Long bookCopyId) {
+        orderBookService.cancelOrder(bookCopyId);
+        copiesOfBooksService.updateAvailabilityOfCopy(true, bookCopyId);
+    }
 }
 

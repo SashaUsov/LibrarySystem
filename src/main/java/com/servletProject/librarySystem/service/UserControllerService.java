@@ -10,8 +10,6 @@ import com.servletProject.librarySystem.service.data.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
-
 @Service
 public class UserControllerService {
     private final RoleService roleService;
@@ -24,7 +22,7 @@ public class UserControllerService {
     }
 
     @Transactional
-    public void save(CreateUserEntityModel model) throws SQLException {
+    public void save(CreateUserEntityModel model) {
 
         userService.checkIfTheUserExists(model.getMail());
 
