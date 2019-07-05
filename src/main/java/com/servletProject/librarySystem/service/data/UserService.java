@@ -59,4 +59,11 @@ public class UserService {
             return userRepository.findFullUserName(id);
         } else throw new UserNotFoundException("The user you are looking for does not exist.");
     }
+
+    public UserEntity getUserByNickName(String nickName) {
+        Optional<UserEntity> user = userRepository.findOneByNickName(nickName);
+        if (user.isPresent()) {
+            return user.get();
+        } else throw new UserNotFoundException("The user you are looking for does not exist.");
+    }
 }

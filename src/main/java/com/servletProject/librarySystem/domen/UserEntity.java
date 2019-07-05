@@ -6,7 +6,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -38,18 +39,17 @@ public class UserEntity {
     @Column(name = "address")
     private String address;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "user_role",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role")}
-    )
-    private List<Role> roles = new ArrayList<>();
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "users_role", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Set<Role> roles = new HashSet<>();
 
     @Column(name = "permission_to_order")
-    private boolean permissionToOrder;
+    private boolean active;
 
-    private boolean login = false;
+    @Transient
+    private boolean permission = false;
 
 }
 

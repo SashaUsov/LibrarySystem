@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head sec:authorize="isAuthenticated()" th:action='${#response.sendRedirect("/")}'>
+    <meta charset="UTF-8">
+
+    <title>Library system</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+
+<body class="w3-light-grey">
+<div class="w3-container w3-blue-grey w3-opacity w3-right-align">
+    <h1>Library system greeting you!</h1>
+</div>
+
+<div class="w3-container w3-blue-grey w3-opacity w3-left-align">
+    <h1>Welcome</h1>
+    <p>
+        Get started quickly by signing up.
+    </p>
+    <p>
+        <a href="/login" th:href="@{/login}" class="w3-button w3-green">Sign up</a>
+    </p>
+</div>
+
+</body>
+</html>

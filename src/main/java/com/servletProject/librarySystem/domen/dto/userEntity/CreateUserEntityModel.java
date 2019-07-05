@@ -31,9 +31,9 @@ public class CreateUserEntityModel {
     @Length(max = 15, message = "Password to long")
     private String password;
 
-    @NotNull
-    @NotEmpty
-    @Email(message = "Email should be valid")
+    @NotNull(message = "Email cannot be empty")
+    @NotEmpty(message = "Email cannot be empty")
+    @Email(message = "Email should be valid" )
     private String mail;
 
     @NotNull

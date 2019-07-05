@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book catalog</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body class="w3-light-grey">
+<div class="w3-container w3-blue-grey w3-opacity w3-right-align">
+    <h1>Library system</h1>
+</div>
+
+<details>
+    <summary>
+        <div class="w3-panel w3-blue">
+            <h1>Find a book by title</h1>
+        </div>
+    </summary>
+    <form id="submitform4" action="/book/search-by-title" method="get" class="w3-selection w3-light-grey w3-padding">
+        <input type="text" name="book_title" class="w3-input w3-animate-input w3-border w3-round-large"
+               style="width: 30%"><br/>
+        <button type="submit" class="w3-btn w3-green w3-round-large w3-margin-bottom">Find</button>
+    </form>
+</details>
+
+<details>
+    <summary>
+        <div class="w3-panel w3-blue">
+            <h1>Find a book by author</h1>
+        </div>
+    </summary>
+    <form id="submitform2" action="/book/search-by-author" method="get" class="w3-selection w3-light-grey w3-padding">
+        <input type="text" name="book_author" class="w3-input w3-animate-input w3-border w3-round-large"
+               style="width: 30%"><br/>
+        <button type="submit" class="w3-btn w3-green w3-round-large w3-margin-bottom">Find</button>
+    </form>
+</details>
+
+<details>
+    <summary>
+        <div class="w3-panel w3-blue">
+            <h1>Find a book by genre</h1>
+        </div>
+    </summary>
+    <form id="submitform3" action="/book/search-by-genre" method="get" class="w3-selection w3-light-grey w3-padding">
+        <input type="text" name="book_genre" class="w3-input w3-animate-input w3-border w3-round-large"
+               style="width: 30%"><br/>
+        <button type="submit" class="w3-btn w3-green w3-round-large w3-margin-bottom">Find</button>
+    </form>
+</details>
+
+<details>
+    <summary>
+        <div class="w3-panel w3-blue">
+            <h1>Books catalog</h1>
+        </div>
+    </summary>
+    <div class="w3-btn w3-block w3-green w3-left-align">
+        <button class="w3-btn w3-round-large" onclick="location.href='/book/catalog'">To the books catalog</button>
+    </div>
+</details>
+<br>
+<div class="w3-container w3-grey w3-opacity w3-right-align w3-padding">
+    <button class="w3-btn w3-round-large" onclick="location.href='/home'">Back to main</button>
+</div>
+</body>
+</html>

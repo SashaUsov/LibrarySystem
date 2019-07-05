@@ -44,3 +44,7 @@ databaseChangeLog:
         file: liquibase/changelog/20190618T1854_create_completed_orders_table_sequence.yaml
     - include:
         file: liquibase/changelog/20190620T1751_create_archive_book_usage_table_sequence.yaml
+    - include:
+        file: liquibase/changelog/20190704T1739_create_users_role_table.yaml
+    - include:
+        file: liquibase/changelog/20190704T1750_drop_user_role_table.yaml

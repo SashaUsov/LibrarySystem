@@ -7,7 +7,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,8 +20,8 @@ public class UserEntityModel {
     private String mail;
     private String nickName;
     private String address;
-    private List<Role> roles = new ArrayList<>();
-    private boolean permissionToOrder;
+    private Set<Role> roles = new HashSet<>();
+    private boolean active;
     private boolean login;
 }
 

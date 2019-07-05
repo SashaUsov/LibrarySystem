@@ -25,9 +25,9 @@ public class UserEntityConverter {
         model.setLastName(entity.getLastName());
         model.setNickName(entity.getNickName());
         model.setMail(entity.getMail());
-        model.setPermissionToOrder(entity.isPermissionToOrder());
+        model.setActive(entity.isActive());
         model.setAddress(entity.getAddress());
-        model.setLogin(entity.isLogin());
+        model.setLogin(entity.isPermission());
         model.setRoles(entity.getRoles());
 
         return model;

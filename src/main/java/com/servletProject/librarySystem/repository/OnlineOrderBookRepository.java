@@ -14,7 +14,7 @@ public interface OnlineOrderBookRepository extends JpaRepository<OnlineOrderBook
     Optional<OnlineOrderBook> findOneByIdUserAndIdBookCopy(Long idUser, Long idCopy);
 
     @Modifying
-    void removeByIdBookCopyAndIAndIdUser(Long idCopy, Long idUser);
+    void removeByIdBookCopyAndIdUser(Long idCopy, Long idUser);
 
     Optional<OnlineOrderBook> findOneByIdBookCopy(Long idCopy);
 }

@@ -3,6 +3,7 @@ package com.servletProject.librarySystem.service;
 import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.domen.OnlineOrderBook;
+import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
 import com.servletProject.librarySystem.exception.ThereAreNoBooksFoundException;
 import com.servletProject.librarySystem.service.data.BookCatalogService;
@@ -36,21 +37,23 @@ public class BookingControllerService {
     }
 
     @Transactional
-    public void reserveBook(long copyId, long readerId) {
+    public void reserveBook(long copyId, String nickName) {
         if (copiesOfBooksService.ifPresent(copyId)) {
             copiesOfBooksService.updateAvailabilityOfCopy(false, copyId);
-            orderBookService.reserveBookCopy(copyId, readerId);
+            UserEntity user = userService.getUserByNickName(nickName);
+            orderBookService.reserveBookCopy(copyId, user.getId());
         } else throw new ThereAreNoBooksFoundException("This book copy is not available.");
     }
 
     public List<OnlineOrderModel> getListOfReservedBooksByUserEmail(String email) {
         Long userId = userService.getUserIdByEmail(email);
-        List<OnlineOrderBook> orderBookList = orderBookService.findAllByUserIdIn(userId);
+        List<OnlineOrderBook> orderBookList = orderBookService.findAllByUserId(userId);
         return prepareListOfReservedBooksByUserId(orderBookList);
     }
 
-    public List<OnlineOrderModel> getListOfReservedBooksByUserId(long userId) {
-        List<OnlineOrderBook> orderBookList = orderBookService.findAllByUserIdIn(userId);
+    public List<OnlineOrderModel> getListOfReservedBooksByUserId(String nickName) {
+        UserEntity user = userService.getUserByNickName(nickName);
+        List<OnlineOrderBook> orderBookList = orderBookService.findAllByUserId(user.getId());
         return prepareListOfReservedBooksByUserId(orderBookList);
     }
 

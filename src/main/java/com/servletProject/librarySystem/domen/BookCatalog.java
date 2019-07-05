@@ -39,6 +39,6 @@ public class BookCatalog {
     @NotEmpty(message = "Enter book genre")
     private String genre;
 
-    @Column(name = "totalAmount")
+    @Column(name = "total_amount")
     private int totalAmount;
 }

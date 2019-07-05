@@ -40,7 +40,7 @@ public class CopiesOfBooksService {
 
     @Transactional
     public void deleteUnusableBookCopy(Long copyId){
-        Optional<CopiesOfBooks> copiesOfBooks = copiesOfBooksRepository.findOneByIdAndAAndAvailabilityTrue(copyId);
+        Optional<CopiesOfBooks> copiesOfBooks = copiesOfBooksRepository.findOneByIdAndAndAvailabilityTrue(copyId);
         if(copiesOfBooks.isPresent()) {
             deleteIfCopyPresent(copiesOfBooks.get());
         } else {
@@ -49,7 +49,7 @@ public class CopiesOfBooksService {
     }
 
     public boolean ifPresent(Long idCopy) {
-        Optional<CopiesOfBooks> copiesOfBooks = copiesOfBooksRepository.findOneByIdAndAAndAvailabilityTrue(idCopy);
+        Optional<CopiesOfBooks> copiesOfBooks = copiesOfBooksRepository.findOneByIdAndAndAvailabilityTrue(idCopy);
         return copiesOfBooks.isPresent();
     }
 
@@ -62,7 +62,13 @@ public class CopiesOfBooksService {
         if (copiesOfBooksList != null && !copiesOfBooksList.isEmpty()) {
             return copiesOfBooksList;
         } else throw new ThereAreNoBooksFoundException("We could not find any copies of the book");
-//
+    }
+
+    public List<CopiesOfBooks> findAllCopy(Long copyId) {
+        List<CopiesOfBooks> copiesOfBooksList = copiesOfBooksRepository.findAllByIdBook(copyId);
+        if (copiesOfBooksList != null && !copiesOfBooksList.isEmpty()) {
+            return copiesOfBooksList;
+        } else throw new ThereAreNoBooksFoundException("We could not find any copies of the book");
     }
 
     private void deleteIfCopyPresent(CopiesOfBooks copiesOfBooks) {
@@ -88,17 +94,7 @@ public class CopiesOfBooksService {
 
     private boolean isAvailability(String condition) {
         boolean b = true;
-        switch (condition) {
-            case "good":
-                b = true;
-                break;
-            case "bad":
-                b = true;
-                break;
-            case "unusable":
-                b = false;
-                break;
-        }
+        if ("unusable".equalsIgnoreCase(condition)) b = false;
         return b;
     }
 }

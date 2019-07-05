@@ -24,7 +24,7 @@ public class OnlineOrderBookService {
         orderBookRepository.save(CreateEntityUtil.createOnlineOrderEntity(copyId, readerId));
     }
 
-    public List<OnlineOrderBook> findAllByUserIdIn(Long idUser) {
+    public List<OnlineOrderBook> findAllByUserId(Long idUser) {
         List<OnlineOrderBook> orderBookList = orderBookRepository.findAllByIdUser(idUser);
         if (orderBookList != null && !orderBookList.isEmpty()) {
             return orderBookList;
@@ -40,7 +40,7 @@ public class OnlineOrderBookService {
 
     public void deleteOrderByCopyIdAndUserId(Long bookCopyId, Long userId) {
         if (isOrderExist(bookCopyId, userId)) {
-            orderBookRepository.removeByIdBookCopyAndIAndIdUser(bookCopyId, userId);
+            orderBookRepository.removeByIdBookCopyAndIdUser(bookCopyId, userId);
         } else throw new OrderNotExistException("The order you are looking for does not exist.");
     }
 

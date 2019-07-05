@@ -19,7 +19,7 @@ public class LogoutUser extends HttpServlet{
         if (req != null) {
             HttpSession session = req.getSession();
             final UserEntity user = (UserEntity) session.getAttribute("user");
-            if (user.isLogin()) {
+            if (user.isPermission()) {
                 session.setAttribute("user", null);
                 session.setAttribute("message", "Logout successful!");
             }else {
