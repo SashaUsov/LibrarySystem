@@ -55,9 +55,9 @@ public class BookingFacade {
         bookingControllerService.cancelOrder(idCopy, user);
     }
 
-    public List<OnlineOrderModel> getListOfCompletedOrdersByUserId(Long id) {
-        if (id != null) {
-            return librarianControllerService.getListOfCompletedOrdersByUserId(id);
+    public List<OnlineOrderModel> getListOfCompletedOrdersByUser(String nickName) {
+        if (nickName != null && !nickName.isEmpty()) {
+            return librarianControllerService.getListOfCompletedOrdersByUser(nickName);
         } else throw new DataIsNotCorrectException("Check the correctness of the entered data and try again.");
     }
 

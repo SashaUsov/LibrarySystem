@@ -31,11 +31,6 @@ public class UserService {
         userRepository.save(entity);
     }
 
-    public boolean isUserExist(long id) {
-        Optional<UserEntity> user = userRepository.findOneById(id);
-        return user.isPresent();
-    }
-
     public UserEntity getUserIfExist(long id) {
         Optional<UserEntity> user = userRepository.findOneById(id);
         if (user.isPresent()) {
@@ -75,5 +70,10 @@ public class UserService {
         userEntity.ifPresent(entity -> {
             throw new ClientAlreadyExistsException("Client with this nick name already exists");
         });
+    }
+
+    private boolean isUserExist(long id) {
+        Optional<UserEntity> user = userRepository.findOneById(id);
+        return user.isPresent();
     }
 }

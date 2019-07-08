@@ -42,4 +42,13 @@ public class UserController {
         model.addAttribute("user_info", user);
         return "info";
     }
+
+    @GetMapping("reading")
+    public String getCompletedOrders(Principal principal,
+                                     Model model
+    ) {
+        String nickName = principal.getName();
+        model.addAttribute("readingList", bookingFacade.getListOfCompletedOrdersByUser(nickName));
+        return "reading";
+    }
 }

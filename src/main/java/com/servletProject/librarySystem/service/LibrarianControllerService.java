@@ -40,7 +40,7 @@ public class LibrarianControllerService {
     @Transactional
     public void giveBookToTheReader(IssueOrderModel model) {
         Long bookCopyId = model.getIdCopy();
-        Long userId= model.getIdReader();
+        Long userId = model.getIdReader();
         Long librarianId = model.getIdLibrarian();
 
         orderBookService.deleteOrderByCopyIdAndUserId(bookCopyId, userId);
@@ -53,11 +53,11 @@ public class LibrarianControllerService {
         return prepareListOfCompletedOrders(completedOrders);
     }
 
-    public List<OnlineOrderModel> getListOfCompletedOrdersByUserId(Long id) {
-        if (userService.isUserExist(id)) {
-            List<CompletedOrders> completedOrders = completedOrdersService.findAllByUserId(id);
-            return prepareListOfCompletedOrders(completedOrders);
-        } else throw new UserNotFoundException("The user you are looking for does not exist.");
+    public List<OnlineOrderModel> getListOfCompletedOrdersByUser(String nickName) {
+        UserEntity user = userService.getUserByNickName(nickName);
+        List<CompletedOrders> completedOrders = completedOrdersService.findAllByUserId(user.getId());
+        return prepareListOfCompletedOrders(completedOrders);
+
     }
 
     public List<OnlineOrderModel> getListOfAllCompletedOrders() {
