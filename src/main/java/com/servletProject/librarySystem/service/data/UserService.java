@@ -1,6 +1,9 @@
 package com.servletProject.librarySystem.service.data;
 
+import com.servletProject.librarySystem.converter.UserEntityConverter;
+import com.servletProject.librarySystem.domen.Role;
 import com.servletProject.librarySystem.domen.UserEntity;
+import com.servletProject.librarySystem.domen.dto.userEntity.CreateUserEntityModel;
 import com.servletProject.librarySystem.exception.ClientAlreadyExistsException;
 import com.servletProject.librarySystem.exception.UserNotFoundException;
 import com.servletProject.librarySystem.repository.UserRepository;
@@ -24,8 +27,15 @@ public class UserService {
         });
     }
 
-    public void save(UserEntity user) {
-        userRepository.save(user);
+    public void save(CreateUserEntityModel model) {
+        checkIfTheUserExists(model.getMail());
+
+        UserEntity entity = UserEntityConverter.toEntity(model);
+        entity.setActive(true);
+        entity.setPermission(true);
+        entity.getRoles().add(Role.USER);
+
+        userRepository.save(entity);
     }
 
     public boolean isUserExist(long id) {

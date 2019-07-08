@@ -20,18 +20,6 @@ public class BookControllerService {
         this.copiesOfBooksService = copiesOfBooksService;
     }
 
-    public List<BookCatalog> getAllBookByTitle(String title){
-        return bookCatalogService.getAllBookByTitle(title);
-    }
-
-    public List<BookCatalog> getAllBookByAuthor(String author){
-        return bookCatalogService.getAllBookByAuthor(author);
-    }
-
-    public List<BookCatalog> getAllBookByGenre(String genre){
-        return bookCatalogService.getAllBookByGenre(genre);
-    }
-
     public void addNewBook(CreateBookCatalogModel model) {
         if (model != null) {
             bookCatalogService.saveBook(model);

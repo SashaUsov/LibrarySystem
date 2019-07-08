@@ -1,21 +1,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head sec:authorize="isAuthenticated()" th:action='${#response.sendRedirect("main")}'>
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
     <title>Login</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 
 <body class="w3-light-grey">
+<span sec:authorize="isAuthenticated()" th:action='${#response.sendRedirect("main")}'></span>
 <div class="w3-container w3-blue-grey w3-opacity w3-right-align">
     <h1>Library system</h1>
 </div>
 
-<div th:if="${#request.getParameter('error')}">
-    Invalid username or password.
+<div th:if="${#request.getParameter('error')}" class="w3-container w3-center w3-red">
+    <h2>Invalid username or password.</h2>
 </div>
 
-<div th:if="${#request.getParameter('logout')}">
-    You have been logged out.
+<div th:if="${#request.getParameter('logout')}" class="w3-container w3-center w3-red">
+    <h2>You have been logged out.</h2>
 </div>
 
 <div class="w3-container w3-padding">
@@ -31,15 +32,14 @@
             <div><label> Password: <input type="password" name="password"
                                           class="w3-input w3-animate-input w3-border w3-round-large"
                                           style="width: 30%"/> </label></div>
-            <div><input type="submit" value="Sign In"/></div>
+            <br>
+            <input type="submit" class="w3-button w3-green" value="Sign In"/>
+
+            <a href="/registration" th:onclick="location.href'/registration'" class="w3-button w3-green">Registration</a>
+
         </form>
     </div>
 
 </div>
-
-<p>
-    <a href="/registration" onclick="location.href='/registration'" class="btn btn-large btn-success" >Registration</a>
-</p>
-
 </body>
 </html>

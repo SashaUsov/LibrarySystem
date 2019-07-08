@@ -31,7 +31,6 @@ public class BookCatalog {
 
     @Column(name = "publication")
     @NotNull
-    @NotEmpty(message = "Year of book publication cannot be empty")
     private int yearOfPublication;
 
     @Column(name = "genre")

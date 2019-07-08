@@ -7,25 +7,27 @@ import com.servletProject.librarySystem.service.BookControllerService;
 import com.servletProject.librarySystem.service.LibrarianControllerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Service
-public class LibrarianCatalogActionsController {
+public class LibrarianCatalogActionsFacade {
     private final BookControllerService bookControllerService;
     private final LibrarianControllerService librarianControllerService;
 
-    public LibrarianCatalogActionsController(BookControllerService bookControllerService,
-                                             LibrarianControllerService librarianControllerService
+    public LibrarianCatalogActionsFacade(BookControllerService bookControllerService,
+                                         LibrarianControllerService librarianControllerService
     ) {
         this.bookControllerService = bookControllerService;
         this.librarianControllerService = librarianControllerService;
     }
 
+    @Transactional
     @ResponseStatus(HttpStatus.CREATED)
-    public void addNewBook(@Valid @RequestBody CreateBookCatalogModel model) {
+    public void addNewBook(CreateBookCatalogModel model) {
         bookControllerService.addNewBook(model);
     }
 
@@ -37,6 +39,6 @@ public class LibrarianCatalogActionsController {
     public void deleteUnusableBookCopy(Long idCopy) {
         if (idCopy != null) {
             librarianControllerService.deleteUnusableBookCopy(idCopy);
-        } else throw new DataIsNotCorrectException("A book with this id does not exist in the catalog.");
+        } else throw new DataIsNotCorrectException("Enter the correct data and try again.");
     }
 }

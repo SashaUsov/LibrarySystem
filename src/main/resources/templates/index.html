@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head sec:authorize="isAuthenticated()" th:action='${#response.sendRedirect("/")}'>
+<head>
     <meta charset="UTF-8">
 
     <title>Library system</title>
@@ -10,6 +10,7 @@
 </head>
 
 <body class="w3-light-grey">
+<span sec:authorize="isAuthenticated()" th:action='${#response.sendRedirect("main")}'></span>
 <div class="w3-container w3-blue-grey w3-opacity w3-right-align">
     <h1>Library system greeting you!</h1>
 </div>

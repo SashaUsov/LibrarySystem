@@ -21,7 +21,6 @@ public class CreateBookCatalogModel {
     private String bookAuthor;
 
     @NotNull
-    @NotEmpty(message = "Year of book publication cannot be empty")
     private int yearOfPublication;
 
     @NotNull

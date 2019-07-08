@@ -3,6 +3,7 @@ package com.servletProject.librarySystem.service;
 import com.servletProject.librarySystem.domen.Role;
 import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.exception.UserNotFoundException;
+import com.servletProject.librarySystem.repository.UserRepository;
 import com.servletProject.librarySystem.service.data.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,9 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminControllerService {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
-    public AdminControllerService(UserService userService) {
+    public AdminControllerService(UserService userService, UserRepository userRepository) {
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -21,7 +24,7 @@ public class AdminControllerService {
         UserEntity user = userService.getUserIfExist(id);
         Role role = createRole(newRole);
         user.getRoles().add(role);
-        userService.save(user);
+        userRepository.save(user);
     }
 
     @Transactional
@@ -30,7 +33,7 @@ public class AdminControllerService {
             UserEntity user = userService.getUserIfExist(idUser);
             Role role = createRole(removedRole);
             user.getRoles().remove(role);
-            userService.save(user);
+            userRepository.save(user);
         } else throw new UserNotFoundException("User not found.");
     }
 

@@ -1,5 +1,6 @@
 package com.servletProject.librarySystem.facade;
 
+import com.servletProject.librarySystem.converter.UserEntityConverter;
 import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.domen.dto.archiveBookUsage.ArchiveBookModel;
@@ -9,7 +10,7 @@ import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
 import com.servletProject.librarySystem.service.BookControllerService;
 import com.servletProject.librarySystem.service.BookingControllerService;
 import com.servletProject.librarySystem.service.LibrarianControllerService;
-import com.servletProject.librarySystem.service.UserControllerService;
+import com.servletProject.librarySystem.service.data.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -21,16 +22,16 @@ public class BookingFacade {
 
     private final BookingControllerService bookingControllerService;
     private final LibrarianControllerService librarianControllerService;
-    private final UserControllerService userControllerService;
+    private final UserService userService;
     private final BookControllerService bookControllerService;
 
     public BookingFacade(BookingControllerService bookingControllerService,
                          LibrarianControllerService librarianControllerService,
-                         UserControllerService userControllerService,
+                         UserService userService,
                          BookControllerService bookControllerService) {
         this.bookingControllerService = bookingControllerService;
         this.librarianControllerService = librarianControllerService;
-        this.userControllerService = userControllerService;
+        this.userService = userService;
         this.bookControllerService = bookControllerService;
     }
 
@@ -60,7 +61,7 @@ public class BookingFacade {
 
     public List<ArchiveBookModel> getListOfArchiveUsageByUserId(Long id) {
         if (id != null) {
-            UserEntityModel user = userControllerService.findUser(id);
+            UserEntityModel user = UserEntityConverter.toModel(userService.getUserIfExist(id));
             return librarianControllerService.getListOfActiveUsageByUser(user.getMail());
         } else throw new DataIsNotCorrectException("Check the correctness of the entered data and try again.");
     }

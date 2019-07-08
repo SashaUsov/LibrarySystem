@@ -8,7 +8,6 @@ import com.servletProject.librarySystem.repository.BookRepository;
 import com.servletProject.librarySystem.repository.CopiesOfBooksRepository;
 import com.servletProject.librarySystem.utils.CreateEntityUtil;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +22,6 @@ public class BookCatalogService {
         this.copiesOfBooksRepository = copiesOfBooksRepository;
     }
 
-    @Transactional
     public void saveBook(CreateBookCatalogModel model) {
         String bookTitle = model.getBookTitle().trim();
         Optional<BookCatalog> entity = bookRepository.findOneByBookTitle(bookTitle);
@@ -31,7 +29,7 @@ public class BookCatalogService {
             BookCatalog book = bookRepository.save(BookCatalogConverter.toEntity(model));
             copiesOfBooksRepository.save(CreateEntityUtil.createCopiesOfBooksEntity(book));
         } else {
-            final BookCatalog bookCatalog = entity.get();
+            BookCatalog bookCatalog = entity.get();
             copiesOfBooksRepository.save(CreateEntityUtil.createCopiesOfBooksEntity(bookCatalog));
             bookRepository.incrementBookTotalAmount(bookCatalog.getId());
         }
@@ -48,14 +46,14 @@ public class BookCatalogService {
         List<BookCatalog> book = bookRepository.findAllByBookTitleContaining(title);
         if (!book.isEmpty()) {
             return book;
-        } else throw new ThereAreNoBooksFoundException("No books found");
+        } else throw new ThereAreNoBooksFoundException("Books with this name are not in the catalog.");
     }
 
     public List<BookCatalog> getAllBookByAuthor(String author){
         List<BookCatalog> book = bookRepository.findAllByBookAuthorContaining(author);
         if (!book.isEmpty()) {
             return book;
-        } else throw new ThereAreNoBooksFoundException("No books found");
+        } else throw new ThereAreNoBooksFoundException("Books by this author are not in the catalog.");
     }
 
     public List<BookCatalog> getAllBookByGenre(String genre){

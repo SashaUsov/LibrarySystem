@@ -50,6 +50,5 @@ public class UserEntity {
 
     @Transient
     private boolean permission = false;
-
 }
 

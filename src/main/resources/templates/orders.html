@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-
+<head>
     <meta charset="UTF-8">
     <title>Book catalog</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -53,11 +53,11 @@
 </div>
 <br>
 <div class="w3-container w3-grey w3-opacity w3-right-align w3-padding">
-    <button class="w3-btn w3-round-large" onclick="history.back(-1)">Back</button>
+    <button class="w3-btn w3-round-large" th:onclick="history.back(-1)">Back</button>
 </div>
 <br>
 <div class="w3-container w3-grey w3-opacity w3-right-align w3-padding">
-    <button class="w3-btn w3-round-large" onclick="location.href='/'">Back to main</button>
+    <button class="w3-btn w3-round-large" th:onclick="location.href'/main'">Back to main</button>
 </div>
 </body>
 </html>
