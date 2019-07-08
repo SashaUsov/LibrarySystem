@@ -1,14 +1,12 @@
 package com.servletProject.librarySystem.controller;
 
-import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
+import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
 import com.servletProject.librarySystem.facade.BookingFacade;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/booking")
@@ -26,8 +24,19 @@ public class BookingController {
                                   Model model
     ) {
         bookingFacade.reserveBook(idCopy, nickName);
-        List<OnlineOrderModel> allUserOrders = bookingFacade.getAllUserOrders(nickName);
-        model.addAttribute("ordersList", allUserOrders);
+        model.addAttribute("ordersList", bookingFacade.getAllUserOrders(nickName));
         return "orders";
+    }
+
+    @PostMapping("cancel")
+    public String cancelOrder(@RequestParam Long idCopy,
+                                  @RequestParam String nickName,
+                                  Model model
+    ) {
+       if (nickName != null && idCopy !=null && !nickName.isEmpty()) {
+           bookingFacade.cancelOrder(idCopy, nickName);
+           model.addAttribute("ordersList", bookingFacade.getAllUserOrders(nickName));
+           return "orders";
+       } else throw  new DataIsNotCorrectException("Enter correct data and try again.");
     }
 }

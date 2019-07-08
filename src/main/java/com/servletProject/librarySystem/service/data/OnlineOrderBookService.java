@@ -1,6 +1,7 @@
 package com.servletProject.librarySystem.service.data;
 
 import com.servletProject.librarySystem.domen.OnlineOrderBook;
+import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.exception.OrderNotExistException;
 import com.servletProject.librarySystem.exception.PermissionToActionIsAbsentException;
 import com.servletProject.librarySystem.exception.ThereAreNoBooksFoundException;
@@ -49,11 +50,11 @@ public class OnlineOrderBookService {
         return orderBook.isPresent();
     }
 
-    public void cancelOrderByReader(Long idCopy) {
+    public void cancelOrderByReader(Long idCopy, UserEntity user) {
         Optional<OnlineOrderBook> orderBook = orderBookRepository.findOneByIdBookCopy(idCopy);
         if (orderBook.isPresent()) {
             OnlineOrderBook onlineOrderBook = orderBook.get();
-            if (idCopy == onlineOrderBook.getIdBookCopy()) {
+            if (idCopy == onlineOrderBook.getIdBookCopy() && onlineOrderBook.getIdUser() == user.getId()) {
                 orderBookRepository.delete(onlineOrderBook);
             } else throw new PermissionToActionIsAbsentException("You do not have permission to delete this order.");
         } else throw new OrderNotExistException("The order you are looking for does not exist.");

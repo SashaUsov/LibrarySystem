@@ -3,6 +3,7 @@ package com.servletProject.librarySystem.facade;
 import com.servletProject.librarySystem.converter.UserEntityConverter;
 import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
+import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.domen.dto.archiveBookUsage.ArchiveBookModel;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
 import com.servletProject.librarySystem.domen.dto.userEntity.UserEntityModel;
@@ -49,8 +50,9 @@ public class BookingFacade {
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void cancelOrder( Long idCopy) {
-        bookingControllerService.cancelOrder(idCopy);
+    public void cancelOrder( Long idCopy, String nickName) {
+        UserEntity user = userService.getUserByNickName(nickName);
+        bookingControllerService.cancelOrder(idCopy, user);
     }
 
     public List<OnlineOrderModel> getListOfCompletedOrdersByUserId(Long id) {

@@ -74,8 +74,8 @@ public class BookingControllerService {
     }
 
     @Transactional
-    public void cancelOrder(Long bookCopyId) {
-        orderBookService.cancelOrderByReader(bookCopyId);
+    public void cancelOrder(Long bookCopyId, UserEntity user) {
+        orderBookService.cancelOrderByReader(bookCopyId, user);
         copiesOfBooksService.updateAvailabilityOfCopy(true, bookCopyId);
     }
 }
