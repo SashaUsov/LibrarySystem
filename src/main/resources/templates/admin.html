@@ -1,0 +1,70 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Book catalog</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+
+<body class="w3-light-grey">
+<div class="w3-container w3-blue-grey w3-opacity w3-right-align">
+    <h1>Library system</h1>
+</div>
+
+<div class="w3-container w3-padding">
+    <details>
+        <summary>
+            <div class="w3-container w3-center w3-green">
+                <h2>Provide a new role to the user</h2>
+            </div>
+        </summary>
+        <form id="submitform" action="/admin/grant" method="post" class="w3-selection w3-light-grey w3-padding">
+            <label>Enter user nick name:
+                <input type="text" name="nickName" class="w3-input w3-animate-input w3-border w3-round-large"
+                       style="width: 30%"><br/>
+            </label>
+
+            <label>Enter new user role:
+                <input type="text" name="role" list="role_list"
+                       class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br/>
+            </label>
+
+            <input type="hidden" th:value="${#authentication.getName()}" name="access"/>
+
+            <datalist id="role_list">
+                <option>USER</option>
+                <option>LIBRARIAN</option>
+                <option>ADMIN</option>
+            </datalist>
+
+            <button type="submit" class="w3-btn w3-green w3-round-large w3-margin-bottom">Submit</button>
+        </form>
+    </details>
+
+    <details>
+        <summary>
+            <div class="w3-container w3-center w3-green">
+                <h2>Revoke user role</h2>
+            </div>
+        </summary>
+        <form action="/admin/revoke" method="post" class="w3-selection w3-light-grey w3-padding">
+            <label>Enter user nick name:
+                <input type="text" name="nickName" class="w3-input w3-animate-input w3-border w3-round-large"
+                       style="width: 30%"><br/>
+            </label>
+
+            <label>User role:
+                <input type="text" name="role" list="role_list"
+                       class="w3-input w3-animate-input w3-border w3-round-large" style="width: 30%"><br/>
+            </label>
+            <input type="hidden" th:value="${#authentication.getName()}" name="access"/>
+            <button type="submit" class="w3-btn w3-green w3-round-large w3-margin-bottom">Submit</button>
+        </form>
+    </details>
+
+</div>
+
+<div class="w3-container w3-grey w3-opacity w3-right-align w3-padding">
+    <button class="w3-btn w3-round-large" onclick="location.href='/'">Back to main</button>
+</div>
+</body>
+
+</html>

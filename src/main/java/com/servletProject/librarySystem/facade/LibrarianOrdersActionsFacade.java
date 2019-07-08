@@ -9,19 +9,20 @@ import com.servletProject.librarySystem.service.LibrarianControllerService;
 import com.servletProject.librarySystem.utils.OrdersUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Service
-public class LibrarianOrdersActionsController {
+public class LibrarianOrdersActionsFacade {
 
     private final LibrarianControllerService librarianControllerService;
     private final BookingControllerService bookingControllerService;
 
-    public LibrarianOrdersActionsController(LibrarianControllerService librarianControllerService,
-                                            BookingControllerService bookingControllerService
+    public LibrarianOrdersActionsFacade(LibrarianControllerService librarianControllerService,
+                                        BookingControllerService bookingControllerService
     ) {
         this.librarianControllerService = librarianControllerService;
         this.bookingControllerService = bookingControllerService;
@@ -37,10 +38,11 @@ public class LibrarianOrdersActionsController {
         librarianControllerService.returnBookToTheCatalog(model);
     }
 
+    @Transactional
     @ResponseStatus(HttpStatus.OK)
-    public void cancelOrder(Long idCopy) {
+    public void cancelOrder(Long idCopy, String nickName) {
         if (idCopy != null) {
-            librarianControllerService.cancelOrder(idCopy);
+            librarianControllerService.cancelOrder(idCopy, nickName);
         } else throw new DataIsNotCorrectException("A book with this id does not exist in the orders table.");
     }
 

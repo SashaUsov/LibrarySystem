@@ -1,6 +1,7 @@
 package com.servletProject.librarySystem.service.data;
 
 import com.servletProject.librarySystem.domen.OnlineOrderBook;
+import com.servletProject.librarySystem.domen.Role;
 import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.exception.OrderNotExistException;
 import com.servletProject.librarySystem.exception.PermissionToActionIsAbsentException;
@@ -60,10 +61,12 @@ public class OnlineOrderBookService {
         } else throw new OrderNotExistException("The order you are looking for does not exist.");
     }
 
-    public void cancelOrderLibrarian(Long idCopy) {
-        Optional<OnlineOrderBook> orderBook = orderBookRepository.findOneByIdBookCopy(idCopy);
-        if (orderBook.isPresent()) {
-            orderBookRepository.delete(orderBook.get());
-        } else throw new OrderNotExistException("The order you are looking for does not exist.");
+    public void cancelOrderLibrarian(Long idCopy, UserEntity userEntity) {
+        if (userEntity.getRoles().contains(Role.LIBRARIAN)) {
+            Optional<OnlineOrderBook> orderBook = orderBookRepository.findOneByIdBookCopy(idCopy);
+            if (orderBook.isPresent()) {
+                orderBookRepository.delete(orderBook.get());
+            } else throw new OrderNotExistException("The order you are looking for does not exist.");
+        } else throw new PermissionToActionIsAbsentException("You do not have permission to delete this order.");
     }
 }

@@ -89,8 +89,9 @@ public class LibrarianControllerService {
         return copiesOfBooksService.getAllCopyByCondition("unusable");
     }
 
-    public void cancelOrder(Long idCopy) {
-        orderBookService.cancelOrderLibrarian(idCopy);
+    public void cancelOrder(Long idCopy, String nickName) {
+        UserEntity user = userService.getUserByNickName(nickName);
+        orderBookService.cancelOrderLibrarian(idCopy, user);
     }
 
     public void deleteUnusableBookCopy(Long idCopy) {

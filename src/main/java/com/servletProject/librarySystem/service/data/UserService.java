@@ -20,13 +20,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void checkIfTheUserExists(String email) {
-        Optional<UserEntity> userEntity = userRepository.findOneByMail(email);
-        userEntity.ifPresent(entity -> {
-            throw new ClientAlreadyExistsException("Client with this nick name already exists");
-        });
-    }
-
     public void save(CreateUserEntityModel model) {
         checkIfTheUserExists(model.getMail());
 
@@ -75,5 +68,12 @@ public class UserService {
         if (user.isPresent()) {
             return user.get();
         } else throw new UserNotFoundException("The user you are looking for does not exist.");
+    }
+
+    private void checkIfTheUserExists(String email) {
+        Optional<UserEntity> userEntity = userRepository.findOneByMail(email);
+        userEntity.ifPresent(entity -> {
+            throw new ClientAlreadyExistsException("Client with this nick name already exists");
+        });
     }
 }
