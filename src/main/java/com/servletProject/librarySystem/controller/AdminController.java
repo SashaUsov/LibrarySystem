@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -24,10 +26,11 @@ public class AdminController {
     }
 
     @PostMapping("grant")
-    public String grantRole(@RequestParam String nickName,
-                            @RequestParam String access,
+    public String grantRole(Principal principal,
+                            @RequestParam String nickName,
                             @RequestParam String role
     ) {
+        String access = principal.getName();
         if (isValidData(nickName, access)) {
             adminFacade.grantRole(nickName, access, role);
             return "admin";
@@ -35,10 +38,11 @@ public class AdminController {
     }
 
     @PostMapping("revoke")
-    public String revokeRole(@RequestParam String nickName,
-                             @RequestParam String access,
+    public String revokeRole(Principal principal,
+                             @RequestParam String nickName,
                              @RequestParam String role
     ) {
+        String access = principal.getName();
         if (isValidData(nickName, access)) {
             adminFacade.revokeRole(nickName, access, role);
             return "admin";
