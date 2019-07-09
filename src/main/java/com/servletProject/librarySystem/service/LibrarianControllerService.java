@@ -40,15 +40,18 @@ public class LibrarianControllerService {
     public void giveBookToTheReader(Long idCopy, Long idUser, String librarian) {
         UserEntity user = userService.getUserByNickName(librarian);
         if (user.getRoles().contains(Role.LIBRARIAN)) {
-        orderBookService.deleteOrderByCopyIdAndUserId(idCopy, idUser);
-        completedOrdersService.saveOrder(idUser, user.getId(), idCopy);
+            orderBookService.deleteOrderByCopyIdAndUserId(idCopy, idUser);
+            completedOrdersService.saveOrder(idUser, user.getId(), idCopy);
         } else throw new PermissionToActionIsAbsentException("You do not have permission to confirm this order.");
     }
 
-    public List<OnlineOrderModel> getListOfCompletedOrdersByReader(String email) {
-        Long idUser = userService.getUserIdByEmail(email);
-        List<CompletedOrders> completedOrders = completedOrdersService.findAllByUserId(idUser);
-        return prepareListOfCompletedOrders(completedOrders);
+    public List<OnlineOrderModel> getListOfCompletedOrdersByReader(String email, String librarian) {
+        UserEntity user = userService.getUserByNickName(librarian);
+        if (user.getRoles().contains(Role.LIBRARIAN)) {
+            Long idUser = userService.getUserIdByEmail(email);
+            List<CompletedOrders> completedOrders = completedOrdersService.findAllByUserId(idUser);
+            return prepareListOfCompletedOrders(completedOrders);
+        } else throw new PermissionToActionIsAbsentException("You do not have permission.");
     }
 
     public List<OnlineOrderModel> getListOfCompletedOrdersByUser(String nickName) {
@@ -58,9 +61,12 @@ public class LibrarianControllerService {
 
     }
 
-    public List<OnlineOrderModel> getListOfAllCompletedOrders() {
-        List<CompletedOrders> completedOrders = completedOrdersService.findAllCompletedOrders();
-        return prepareListOfCompletedOrders(completedOrders);
+    public List<OnlineOrderModel> getListOfAllCompletedOrders(String librarian) {
+        UserEntity user = userService.getUserByNickName(librarian);
+        if (user.getRoles().contains(Role.LIBRARIAN)) {
+            List<CompletedOrders> completedOrders = completedOrdersService.findAllCompletedOrders();
+            return prepareListOfCompletedOrders(completedOrders);
+        } else throw new PermissionToActionIsAbsentException("You do not have permission.");
     }
 
     public List<ArchiveBookModel> getListOfActiveUsageByUser(String email) {
@@ -91,8 +97,8 @@ public class LibrarianControllerService {
     public void cancelOrder(Long idCopy, Long idUser, String librarian) {
         UserEntity user = userService.getUserByNickName(librarian);
         if (user.getRoles().contains(Role.LIBRARIAN)) {
-        orderBookService.cancelOrderLibrarian(idCopy, idUser);
-        copiesOfBooksService.updateAvailabilityOfCopy(true, idCopy);
+            orderBookService.cancelOrderLibrarian(idCopy, idUser);
+            copiesOfBooksService.updateAvailabilityOfCopy(true, idCopy);
         } else throw new PermissionToActionIsAbsentException("You do not have permission to delete this order.");
     }
 
@@ -123,13 +129,16 @@ public class LibrarianControllerService {
     }
 
     @Transactional
-    public void returnBookToTheCatalog(ReturnOrderInCatalogModel model) {
+    public void returnBookToTheCatalog(ReturnOrderInCatalogModel model, String librarian) {
+        UserEntity user = userService.getUserByNickName(librarian);
+        if (user.getRoles().contains(Role.LIBRARIAN)) {
         Long readerId = model.getIdReader();
         Long copyId = model.getIdCopy();
         String condition = model.getCondition();
-        usageService.putBookInUsageArchive(copyId, readerId, condition);
+        usageService.putBookInUsageArchive(readerId, copyId, condition);
         completedOrdersService.deleteFromCompletedOrdersByCopyId(copyId);
         copiesOfBooksService.updateCopyOfBookInfo(copyId, condition);
+        } else throw new PermissionToActionIsAbsentException("You do not have permission to delete this order.");
     }
 
     private List<ArchiveBookModel> getArchiveBookModelList(List<ArchiveBookUsage> allUsageArchive,

@@ -1,5 +1,6 @@
 package com.servletProject.librarySystem.controller;
 
+import com.servletProject.librarySystem.domen.dto.onlineOrderBook.ReturnOrderInCatalogModel;
 import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
 import com.servletProject.librarySystem.service.BookingControllerService;
 import com.servletProject.librarySystem.service.LibrarianControllerService;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 
 @Controller
@@ -69,8 +71,40 @@ public class LibrarianActionsController {
         String librarian = principal.getName();
         if (idUser != null && idCopy != null) {
             librarianControllerService.giveBookToTheReader(idCopy, idUser, librarian);
-            model.addAttribute("message", "Order confirmed");
+            model.addAttribute("message", "Order confirmed!");
             return "librarian";
         } else throw new DataIsNotCorrectException("Reload page and try again.");
+    }
+
+    @GetMapping("completed")
+    public String getAllCompletedOrders(Principal principal,
+                                        Model model
+    ) {
+        String librarian = principal.getName();
+        model.addAttribute("ordersList",
+                librarianControllerService.getListOfAllCompletedOrders(librarian));
+        return "completed";
+    }
+
+    @GetMapping("completed-by")
+    public String getCompletedOrdersByEmail(@RequestParam String userEmail,
+                                            Principal principal,
+                                            Model model
+    ) {
+        String librarian = principal.getName();
+        model.addAttribute("ordersList",
+                librarianControllerService.getListOfCompletedOrdersByReader(userEmail, librarian));
+        return "completed";
+    }
+
+    @PostMapping("/return")
+    public String returnBookToTheCatalog(@Valid ReturnOrderInCatalogModel model,
+                                         Principal principal,
+                                         Model m
+    ) {
+        String librarian = principal.getName();
+        librarianControllerService.returnBookToTheCatalog(model, librarian);
+        m.addAttribute("message", "Order returned!");
+        return "librarian";
     }
 }

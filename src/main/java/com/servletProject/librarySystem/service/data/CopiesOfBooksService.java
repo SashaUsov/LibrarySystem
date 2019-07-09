@@ -49,7 +49,7 @@ public class CopiesOfBooksService {
     }
 
     public boolean ifPresent(Long idCopy) {
-        Optional<CopiesOfBooks> copiesOfBooks = copiesOfBooksRepository.findOneByIdAndAndAvailabilityTrue(idCopy);
+        Optional<CopiesOfBooks> copiesOfBooks = copiesOfBooksRepository.findOneByIdAndAndAvailabilityFalse(idCopy);
         return copiesOfBooks.isPresent();
     }
 

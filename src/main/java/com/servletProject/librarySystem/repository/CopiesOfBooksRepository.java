@@ -25,6 +25,8 @@ public interface CopiesOfBooksRepository extends JpaRepository<CopiesOfBooks, Lo
 
     Optional<CopiesOfBooks> findOneByIdAndAndAvailabilityTrue(Long idCopy);
 
+    Optional<CopiesOfBooks> findOneByIdAndAndAvailabilityFalse(Long idCopy);
+
     List<CopiesOfBooks> findAllByIdIn(Collection<Long> idCopyList);
 
     @Modifying
