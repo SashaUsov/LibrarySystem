@@ -1,10 +1,8 @@
 package com.servletProject.librarySystem.service;
 
-import com.servletProject.librarySystem.domen.BookCatalog;
-import com.servletProject.librarySystem.domen.CopiesOfBooks;
-import com.servletProject.librarySystem.domen.OnlineOrderBook;
-import com.servletProject.librarySystem.domen.UserEntity;
+import com.servletProject.librarySystem.domen.*;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
+import com.servletProject.librarySystem.exception.PermissionToActionIsAbsentException;
 import com.servletProject.librarySystem.exception.ThereAreNoBooksFoundException;
 import com.servletProject.librarySystem.service.data.BookCatalogService;
 import com.servletProject.librarySystem.service.data.CopiesOfBooksService;
@@ -45,10 +43,13 @@ public class BookingControllerService {
         } else throw new ThereAreNoBooksFoundException("This book copy is not available.");
     }
 
-    public List<OnlineOrderModel> getListOfReservedBooksByUserEmail(String email) {
-        Long userId = userService.getUserIdByEmail(email);
-        List<OnlineOrderBook> orderBookList = orderBookService.findAllByUserId(userId);
-        return prepareListOfReservedBooksByUserId(orderBookList);
+    public List<OnlineOrderModel> getListOfReservedBooksByUserEmail(String librarian, String email) {
+        UserEntity user = userService.getUserByNickName(librarian);
+        if (user.getRoles().contains(Role.LIBRARIAN)) {
+            Long userId = userService.getUserIdByEmail(email);
+            List<OnlineOrderBook> orderBookList = orderBookService.findAllByUserId(userId);
+            return prepareListOfReservedBooksByUserId(orderBookList);
+        } else throw new PermissionToActionIsAbsentException("You do not have permission to this functionality.");
     }
 
     public List<OnlineOrderModel> getListOfReservedBooksByUserId(String nickName) {
@@ -57,9 +58,12 @@ public class BookingControllerService {
         return prepareListOfReservedBooksByUserId(orderBookList);
     }
 
-    public List<OnlineOrderModel> getListOfAllReservedBooks() {
-        List<OnlineOrderBook> reservedBooksCopy = orderBookService.findAllOrders();
-        return prepareListOfReservedBooksByUserId(reservedBooksCopy);
+    public List<OnlineOrderModel> getListOfAllReservedBooks(String librarian) {
+        UserEntity user = userService.getUserByNickName(librarian);
+        if (user.getRoles().contains(Role.LIBRARIAN)) {
+            List<OnlineOrderBook> reservedBooksCopy = orderBookService.findAllOrders();
+            return prepareListOfReservedBooksByUserId(reservedBooksCopy);
+        } else throw new PermissionToActionIsAbsentException("You do not have permission to this functionality.");
     }
 
     private List<OnlineOrderModel> prepareListOfReservedBooksByUserId(List<OnlineOrderBook> orderBookList) {

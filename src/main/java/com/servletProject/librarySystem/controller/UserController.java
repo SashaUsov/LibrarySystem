@@ -1,6 +1,5 @@
 package com.servletProject.librarySystem.controller;
 
-import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
 import com.servletProject.librarySystem.domen.dto.userEntity.UserEntityModel;
 import com.servletProject.librarySystem.facade.BookingFacade;
 import com.servletProject.librarySystem.facade.UserFacade;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
-import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -29,8 +27,7 @@ public class UserController {
                                Model model
     ) {
         String nickName = principal.getName();
-        List<OnlineOrderModel> allUserOrders = bookingFacade.getAllUserOrders(nickName);
-        model.addAttribute("ordersList", allUserOrders);
+        model.addAttribute("ordersList", bookingFacade.getAllUserOrders(nickName));
         return "orders";
     }
 

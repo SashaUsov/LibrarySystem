@@ -1,6 +1,5 @@
 package com.servletProject.librarySystem.facade;
 
-import com.servletProject.librarySystem.domen.dto.onlineOrderBook.IssueOrderModel;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.ReturnOrderInCatalogModel;
 import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
@@ -9,8 +8,8 @@ import com.servletProject.librarySystem.service.LibrarianControllerService;
 import com.servletProject.librarySystem.utils.OrdersUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -19,41 +18,14 @@ import java.util.List;
 public class LibrarianOrdersActionsFacade {
 
     private final LibrarianControllerService librarianControllerService;
-    private final BookingControllerService bookingControllerService;
 
-    public LibrarianOrdersActionsFacade(LibrarianControllerService librarianControllerService,
-                                        BookingControllerService bookingControllerService
-    ) {
+    public LibrarianOrdersActionsFacade(LibrarianControllerService librarianControllerService) {
         this.librarianControllerService = librarianControllerService;
-        this.bookingControllerService = bookingControllerService;
-    }
-
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void giveBookToTheReader(@Valid @RequestBody IssueOrderModel model) {
-        librarianControllerService.giveBookToTheReader(model);
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void returnOrderToTheReader(@Valid @RequestBody ReturnOrderInCatalogModel model) {
         librarianControllerService.returnBookToTheCatalog(model);
-    }
-
-    @Transactional
-    @ResponseStatus(HttpStatus.OK)
-    public void cancelOrder(Long idCopy, String nickName) {
-        if (idCopy != null) {
-            librarianControllerService.cancelOrder(idCopy, nickName);
-        } else throw new DataIsNotCorrectException("A book with this id does not exist in the orders table.");
-    }
-
-    public List<OnlineOrderModel> getAllReservedBooks() {
-        return bookingControllerService.getListOfAllReservedBooks();
-    }
-
-    public List<OnlineOrderModel> getAllReservedBooksByUserEmail(String email) {
-        if (OrdersUtil.ifEmailPresent(email)) {
-            return bookingControllerService.getListOfReservedBooksByUserEmail(email);
-        } else throw new DataIsNotCorrectException("Enter the correct email and try again.");
     }
 
     public List<OnlineOrderModel> getAllCompletedOrders() {

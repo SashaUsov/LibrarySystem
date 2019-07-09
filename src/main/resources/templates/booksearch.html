@@ -9,56 +9,57 @@
 <div class="w3-container w3-blue-grey w3-opacity w3-right-align">
     <h1>Library system</h1>
 </div>
+<div class="w3-container w3-padding">
+    <details>
+        <summary>
+            <div class="w3-container w3-center w3-blue">
+                <h2>Find a book by title</h2>
+            </div>
+        </summary>
+        <form id="submitform4" action="/book/by-title" method="get" class="w3-selection w3-light-grey w3-padding">
+            <input type="text" name="bookTitle" class="w3-input w3-animate-input w3-border w3-round-large"
+                   style="width: 30%"><br/>
+            <button type="submit" class="w3-btn w3-green w3-round-large w3-margin-bottom">Find</button>
+        </form>
+    </details>
 
-<details>
-    <summary>
-        <div class="w3-panel w3-blue">
-            <h2>Find a book by title</h2>
-        </div>
-    </summary>
-    <form id="submitform4" action="/book/by-title" method="get" class="w3-selection w3-light-grey w3-padding">
-        <input type="text" name="bookTitle" class="w3-input w3-animate-input w3-border w3-round-large"
-               style="width: 30%"><br/>
-        <button type="submit" class="w3-btn w3-green w3-round-large w3-margin-bottom">Find</button>
-    </form>
-</details>
+    <details>
+        <summary>
+            <div class="w3-container w3-center w3-blue">
+                <h2>Find a book by author</h2>
+            </div>
+        </summary>
+        <form id="submitform2" action="/book/by-author" method="get" class="w3-selection w3-light-grey w3-padding">
+            <input type="text" name="bookAuthor" class="w3-input w3-animate-input w3-border w3-round-large"
+                   style="width: 30%"><br/>
+            <button type="submit" class="w3-btn w3-green w3-round-large w3-margin-bottom">Find</button>
+        </form>
+    </details>
 
-<details>
-    <summary>
-        <div class="w3-panel w3-blue">
-            <h2>Find a book by author</h2>
-        </div>
-    </summary>
-    <form id="submitform2" action="/book/by-author" method="get" class="w3-selection w3-light-grey w3-padding">
-        <input type="text" name="bookAuthor" class="w3-input w3-animate-input w3-border w3-round-large"
-               style="width: 30%"><br/>
-        <button type="submit" class="w3-btn w3-green w3-round-large w3-margin-bottom">Find</button>
-    </form>
-</details>
+    <details>
+        <summary>
+            <div class="w3-container w3-center w3-blue">
+                <h2>Find a book by genre</h2>
+            </div>
+        </summary>
+        <form id="submitform3" action="/book/by-genre" method="get" class="w3-selection w3-light-grey w3-padding">
+            <input type="text" name="bookGenre" class="w3-input w3-animate-input w3-border w3-round-large"
+                   style="width: 30%"><br/>
+            <button type="submit" class="w3-btn w3-green w3-round-large w3-margin-bottom">Find</button>
+        </form>
+    </details>
 
-<details>
-    <summary>
-        <div class="w3-panel w3-blue">
-            <h2>Find a book by genre</h2>
+    <details>
+        <summary>
+            <div class="w3-container w3-center w3-blue">
+                <h2>Books catalog</h2>
+            </div>
+        </summary>
+        <div class="w3-btn w3-block w3-green w3-left-align">
+            <button class="w3-btn w3-round-large" onclick="location.href='/book/catalog'">To the books catalog</button>
         </div>
-    </summary>
-    <form id="submitform3" action="/book/by-genre" method="get" class="w3-selection w3-light-grey w3-padding">
-        <input type="text" name="bookGenre" class="w3-input w3-animate-input w3-border w3-round-large"
-               style="width: 30%"><br/>
-        <button type="submit" class="w3-btn w3-green w3-round-large w3-margin-bottom">Find</button>
-    </form>
-</details>
-
-<details>
-    <summary>
-        <div class="w3-panel w3-blue">
-            <h2>Books catalog</h2>
-        </div>
-    </summary>
-    <div class="w3-btn w3-block w3-green w3-left-align">
-        <button class="w3-btn w3-round-large" onclick="location.href='/book/catalog'">To the books catalog</button>
-    </div>
-</details>
+    </details>
+</div>
 <br>
 <div class="w3-container w3-grey w3-opacity w3-right-align w3-padding">
     <button class="w3-btn w3-round-large" onclick="location.href='/main'">Back to main</button>

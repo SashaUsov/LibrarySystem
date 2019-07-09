@@ -25,7 +25,8 @@
             <th> Book author</th>
             <th> Genre</th>
             <th> Publication</th>
-            <th> Uniq id</th>
+            <th> Uniq book id</th>
+            <th></th>
             <th></th>
         </tr>
         </thead>
@@ -41,10 +42,19 @@
             <td style="color: black"><span th:text="${book.getUniqueId()}"></span></td>
             <td>
                 <div>
-                    <form id="submitform" action="/booking/cancel" method="post">
-                        <input type="hidden" th:value="${#authentication.getName()}" name="nickName"/>
+                    <form id="submitform" action="/orders/cancel" method="post">
+                        <input type="hidden" th:value="${book.getUserId()}" name="idUser"/>
                         <input type="hidden" th:if="${book != null}" th:value="${book.getUniqueId()}" name="idCopy"/>
                         <button type="submit" class="w3-btn w3-ripple w3-teal">Cancel</button>
+                    </form>
+                </div>
+            </td>
+            <td>
+                <div>
+                    <form id="submitform2" action="/orders/finish" method="post">
+                        <input type="hidden" th:value="${book.getUserId()}" name="idUser"/>
+                        <input type="hidden" th:if="${book != null}" th:value="${book.getUniqueId()}" name="idCopy"/>
+                        <button type="submit" class="w3-btn w3-ripple w3-teal">Confirm</button>
                     </form>
                 </div>
             </td>

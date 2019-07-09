@@ -1,11 +1,10 @@
 package com.servletProject.librarySystem.service;
 
 import com.servletProject.librarySystem.domen.*;
-import com.servletProject.librarySystem.domen.dto.onlineOrderBook.IssueOrderModel;
 import com.servletProject.librarySystem.domen.dto.archiveBookUsage.ArchiveBookModel;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.ReturnOrderInCatalogModel;
-import com.servletProject.librarySystem.exception.UserNotFoundException;
+import com.servletProject.librarySystem.exception.PermissionToActionIsAbsentException;
 import com.servletProject.librarySystem.service.data.*;
 import com.servletProject.librarySystem.utils.CreateEntityUtil;
 import com.servletProject.librarySystem.utils.OrdersUtil;
@@ -38,13 +37,12 @@ public class LibrarianControllerService {
     }
 
     @Transactional
-    public void giveBookToTheReader(IssueOrderModel model) {
-        Long bookCopyId = model.getIdCopy();
-        Long userId = model.getIdReader();
-        Long librarianId = model.getIdLibrarian();
-
-        orderBookService.deleteOrderByCopyIdAndUserId(bookCopyId, userId);
-        completedOrdersService.saveOrder(userId, librarianId, bookCopyId);
+    public void giveBookToTheReader(Long idCopy, Long idUser, String librarian) {
+        UserEntity user = userService.getUserByNickName(librarian);
+        if (user.getRoles().contains(Role.LIBRARIAN)) {
+        orderBookService.deleteOrderByCopyIdAndUserId(idCopy, idUser);
+        completedOrdersService.saveOrder(idUser, user.getId(), idCopy);
+        } else throw new PermissionToActionIsAbsentException("You do not have permission to confirm this order.");
     }
 
     public List<OnlineOrderModel> getListOfCompletedOrdersByReader(String email) {
@@ -89,9 +87,13 @@ public class LibrarianControllerService {
         return copiesOfBooksService.getAllCopyByCondition("unusable");
     }
 
-    public void cancelOrder(Long idCopy, String nickName) {
-        UserEntity user = userService.getUserByNickName(nickName);
-        orderBookService.cancelOrderLibrarian(idCopy, user);
+    @Transactional
+    public void cancelOrder(Long idCopy, Long idUser, String librarian) {
+        UserEntity user = userService.getUserByNickName(librarian);
+        if (user.getRoles().contains(Role.LIBRARIAN)) {
+        orderBookService.cancelOrderLibrarian(idCopy, idUser);
+        copiesOfBooksService.updateAvailabilityOfCopy(true, idCopy);
+        } else throw new PermissionToActionIsAbsentException("You do not have permission to delete this order.");
     }
 
     public void deleteUnusableBookCopy(Long idCopy) {

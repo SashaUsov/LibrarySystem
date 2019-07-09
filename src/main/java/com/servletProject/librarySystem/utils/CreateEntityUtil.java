@@ -33,9 +33,9 @@ public class CreateEntityUtil {
                                                                           List<OnlineOrderBook> orderBookList
     ) {
         List<OnlineOrderModel> entityList = new ArrayList<>();
-        for (BookCatalog book : bookCatalogList) {
+        for (CopiesOfBooks book : bookCopyList) {
             OnlineOrderModel entity = new OnlineOrderModel();
-            createOnlineOrderModelEntity(bookCopyList, orderBookList, book, entity);
+            createOnlineOrderModelEntity(bookCatalogList, orderBookList, book, entity);
             entityList.add(entity);
         }
         return entityList;
@@ -99,21 +99,21 @@ public class CreateEntityUtil {
         entity.setUserId(completedOrders.getIdReader());
     }
 
-    private static void createOnlineOrderModelEntity(List<CopiesOfBooks> bookCopyList,
+    private static void createOnlineOrderModelEntity(List<BookCatalog> bookCopyList,
                                                      List<OnlineOrderBook> orderBookList,
-                                                     BookCatalog book,
+                                                     CopiesOfBooks book,
                                                      OnlineOrderModel entity
     ) {
-        entity.setBookTitle(book.getBookTitle());
-        entity.setBookAuthor(book.getBookAuthor());
-        entity.setGenre(book.getGenre());
-        entity.setYearOfPublication(book.getYearOfPublication());
-
-        CopiesOfBooks copy = getCopiesOfBooksId(bookCopyList, book);
-        entity.setUniqueId(copy.getId());
+        Optional<BookCatalog> first = bookCopyList.stream().filter(b -> book.getIdBook() == b.getId()).findFirst();
+        BookCatalog bookCatalog = first.get();
+        entity.setBookTitle(bookCatalog.getBookTitle());
+        entity.setBookAuthor(bookCatalog.getBookAuthor());
+        entity.setGenre(bookCatalog.getGenre());
+        entity.setYearOfPublication(bookCatalog.getYearOfPublication());
+        entity.setUniqueId(book.getId());
 
         Optional<OnlineOrderBook> order = orderBookList.stream()
-                .filter(o -> copy.getId() == o.getIdBookCopy())
+                .filter(o -> book.getId() == o.getIdBookCopy())
                 .findFirst();
         OnlineOrderBook onlineOrderBook = order.orElseThrow(() -> new ThereAreNoBooksFoundException("We could not find any copies of the book"));
         entity.setUserId(onlineOrderBook.getIdUser());

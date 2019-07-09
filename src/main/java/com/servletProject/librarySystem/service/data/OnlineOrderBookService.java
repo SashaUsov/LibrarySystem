@@ -61,12 +61,14 @@ public class OnlineOrderBookService {
         } else throw new OrderNotExistException("The order you are looking for does not exist.");
     }
 
-    public void cancelOrderLibrarian(Long idCopy, UserEntity userEntity) {
-        if (userEntity.getRoles().contains(Role.LIBRARIAN)) {
-            Optional<OnlineOrderBook> orderBook = orderBookRepository.findOneByIdBookCopy(idCopy);
-            if (orderBook.isPresent()) {
-                orderBookRepository.delete(orderBook.get());
-            } else throw new OrderNotExistException("The order you are looking for does not exist.");
-        } else throw new PermissionToActionIsAbsentException("You do not have permission to delete this order.");
+    public void cancelOrderLibrarian(Long idCopy, Long idUser) {
+        Optional<OnlineOrderBook> orderBook = orderBookRepository.findOneByIdBookCopy(idCopy);
+        if (orderBook.isPresent()) {
+            OnlineOrderBook onlineOrderBook = orderBook.get();
+            if (idUser == onlineOrderBook.getIdUser()) {
+
+                orderBookRepository.delete(onlineOrderBook);
+            }
+        } else throw new OrderNotExistException("The order you are looking for does not exist.");
     }
 }
