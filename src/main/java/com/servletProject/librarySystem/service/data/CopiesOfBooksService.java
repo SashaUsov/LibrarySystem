@@ -28,16 +28,6 @@ public class CopiesOfBooksService {
         this.archiveBookUsageRepository = archiveBookUsageRepository;
     }
 
-    public List<CopiesOfBooks> getAllBookCopy(Long bookId){
-        List<CopiesOfBooks> copiesOfBooksList = copiesOfBooksRepository.findAllByIdBook(bookId);
-        if (!copiesOfBooksList.isEmpty()) {
-            return copiesOfBooksList;
-        } else {
-            throw new ThereAreNoBooksFoundException("We could not find any copies of the book");
-//            log.error("", );
-        }
-    }
-
     @Transactional
     public void deleteUnusableBookCopy(Long copyId){
         Optional<CopiesOfBooks> copiesOfBooks = copiesOfBooksRepository.findOneByIdAndAndAvailabilityTrue(copyId);
@@ -73,9 +63,8 @@ public class CopiesOfBooksService {
 
     private void deleteIfCopyPresent(CopiesOfBooks copiesOfBooks) {
         archiveBookUsageRepository.deleteAllByIdCopiesBook(copiesOfBooks.getId());
-        Long idBook = copiesOfBooksRepository.findIdBookById(copiesOfBooks.getId());
+        bookRepository.decrementBookTotalAmount(copiesOfBooks.getIdBook());
         copiesOfBooksRepository.delete(copiesOfBooks);
-        bookRepository.decrementBookTotalAmount(idBook);
     }
 
     public void updateCopyOfBookInfo(Long copyId, String condition) {

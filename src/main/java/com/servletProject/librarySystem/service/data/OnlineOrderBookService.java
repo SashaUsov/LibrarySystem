@@ -1,7 +1,6 @@
 package com.servletProject.librarySystem.service.data;
 
 import com.servletProject.librarySystem.domen.OnlineOrderBook;
-import com.servletProject.librarySystem.domen.Role;
 import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.exception.OrderNotExistException;
 import com.servletProject.librarySystem.exception.PermissionToActionIsAbsentException;

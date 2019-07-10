@@ -1,7 +1,7 @@
 package com.servletProject.librarySystem.controller;
 
 import com.servletProject.librarySystem.domen.dto.bookCatalog.CreateBookCatalogModel;
-import com.servletProject.librarySystem.facade.LibrarianCatalogActionsFacade;
+import com.servletProject.librarySystem.service.BookControllerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,11 +13,12 @@ import javax.validation.Valid;
 @RequestMapping("/librarian")
 public class LibrarianController {
 
-    private final LibrarianCatalogActionsFacade librarianCatalogActionsFacade;
+    private final BookControllerService bookControllerService;
 
-    public LibrarianController(LibrarianCatalogActionsFacade librarianCatalogActionsFacade) {
-        this.librarianCatalogActionsFacade = librarianCatalogActionsFacade;
+    public LibrarianController(BookControllerService bookControllerService) {
+        this.bookControllerService = bookControllerService;
     }
+
 
     @GetMapping
     public String librarianPage() {
@@ -26,7 +27,7 @@ public class LibrarianController {
 
     @PostMapping
     public String addBook(@Valid CreateBookCatalogModel model) {
-        librarianCatalogActionsFacade.addNewBook(model);
+        bookControllerService.addNewBook(model);
         return "librarian";
     }
 

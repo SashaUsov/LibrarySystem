@@ -69,28 +69,37 @@ public class LibrarianControllerService {
         } else throw new PermissionToActionIsAbsentException("You do not have permission.");
     }
 
-    public List<ArchiveBookModel> getListOfActiveUsageByUser(String email) {
-        UserEntity user = userService.getUserByEmail(email);
-        List<ArchiveBookUsage> bookUsageList = usageService.findAllByUserId(user.getId());
-        List<Long> copyIdList = getBookCopyIdFromArchiveUsageList(bookUsageList);
-        List<CopiesOfBooks> copyBookList = copiesOfBooksService.findAllById(copyIdList);
-        List<Long> bookIdList = OrdersUtil.getBookIdFromBookCopyList(copyBookList);
-        List<BookCatalog> bookCatalogList = bookCatalogService.findAllByIdIn(bookIdList);
+    public List<ArchiveBookModel> getListOfActiveUsageByUser(String email, String librarian) {
+        UserEntity user = userService.getUserByNickName(librarian);
+        if (user.getRoles().contains(Role.LIBRARIAN)) {
+            UserEntity entity = userService.getUserByEmail(email);
+            List<ArchiveBookUsage> bookUsageList = usageService.findAllByUserId(entity.getId());
+            List<Long> copyIdList = getBookCopyIdFromArchiveUsageList(bookUsageList);
+            List<CopiesOfBooks> copyBookList = copiesOfBooksService.findAllById(copyIdList);
+            List<Long> bookIdList = OrdersUtil.getBookIdFromBookCopyList(copyBookList);
+            List<BookCatalog> bookCatalogList = bookCatalogService.findAllByIdIn(bookIdList);
 
-        return CreateEntityUtil.createArchiveBookModelEntityList(copyBookList, bookCatalogList, user);
+            return CreateEntityUtil.createArchiveBookModelEntityList(copyBookList, bookCatalogList, entity);
+        } else throw new PermissionToActionIsAbsentException("You do not have permission.");
     }
 
-    public List<ArchiveBookModel> getListOfAllArchiveUsage() {
-        List<ArchiveBookUsage> allUsageArchive = usageService.findAllUsageArchive();
-        List<Long> copyIdFromArchiveUsageList = getBookCopyIdFromArchiveUsageList(allUsageArchive);
-        List<CopiesOfBooks> copiesOfBooks = copiesOfBooksService.findAllById(copyIdFromArchiveUsageList);
-        List<Long> bookIdList = OrdersUtil.getBookIdFromBookCopyList(copiesOfBooks);
-        List<BookCatalog> bookCatalogList = bookCatalogService.findAllByIdIn(bookIdList);
-        return getArchiveBookModelList(allUsageArchive, copiesOfBooks, bookCatalogList);
+    public List<ArchiveBookModel> getListOfAllArchiveUsage(String librarian) {
+        UserEntity user = userService.getUserByNickName(librarian);
+        if (user.getRoles().contains(Role.LIBRARIAN)) {
+            List<ArchiveBookUsage> allUsageArchive = usageService.findAllUsageArchive();
+            List<Long> copyIdFromArchiveUsageList = getBookCopyIdFromArchiveUsageList(allUsageArchive);
+            List<CopiesOfBooks> copiesOfBooks = copiesOfBooksService.findAllById(copyIdFromArchiveUsageList);
+            List<Long> bookIdList = OrdersUtil.getBookIdFromBookCopyList(copiesOfBooks);
+            List<BookCatalog> bookCatalogList = bookCatalogService.findAllByIdIn(bookIdList);
+            return getArchiveBookModelList(allUsageArchive, copiesOfBooks, bookCatalogList);
+        } else throw new PermissionToActionIsAbsentException("You do not have permission.");
     }
 
-    public List<CopiesOfBooks> unusableConditionBooksList() {
-        return copiesOfBooksService.getAllCopyByCondition("unusable");
+    public List<CopiesOfBooks> unusableConditionBooksList(String librarian) {
+        UserEntity user = userService.getUserByNickName(librarian);
+        if (user.getRoles().contains(Role.LIBRARIAN)) {
+            return copiesOfBooksService.getAllCopyByCondition("unusable");
+        } else throw new PermissionToActionIsAbsentException("You do not have permission.");
     }
 
     @Transactional
@@ -102,8 +111,25 @@ public class LibrarianControllerService {
         } else throw new PermissionToActionIsAbsentException("You do not have permission to delete this order.");
     }
 
-    public void deleteUnusableBookCopy(Long idCopy) {
-        copiesOfBooksService.deleteUnusableBookCopy(idCopy);
+    @Transactional
+    public void deleteUnusableBookCopy(Long idCopy, String librarian) {
+        UserEntity user = userService.getUserByNickName(librarian);
+        if (user.getRoles().contains(Role.LIBRARIAN)) {
+            copiesOfBooksService.deleteUnusableBookCopy(idCopy);
+        } else throw new PermissionToActionIsAbsentException("You do not have permission to remove this book from the catalog.");
+    }
+
+    @Transactional
+    public void returnBookToTheCatalog(ReturnOrderInCatalogModel model, String librarian) {
+        UserEntity user = userService.getUserByNickName(librarian);
+        if (user.getRoles().contains(Role.LIBRARIAN)) {
+            Long readerId = model.getIdReader();
+            Long copyId = model.getIdCopy();
+            String condition = model.getCondition();
+            usageService.putBookInUsageArchive(readerId, copyId, condition);
+            completedOrdersService.deleteFromCompletedOrdersByCopyId(copyId);
+            copiesOfBooksService.updateCopyOfBookInfo(copyId, condition);
+        } else throw new PermissionToActionIsAbsentException("You do not have permission to delete this order.");
     }
 
     private List<OnlineOrderModel> prepareListOfCompletedOrders(List<CompletedOrders> completedOrders) {
@@ -126,19 +152,6 @@ public class LibrarianControllerService {
         return bookUsageList.stream()
                 .map(ArchiveBookUsage::getIdCopiesBook)
                 .collect(Collectors.toList());
-    }
-
-    @Transactional
-    public void returnBookToTheCatalog(ReturnOrderInCatalogModel model, String librarian) {
-        UserEntity user = userService.getUserByNickName(librarian);
-        if (user.getRoles().contains(Role.LIBRARIAN)) {
-        Long readerId = model.getIdReader();
-        Long copyId = model.getIdCopy();
-        String condition = model.getCondition();
-        usageService.putBookInUsageArchive(readerId, copyId, condition);
-        completedOrdersService.deleteFromCompletedOrdersByCopyId(copyId);
-        copiesOfBooksService.updateCopyOfBookInfo(copyId, condition);
-        } else throw new PermissionToActionIsAbsentException("You do not have permission to delete this order.");
     }
 
     private List<ArchiveBookModel> getArchiveBookModelList(List<ArchiveBookUsage> allUsageArchive,

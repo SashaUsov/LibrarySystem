@@ -7,6 +7,7 @@ import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
 import com.servletProject.librarySystem.service.data.BookCatalogService;
 import com.servletProject.librarySystem.service.data.CopiesOfBooksService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class BookControllerService {
         this.copiesOfBooksService = copiesOfBooksService;
     }
 
+    @Transactional
     public void addNewBook(CreateBookCatalogModel model) {
         if (model != null) {
             bookCatalogService.saveBook(model);

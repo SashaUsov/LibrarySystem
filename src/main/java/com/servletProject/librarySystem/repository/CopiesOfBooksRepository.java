@@ -16,8 +16,6 @@ public interface CopiesOfBooksRepository extends JpaRepository<CopiesOfBooks, Lo
 
     List<CopiesOfBooks> findAllByBookConditionAndAvailabilityTrue(String condition);
 
-    Long findIdBookById(Long idCopy);
-
     @Modifying
     @Query(value = "UPDATE copies_of_books SET availability= :av WHERE id= :id_new",
     nativeQuery = true)

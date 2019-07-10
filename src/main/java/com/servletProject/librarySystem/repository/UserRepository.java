@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findOneByNickName(String nickName);
 
-    @Query(value = "SELECT CONCAT(u.first_name, ' ' ,u.last_name) FROM user_entity u WHERE u.id=: idUser",
+    @Query(value = "SELECT CONCAT(u.first_name, ' ' ,u.last_name) FROM user_entity u WHERE u.id= :idUser",
             nativeQuery = true)
     String findFullUserName(@Param("idUser") Long userId);
 

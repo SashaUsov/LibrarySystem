@@ -3,11 +3,9 @@ package com.servletProject.librarySystem.service;
 import com.servletProject.librarySystem.domen.Role;
 import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.exception.PermissionToActionIsAbsentException;
-import com.servletProject.librarySystem.exception.UserNotFoundException;
 import com.servletProject.librarySystem.repository.UserRepository;
 import com.servletProject.librarySystem.service.data.UserService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AdminControllerService {

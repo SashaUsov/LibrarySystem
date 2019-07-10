@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book catalog</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body class="w3-light-grey">
+<div class="w3-container w3-blue-grey w3-opacity w3-right-align">
+    <h1>Library system</h1>
+</div>
+
+<form th:action="@{/logout}" method="post">
+    <input class="w3-btn w3-block w3-red w3-left-align" type="submit" value="Sign Out"/>
+</form>
+
+<div class="w3-container w3-center w3-green">
+    <h2>Archive usage</h2>
+
+
+    <table class="w3-table-all">
+        <thead>
+        <tr class="w3-blue">
+            <th> Book title </th>
+            <th> Book author </th>
+            <th> Genre </th>
+            <th> Publication </th>
+            <th> Uniq book id </th>
+            <th> Reader name </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${archiveList.isEmpty()}">
+            <td colspan="2"> No Archive Usage</td>
+        </tr>
+        <tr th:each="book : ${archiveList}">
+            <td style="color: black"><span th:text="${book.getBookTitle()}"></span></td>
+            <td style="color: black"><span th:text="${book.getBookAuthor()}"></span></td>
+            <td style="color: black"><span th:text="${book.getGenre()}"></span></td>
+            <td style="color: black"><span th:text="${book.getYearOfPublication()}"></span></td>
+            <td style="color: black"><span th:text="${book.getUniqueId()}"></span></td>
+            <td style="color: black"><span th:text="${book.getName()}"></span></td>
+
+        </tr>
+        </tbody>
+    </table>
+    <br>
+</div>
+<br>
+<div class="w3-container w3-grey w3-opacity w3-right-align w3-padding">
+    <button class="w3-btn w3-round-large" th:onclick="history.back(-1)">Back</button>
+</div>
+<br>
+<div class="w3-container w3-grey w3-opacity w3-right-align w3-padding">
+    <button class="w3-btn w3-round-large" onclick="location.href='/main'">Back to main</button>
+</div>
+</body>
+</html>

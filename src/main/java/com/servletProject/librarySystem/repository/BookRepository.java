@@ -21,12 +21,12 @@ public interface BookRepository extends JpaRepository<BookCatalog, Long> {
     List<BookCatalog> findAllByGenreContaining(String genre);
 
     @Modifying
-    @Query(value = "UPDATE book_catalog bc SET bc.total_amount= bc.total_amount-1 WHERE bc.id=: id",
+    @Query(value = "UPDATE book_catalog bc SET total_amount= bc.total_amount-1 WHERE bc.id= :id",
     nativeQuery = true)
     void decrementBookTotalAmount(@Param("id") Long id);
 
     @Modifying
-    @Query(value = "UPDATE book_catalog bc SET bc.total_amount= bc.total_amount+1 WHERE bc.id=: id",
+    @Query(value = "UPDATE book_catalog bc SET total_amount= bc.total_amount+1 WHERE bc.id= :id",
             nativeQuery = true)
     void incrementBookTotalAmount(@Param("id") Long id);
 

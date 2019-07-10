@@ -107,4 +107,49 @@ public class LibrarianActionsController {
         m.addAttribute("message", "Order returned!");
         return "librarian";
     }
+
+    @GetMapping("archive")
+    public String getAllArchiveUsage(Principal principal,
+                                        Model model
+    ) {
+        String librarian = principal.getName();
+        model.addAttribute("archiveList",
+                librarianControllerService.getListOfAllArchiveUsage(librarian));
+        return "archive";
+    }
+
+    @GetMapping("archive-by")
+    public String ArchiveUsage(@RequestParam String userEmail,
+                                            Principal principal,
+                                            Model model
+    ) {
+        String librarian = principal.getName();
+        model.addAttribute("archiveList",
+                librarianControllerService.getListOfActiveUsageByUser(userEmail, librarian));
+        return "archive";
+    }
+
+    @GetMapping("unusable")
+    public String getAllUnusableBooks(Principal principal,
+                                     Model model
+    ) {
+        String librarian = principal.getName();
+        model.addAttribute("unusableList",
+                librarianControllerService.unusableConditionBooksList(librarian));
+        return "unusable";
+    }
+
+    @PostMapping("remove-u")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public String removeUnusable(@RequestParam Long idCopy,
+                               Principal principal,
+                               Model model
+    ) {
+        String librarian = principal.getName();
+        if (idCopy != null) {
+            librarianControllerService.deleteUnusableBookCopy(idCopy, librarian);
+            model.addAttribute("message", "Unusable book removed from the catalog!");
+            return "librarian";
+        } else throw new DataIsNotCorrectException("Reload page and try again.");
+    }
 }

@@ -61,13 +61,6 @@ public class BookingFacade {
         } else throw new DataIsNotCorrectException("Check the correctness of the entered data and try again.");
     }
 
-    public List<ArchiveBookModel> getListOfArchiveUsageByUserId(Long id) {
-        if (id != null) {
-            UserEntityModel user = UserEntityConverter.toModel(userService.getUserIfExist(id));
-            return librarianControllerService.getListOfActiveUsageByUser(user.getMail());
-        } else throw new DataIsNotCorrectException("Check the correctness of the entered data and try again.");
-    }
-
     public List<BookCatalog> getAllBook() {
         return bookControllerService.getAllBook();
     }
