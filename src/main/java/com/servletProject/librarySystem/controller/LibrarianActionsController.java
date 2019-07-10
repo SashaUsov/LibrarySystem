@@ -5,6 +5,7 @@ import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
 import com.servletProject.librarySystem.service.BookingControllerService;
 import com.servletProject.librarySystem.service.LibrarianControllerService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.security.Principal;
 
 @Controller
 @RequestMapping("/orders")
+@PreAuthorize("hasAuthority('LIBRARIAN')")
 public class LibrarianActionsController {
 
     private final LibrarianControllerService librarianControllerService;

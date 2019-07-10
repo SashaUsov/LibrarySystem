@@ -2,6 +2,7 @@ package com.servletProject.librarySystem.controller;
 
 import com.servletProject.librarySystem.domen.dto.bookCatalog.CreateBookCatalogModel;
 import com.servletProject.librarySystem.service.BookControllerService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/librarian")
+@PreAuthorize("hasAuthority('LIBRARIAN')")
 public class LibrarianController {
 
     private final BookControllerService bookControllerService;

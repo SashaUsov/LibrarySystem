@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Library system</title>
@@ -21,8 +22,8 @@
         </button>
         <button class="w3-btn w3-hover-green w3-round-large" onclick="location.href='/book/search'">Work with books
         </button>
-        <button class="w3-btn w3-hover-green w3-round-large\" onclick="location.href='/admin'">Admin page</button>
-        <button class="w3-btn w3-hover-green w3-round-large\ " onclick="location.href='/librarian'">Librarian
+        <button sec:authorize="hasAuthority('ADMIN')" class="w3-btn w3-hover-green w3-round-large\" onclick="location.href='/admin'">Admin page</button>
+        <button sec:authorize="hasAuthority('LIBRARIAN')" class="w3-btn w3-hover-green w3-round-large\ " onclick="location.href='/librarian'">Librarian
             page
         </button>
     </div>
