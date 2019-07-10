@@ -1,12 +1,9 @@
 package com.servletProject.librarySystem.facade;
 
-import com.servletProject.librarySystem.converter.UserEntityConverter;
 import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.domen.UserEntity;
-import com.servletProject.librarySystem.domen.dto.archiveBookUsage.ArchiveBookModel;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
-import com.servletProject.librarySystem.domen.dto.userEntity.UserEntityModel;
 import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
 import com.servletProject.librarySystem.service.BookControllerService;
 import com.servletProject.librarySystem.service.BookingControllerService;
@@ -14,7 +11,7 @@ import com.servletProject.librarySystem.service.LibrarianControllerService;
 import com.servletProject.librarySystem.service.data.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 

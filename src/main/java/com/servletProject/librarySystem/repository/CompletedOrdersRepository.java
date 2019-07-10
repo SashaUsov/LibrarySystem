@@ -11,9 +11,6 @@ public interface CompletedOrdersRepository extends JpaRepository<CompletedOrders
 
     List<CompletedOrders> findAllByIdReader(Long idReader);
 
-    @Modifying
-    void deleteOneByIdBook(Long idBook);
-
     Optional<CompletedOrders> findOneByIdBook(Long idCopy);
 
 }
