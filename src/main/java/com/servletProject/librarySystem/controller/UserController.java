@@ -35,9 +35,7 @@ public class UserController {
     }
 
     @GetMapping("reading")
-    public List<OnlineOrderModel> getCompletedOrders(Principal principal,
-                                     Model model
-    ) {
+    public List<OnlineOrderModel> getCompletedOrders(Principal principal) {
         String nickName = principal.getName();
         return bookingFacade.getListOfCompletedOrdersByUser(nickName);
     }
