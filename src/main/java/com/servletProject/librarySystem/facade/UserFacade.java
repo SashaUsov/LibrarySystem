@@ -20,7 +20,6 @@ public class UserFacade {
     }
 
     @Transactional
-    @ResponseStatus(HttpStatus.CREATED)
     public void createUser(CreateUserEntityModel model) {
         userService.save(model);
     }

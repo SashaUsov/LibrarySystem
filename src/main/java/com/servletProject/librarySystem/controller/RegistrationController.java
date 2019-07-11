@@ -2,13 +2,15 @@ package com.servletProject.librarySystem.controller;
 
 import com.servletProject.librarySystem.domen.dto.userEntity.CreateUserEntityModel;
 import com.servletProject.librarySystem.facade.UserFacade;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@Controller
+@RestController("/registration")
 public class RegistrationController {
 
     private final UserFacade userFacade;
@@ -17,15 +19,9 @@ public class RegistrationController {
         this.userFacade = userFacade;
     }
 
-    @GetMapping("/registration")
-    public String registerPage() {
-        return "registration";
-    }
-
-    @PostMapping("/registration")
-    public String registration(@Valid CreateUserEntityModel user) {
+    @PostMapping
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void registration(@Valid @RequestBody CreateUserEntityModel user) {
         userFacade.createUser(user);
-
-        return "redirect:/login";
     }
 }

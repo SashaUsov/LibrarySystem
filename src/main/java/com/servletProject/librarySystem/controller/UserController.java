@@ -1,17 +1,17 @@
 package com.servletProject.librarySystem.controller;
 
+import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
 import com.servletProject.librarySystem.domen.dto.userEntity.UserEntityModel;
 import com.servletProject.librarySystem.facade.BookingFacade;
 import com.servletProject.librarySystem.facade.UserFacade;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.List;
 
-@Controller
-@RequestMapping("/user")
+@RestController("/user")
 public class UserController {
 
     private final BookingFacade bookingFacade;
@@ -23,29 +23,22 @@ public class UserController {
     }
 
     @GetMapping("orders")
-    public String getAllOrders(Principal principal,
-                               Model model
-    ) {
+    public List<OnlineOrderModel> getAllOrders(Principal principal) {
         String nickName = principal.getName();
-        model.addAttribute("ordersList", bookingFacade.getAllUserOrders(nickName));
-        return "orders";
+        return bookingFacade.getAllUserOrders(nickName);
     }
 
     @GetMapping
-    public String accountDetail(Principal principal,
-                                Model model) {
+    public UserEntityModel accountDetail(Principal principal) {
         String nickName = principal.getName();
-        UserEntityModel user = userFacade.getUserByNickName(nickName);
-        model.addAttribute("user_info", user);
-        return "info";
+        return userFacade.getUserByNickName(nickName);
     }
 
     @GetMapping("reading")
-    public String getCompletedOrders(Principal principal,
+    public List<OnlineOrderModel> getCompletedOrders(Principal principal,
                                      Model model
     ) {
         String nickName = principal.getName();
-        model.addAttribute("readingList", bookingFacade.getListOfCompletedOrdersByUser(nickName));
-        return "reading";
+        return bookingFacade.getListOfCompletedOrdersByUser(nickName);
     }
 }

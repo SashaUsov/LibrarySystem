@@ -1,18 +1,16 @@
 package com.servletProject.librarySystem.controller;
 
+import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.domen.dto.bookCatalog.CreateBookCatalogModel;
 import com.servletProject.librarySystem.service.BookControllerService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
-@Controller
-@RequestMapping("/librarian")
+@RestController("/librarian")
 @PreAuthorize("hasAuthority('LIBRARIAN')")
 public class LibrarianController {
 
@@ -22,18 +20,11 @@ public class LibrarianController {
         this.bookControllerService = bookControllerService;
     }
 
-
-    @GetMapping
-    public String librarianPage() {
-        return "librarian";
-    }
-
     @PostMapping
-    public String addBook(@Valid CreateBookCatalogModel model,
-                          Model m) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<BookCatalog> addBook(@Valid @RequestBody CreateBookCatalogModel model) {
         bookControllerService.addNewBook(model);
-        m.addAttribute("message", "Book successfully added to catalog.");
-        return "librarian";
+        return bookControllerService.getAllBook();
     }
 
 }

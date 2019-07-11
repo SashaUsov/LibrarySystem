@@ -1,20 +1,21 @@
 package com.servletProject.librarySystem.controller;
 
+import com.servletProject.librarySystem.domen.CopiesOfBooks;
+import com.servletProject.librarySystem.domen.dto.archiveBookUsage.ArchiveBookModel;
+import com.servletProject.librarySystem.domen.dto.onlineOrderBook.CancelConfirmOrderModel;
+import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.ReturnOrderInCatalogModel;
-import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
 import com.servletProject.librarySystem.service.BookingControllerService;
 import com.servletProject.librarySystem.service.LibrarianControllerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
-@Controller
-@RequestMapping("/orders")
+@RestController("/orders")
 @PreAuthorize("hasAuthority('LIBRARIAN')")
 public class LibrarianActionsController {
 
@@ -29,129 +30,86 @@ public class LibrarianActionsController {
     }
 
     @GetMapping
-    public String getAllOrders(Principal principal,
-                               Model model
-    ) {
+    public List<OnlineOrderModel> getAllOrders(Principal principal) {
         String librarian = principal.getName();
-        model.addAttribute("ordersList", bookingControllerService.getListOfAllReservedBooks(librarian));
-        return "work";
+        return bookingControllerService.getListOfAllReservedBooks(librarian);
     }
 
-    @GetMapping("by-email")
-    public String getOrdersByUserEmail(@RequestParam String userEmail,
-                                       Principal principal,
-                                       Model model
-    ) {
+    @GetMapping("{email}")
+    public List<OnlineOrderModel> getOrdersByUserEmail(@PathVariable("email") String userEmail,
+                                                       Principal principal) {
         String librarian = principal.getName();
-        model.addAttribute("ordersList",
-                bookingControllerService.getListOfReservedBooksByUserEmail(librarian, userEmail));
-        return "work";
+        return bookingControllerService
+                .getListOfReservedBooksByUserEmail(librarian, userEmail);
     }
 
     @PostMapping("cancel")
     @ResponseStatus(HttpStatus.OK)
-    public String cancelOrder(@RequestParam Long idUser,
-                              @RequestParam Long idCopy,
-                              Principal principal,
-                              Model model
-    ) {
+    public void cancelOrder(@Valid @RequestBody CancelConfirmOrderModel cancelOrderModel,
+                            Principal principal) {
         String librarian = principal.getName();
-        if (idUser != null && idCopy != null) {
-            librarianControllerService.cancelOrder(idCopy, idUser, librarian);
-            model.addAttribute("message", "Order canceled!");
-            return "librarian";
-        } else throw new DataIsNotCorrectException("Reload page and try again.");
+        librarianControllerService
+                .cancelOrder(cancelOrderModel.getIdCopy(), cancelOrderModel.getIdUser(), librarian);
     }
 
-    @PostMapping("finish")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public String confirmOrder(@RequestParam Long idUser,
-                              @RequestParam Long idCopy,
-                              Principal principal,
-                              Model model
-    ) {
+    @PostMapping("confirm")
+    @ResponseStatus(HttpStatus.OK)
+    public void confirmOrder(@Valid @RequestBody CancelConfirmOrderModel confirmOrderModel,
+                             Principal principal) {
         String librarian = principal.getName();
-        if (idUser != null && idCopy != null) {
-            librarianControllerService.giveBookToTheReader(idCopy, idUser, librarian);
-            model.addAttribute("message", "Order confirmed!");
-            return "librarian";
-        } else throw new DataIsNotCorrectException("Reload page and try again.");
+        librarianControllerService
+                .giveBookToTheReader(confirmOrderModel.getIdCopy(), confirmOrderModel.getIdUser(), librarian);
     }
 
     @GetMapping("completed")
-    public String getAllCompletedOrders(Principal principal,
-                                        Model model
-    ) {
+    public List<OnlineOrderModel> getAllCompletedOrders(Principal principal) {
         String librarian = principal.getName();
-        model.addAttribute("ordersList",
-                librarianControllerService.getListOfAllCompletedOrders(librarian));
-        return "completed";
+        return librarianControllerService.getListOfAllCompletedOrders(librarian);
+
     }
 
-    @GetMapping("completed-by")
-    public String getCompletedOrdersByEmail(@RequestParam String userEmail,
-                                            Principal principal,
-                                            Model model
-    ) {
+    @GetMapping("completed/{email}")
+    public List<OnlineOrderModel> getCompletedOrdersByEmail(@PathVariable("email") String userEmail,
+                                                            Principal principal) {
         String librarian = principal.getName();
-        model.addAttribute("ordersList",
-                librarianControllerService.getListOfCompletedOrdersByReader(userEmail, librarian));
-        return "completed";
+        return librarianControllerService
+                .getListOfCompletedOrdersByReader(userEmail, librarian);
+
     }
 
-    @PostMapping("/return")
-    public String returnBookToTheCatalog(@Valid ReturnOrderInCatalogModel model,
-                                         Principal principal,
-                                         Model m
-    ) {
+    @PostMapping("return")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void returnBookToTheCatalog(@Valid @RequestBody ReturnOrderInCatalogModel model,
+                                       Principal principal) {
         String librarian = principal.getName();
         librarianControllerService.returnBookToTheCatalog(model, librarian);
-        m.addAttribute("message", "Order returned!");
-        return "librarian";
     }
 
     @GetMapping("archive")
-    public String getAllArchiveUsage(Principal principal,
-                                        Model model
-    ) {
+    public List<ArchiveBookModel> getAllArchiveUsage(Principal principal) {
         String librarian = principal.getName();
-        model.addAttribute("archiveList",
-                librarianControllerService.getListOfAllArchiveUsage(librarian));
-        return "archive";
+        return librarianControllerService.getListOfAllArchiveUsage(librarian);
+
     }
 
-    @GetMapping("archive-by")
-    public String ArchiveUsage(@RequestParam String userEmail,
-                                            Principal principal,
-                                            Model model
-    ) {
+    @GetMapping("archive/{email}")
+    public List<ArchiveBookModel> archiveUsageByUser(@PathVariable("email") String userEmail,
+                                                     Principal principal) {
         String librarian = principal.getName();
-        model.addAttribute("archiveList",
-                librarianControllerService.getListOfActiveUsageByUser(userEmail, librarian));
-        return "archive";
+        return librarianControllerService.getListOfActiveUsageByUser(userEmail, librarian);
     }
 
     @GetMapping("unusable")
-    public String getAllUnusableBooks(Principal principal,
-                                     Model model
-    ) {
+    public List<CopiesOfBooks> getAllUnusableBooks(Principal principal) {
         String librarian = principal.getName();
-        model.addAttribute("unusableList",
-                librarianControllerService.unusableConditionBooksList(librarian));
-        return "unusable";
+        return librarianControllerService.unusableConditionBooksList(librarian);
     }
 
-    @PostMapping("remove-u")
+    @PostMapping("remove/{idCopy}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public String removeUnusable(@RequestParam Long idCopy,
-                               Principal principal,
-                               Model model
-    ) {
+    public void removeUnusable(@PathVariable("idCopy") Long idCopy,
+                               Principal principal) {
         String librarian = principal.getName();
-        if (idCopy != null) {
-            librarianControllerService.deleteUnusableBookCopy(idCopy, librarian);
-            model.addAttribute("message", "Unusable book removed from the catalog!");
-            return "librarian";
-        } else throw new DataIsNotCorrectException("Reload page and try again.");
+        librarianControllerService.deleteUnusableBookCopy(idCopy, librarian);
     }
 }

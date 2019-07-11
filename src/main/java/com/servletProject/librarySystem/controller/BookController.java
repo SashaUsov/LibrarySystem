@@ -1,15 +1,16 @@
 package com.servletProject.librarySystem.controller;
 
+import com.servletProject.librarySystem.domen.BookCatalog;
+import com.servletProject.librarySystem.domen.CopiesOfBooks;
 import com.servletProject.librarySystem.facade.BookingFacade;
 import com.servletProject.librarySystem.facade.SearchActionsFacade;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping("/book")
+import java.util.List;
+
+@RestController("/book")
 public class BookController {
 
     private final BookingFacade bookingFacade;
@@ -21,9 +22,8 @@ public class BookController {
     }
 
     @GetMapping("catalog")
-    public String getAllBooks(Model model) {
-        model.addAttribute("books", bookingFacade.getAllBook());
-        return "catalog";
+    public List<BookCatalog> getAllBooks() {
+        return bookingFacade.getAllBook();
     }
 
     @GetMapping("search")
@@ -31,27 +31,23 @@ public class BookController {
         return "booksearch";
     }
 
-    @GetMapping("detail")
-    public String showDetail(@RequestParam Long idCopy, Model model) {
-        model.addAttribute("booksCopy", bookingFacade.findAllCopy(idCopy));
-        return "detail";
+    @GetMapping("detail/{id}")
+    public List<CopiesOfBooks> showDetail(@PathVariable("id") Long idCopy) {
+        return bookingFacade.findAllCopy(idCopy);
     }
 
-    @GetMapping("by-title")
-    public String getAllBooksByTitle(@RequestParam String bookTitle, Model model) {
-        model.addAttribute("books", searchActionsFacade.searchBookByTitle(bookTitle));
-        return "catalog";
+    @GetMapping("by-title/{title}")
+    public List<BookCatalog> getAllBooksByTitle(@PathVariable("title") String bookTitle) {
+        return searchActionsFacade.searchBookByTitle(bookTitle);
     }
 
-    @GetMapping("by-author")
-    public String getAllBooksByAuthor(@RequestParam String bookAuthor, Model model) {
-        model.addAttribute("books", searchActionsFacade.searchBookByAuthor(bookAuthor));
-        return "catalog";
+    @GetMapping("by-author/{author}")
+    public List<BookCatalog> getAllBooksByAuthor(@PathVariable("author") String bookAuthor) {
+        return searchActionsFacade.searchBookByAuthor(bookAuthor);
     }
 
-    @GetMapping("by-genre")
-    public String getAllBooksByGenre(@RequestParam String bookGenre, Model model) {
-        model.addAttribute("books", searchActionsFacade.searchBookByGenre(bookGenre));
-        return "catalog";
+    @GetMapping("by-genre/{genre}")
+    public List<BookCatalog> getAllBooksByGenre(@PathVariable("genre") String bookGenre) {
+        return searchActionsFacade.searchBookByGenre(bookGenre);
     }
 }
