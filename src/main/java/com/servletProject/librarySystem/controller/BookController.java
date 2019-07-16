@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController("/book")
+@RestController("book")
 public class BookController {
 
     private final BookingFacade bookingFacade;
@@ -24,11 +24,6 @@ public class BookController {
     @GetMapping("catalog")
     public List<BookCatalog> getAllBooks() {
         return bookingFacade.getAllBook();
-    }
-
-    @GetMapping("search")
-    public String search() {
-        return "booksearch";
     }
 
     @GetMapping("detail/{id}")

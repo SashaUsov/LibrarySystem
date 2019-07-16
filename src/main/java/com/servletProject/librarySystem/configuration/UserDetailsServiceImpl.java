@@ -3,7 +3,6 @@ package com.servletProject.librarySystem.configuration;
 import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.exception.UserNotFoundException;
 import com.servletProject.librarySystem.repository.UserRepository;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new User(
                 userEntity.getNickName(),
                 userEntity.getPassword(),
-                AuthorityUtils.createAuthorityList()
+                userEntity.getRoles()
         );
     }
 }
