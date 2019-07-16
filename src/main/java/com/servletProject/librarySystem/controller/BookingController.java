@@ -4,15 +4,13 @@ import com.servletProject.librarySystem.domen.dto.onlineOrderBook.CreateCancelOr
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
 import com.servletProject.librarySystem.facade.BookingFacade;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController("/booking")
+@RestController
+@RequestMapping("booking")
 public class BookingController {
 
     private final BookingFacade bookingFacade;

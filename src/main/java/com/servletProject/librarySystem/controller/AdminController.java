@@ -4,15 +4,13 @@ import com.servletProject.librarySystem.domen.dto.GrantRoleModel;
 import com.servletProject.librarySystem.facade.AdminFacade;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
 
-@RestController("/admin")
+@RestController
+@RequestMapping("admin")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class AdminController {
 

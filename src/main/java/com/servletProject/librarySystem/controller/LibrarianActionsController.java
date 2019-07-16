@@ -15,7 +15,8 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
-@RestController("/orders")
+@RestController
+@RequestMapping("orders")
 @PreAuthorize("hasAuthority('LIBRARIAN')")
 public class LibrarianActionsController {
 
@@ -29,7 +30,7 @@ public class LibrarianActionsController {
         this.bookingControllerService = bookingControllerService;
     }
 
-    @GetMapping
+    @GetMapping("/orders")
     public List<OnlineOrderModel> getAllOrders(Principal principal) {
         String librarian = principal.getName();
         return bookingControllerService.getListOfAllReservedBooks(librarian);

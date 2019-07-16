@@ -6,11 +6,13 @@ import com.servletProject.librarySystem.facade.BookingFacade;
 import com.servletProject.librarySystem.facade.SearchActionsFacade;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController("book")
+@RestController
+@RequestMapping("book")
 public class BookController {
 
     private final BookingFacade bookingFacade;

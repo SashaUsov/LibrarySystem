@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController("/librarian")
+@RestController
+@RequestMapping("librarian")
 @PreAuthorize("hasAuthority('LIBRARIAN')")
 public class LibrarianController {
 
