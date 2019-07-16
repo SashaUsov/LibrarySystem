@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UserEntityConverter {
 
-    private final static PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+    private final static PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder(6);
 
     public static UserEntity toEntity(CreateUserEntityModel model) {
         UserEntity entity = new UserEntity();
