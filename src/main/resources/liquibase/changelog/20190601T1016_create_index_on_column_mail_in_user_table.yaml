@@ -1,14 +1,14 @@
 databaseChangeLog:
 
-    - changeSet:
-        id: create_unique_index_on_column_mail_in_user_table
-        author: sasha_vosu
-        changes:
-          - createIndex:
-              columns:
+  - changeSet:
+      id: create_unique_index_on_column_mail_in_user_table
+      author: sasha_vosu
+      changes:
+        - createIndex:
+            columns:
               - column:
                   name: mail
                   type: varchar(50)
-              indexName: idx_mail
-              tableName: user_entity
-              unique: true
+            indexName: idx_mail
+            tableName: user_entity
+            unique: true

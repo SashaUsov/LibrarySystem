@@ -1,52 +1,52 @@
 databaseChangeLog:
 
-    - changeSet:
-        id: 1
-        author: sasha_vosu
-        changes:
+  - changeSet:
+      id: 1
+      author: sasha_vosu
+      changes:
 
         - createTable:
             tableName: user_entity
             columns:
               - column:
-                 name: id
-                 type: bigint
-                 constraints:
+                  name: id
+                  type: bigint
+                  constraints:
                     primaryKey: true
                     primaryKeyName: pk_user_entity
                     nullable: false
                     autoIncrement: true
                     unique: true
               - column:
-                 name: first_name
-                 type: varchar(15)
-                 constraints:
+                  name: first_name
+                  type: varchar(15)
+                  constraints:
                     nullable: false
               - column:
-                 name: last_name
-                 type: varchar(15)
-                 constraints:
+                  name: last_name
+                  type: varchar(15)
+                  constraints:
                     nullable: false
               - column:
-                 name: nick_name
-                 type: varchar(15)
-                 constraints:
+                  name: nick_name
+                  type: varchar(15)
+                  constraints:
                     nullable: false
                     unique: true
               - column:
-                 name: password
-                 type: varchar(20)
-                 constraints:
+                  name: password
+                  type: varchar(20)
+                  constraints:
                     nullable: false
               - column:
-                 name: mail
-                 type: varchar(50)
-                 constraints:
+                  name: mail
+                  type: varchar(50)
+                  constraints:
                     nullable: false
               - column:
-                 name: address
-                 type: varchar
+                  name: address
+                  type: varchar
               - column:
-                 name: permission_to_order
-                 type: boolean
-                 defaultValueBoolean: true
+                  name: permission_to_order
+                  type: boolean
+                  defaultValueBoolean: true

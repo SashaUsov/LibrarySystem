@@ -1,54 +1,59 @@
 package com.servletProject.librarySystem.configuration;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Configuration;
+import com.servletProject.librarySystem.security.JWTAuthenticationFilter;
+import com.servletProject.librarySystem.security.JWTAuthorizationFilter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import javax.sql.DataSource;
+import static com.servletProject.librarySystem.security.SecurityConstants.SIGN_UP_URL;
 
-@Configuration
+@Component
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final DataSource dataSource;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public WebSecurityConfig(@Qualifier("dataSource") DataSource dataSource) {
-        this.dataSource = dataSource;
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService,
+                             BCryptPasswordEncoder bCryptPasswordEncoder
+    ) {
+        this.userDetailsService = userDetailsService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http.cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/", "/registration").permitAll()
-                    .antMatchers("/admin")
-                    .hasRole("ADMIN")
-                    .antMatchers("/orders", "/librarian")
-                    .hasRole("LIBRARIAN")
+                    .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                     .anyRequest().authenticated()
                 .and()
-                    .formLogin()
-                    .loginPage("/login").defaultSuccessUrl("/main", true)
-                    .permitAll()
-                .and()
-                    .logout()
-                    .permitAll();
+                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+                // this disables session creation on Spring Security
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .passwordEncoder(NoOpPasswordEncoder.getInstance())
-                .usersByUsernameQuery("select nick_name as username, password, permission_to_order as active from user_entity where nick_name= ?")
-                .authoritiesByUsernameQuery("select u.nick_name, ur.role from user_entity u inner join users_role ur on u.id = ur.user_id where u.nick_name=?");
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        return source;
+    }
 }

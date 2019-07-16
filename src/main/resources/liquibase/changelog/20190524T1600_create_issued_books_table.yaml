@@ -1,49 +1,49 @@
 databaseChangeLog:
 
-    - changeSet:
-        id: 4
-        author: sasha_vosu
-        changes:
+  - changeSet:
+      id: 4
+      author: sasha_vosu
+      changes:
 
         - createTable:
             tableName: issued_books
             columns:
               - column:
-                 name: id
-                 type: bigint
-                 constraints:
+                  name: id
+                  type: bigint
+                  constraints:
                     primaryKey: true
                     primaryKeyName: pk_issued_books
                     nullable: false
                     unique: true
               - column:
-                 name: id_reader
-                 type: bigint
-                 constraints:
+                  name: id_reader
+                  type: bigint
+                  constraints:
                     nullable: false
                     foreignKeyName: fk_reader_id
                     references: user_entity(id)
               - column:
-                 name: id_librarian
-                 type: bigint
-                 constraints:
+                  name: id_librarian
+                  type: bigint
+                  constraints:
                     nullable: false
                     foreignKeyName: fk_librarian_id
                     references: user_entity(id)
               - column:
-                 name: id_book
-                 type: bigint
-                 constraints:
+                  name: id_book
+                  type: bigint
+                  constraints:
                     nullable: false
                     foreignKeyName: fk_issued_copies
                     references: copies_of_books(id)
               - column:
-                 name: reading_place
-                 type: varchar(4)
+                  name: reading_place
+                  type: varchar(4)
               - column:
-                 name: date_of_issue
-                 type: date
-                 defaultValueDate: CURRENT_TIMESTAMP
+                  name: date_of_issue
+                  type: date
+                  defaultValueDate: CURRENT_TIMESTAMP
               - column:
-                 name: period
-                 type: bigint
+                  name: period
+                  type: bigint

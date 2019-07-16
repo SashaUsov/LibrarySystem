@@ -1,36 +1,36 @@
 databaseChangeLog:
 
-    - changeSet:
-        id: 3
-        author: sasha_vosu
-        changes:
+  - changeSet:
+      id: 3
+      author: sasha_vosu
+      changes:
 
         - createTable:
             tableName: copies_of_books
             columns:
               - column:
-                 name: id
-                 type: bigint
-                 constraints:
+                  name: id
+                  type: bigint
+                  constraints:
                     primaryKey: true
                     primaryKeyName: pk_copies_of_books
                     nullable: false
                     unique: true
               - column:
-                 name: id_book
-                 type: bigint
-                 constraints:
+                  name: id_book
+                  type: bigint
+                  constraints:
                     nullable: false
                     foreignKeyName: fk_copies_of_books
                     references: book_catalog(id)
               - column:
-                 name: availability
-                 type: boolean
-                 defaultValueBoolean: true
-                 constraints:
+                  name: availability
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
                     nullable: false
               - column:
-                 name: book_condition
-                 type: varchar(8)
-                 constraints:
+                  name: book_condition
+                  type: varchar(8)
+                  constraints:
                     nullable: false

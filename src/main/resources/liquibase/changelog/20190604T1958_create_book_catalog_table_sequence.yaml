@@ -1,9 +1,9 @@
 databaseChangeLog:
 
-    - changeSet:
-        id: sequence_on_book_catalog_table
-        author: sashaVosu
-        changes:
+  - changeSet:
+      id: sequence_on_book_catalog_table
+      author: sashaVosu
+      changes:
         - createSequence:
             incrementBy: 1
             sequenceName: seq_book_id

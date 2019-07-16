@@ -20,7 +20,7 @@ public class LibrarianController {
         this.bookControllerService = bookControllerService;
     }
 
-    @PostMapping
+    @PostMapping("add")
     @ResponseStatus(HttpStatus.CREATED)
     public List<BookCatalog> addBook(@Valid @RequestBody CreateBookCatalogModel model) {
         bookControllerService.addNewBook(model);

@@ -1,9 +1,9 @@
 databaseChangeLog:
 
-    - changeSet:
-        id: sequence_on_completed_orders_table
-        author: sashaVosu
-        changes:
+  - changeSet:
+      id: sequence_on_completed_orders_table
+      author: sashaVosu
+      changes:
         - createSequence:
             incrementBy: 1
             sequenceName: seq_completed_orders_id

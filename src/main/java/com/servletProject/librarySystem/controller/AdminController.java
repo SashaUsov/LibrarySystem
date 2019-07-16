@@ -29,7 +29,7 @@ public class AdminController {
         adminFacade.grantRole(roleModel.getNickName(), access, roleModel.getRole());
     }
 
-    @PostMapping("revoke")
+    @PostMapping("revoke-role")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void revokeRole(@Valid @RequestBody GrantRoleModel roleModel, Principal principal) {
         String access = principal.getName();

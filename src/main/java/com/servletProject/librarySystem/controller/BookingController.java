@@ -21,14 +21,14 @@ public class BookingController {
         this.bookingFacade = bookingFacade;
     }
 
-    @PostMapping
+    @PostMapping("reserve")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public List<OnlineOrderModel> reserveBookCopy(@Valid @RequestBody CreateCancelOrderModel orderModel) {
         bookingFacade.reserveBook(orderModel.getIdCopy(), orderModel.getNickName());
         return bookingFacade.getAllUserOrders(orderModel.getNickName());
     }
 
-    @PostMapping("cancel")
+    @PostMapping("revoke")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public List<OnlineOrderModel> cancelOrder(@Valid @RequestBody CreateCancelOrderModel orderModel) {
         bookingFacade.cancelOrder(orderModel.getIdCopy(), orderModel.getNickName());

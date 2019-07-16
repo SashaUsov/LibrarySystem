@@ -27,7 +27,7 @@ public class UserController {
         return bookingFacade.getAllUserOrders(nickName);
     }
 
-    @GetMapping
+    @GetMapping("info")
     public UserEntityModel accountDetail(Principal principal) {
         String nickName = principal.getName();
         return userFacade.getUserByNickName(nickName);
