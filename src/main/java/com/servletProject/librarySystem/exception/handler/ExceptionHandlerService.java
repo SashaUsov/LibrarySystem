@@ -72,7 +72,8 @@ public class ExceptionHandlerService {
      * Customize the response for MethodArgumentNotValidException.
      */
     private ResponseEntity<ErrorInfo> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpHeaders headers,
-                                                                            HttpStatus status, WebRequest request) {
+                                                                            HttpStatus status, WebRequest request
+    ) {
         return handleExceptionInternal(ex, new ErrorInfo().setTimestamp(CreateEntityUtil.getCurrentTime())
                 .setMessage(ex.getMessage())
                 .setDeveloperMessage(ex.toString()), headers, status, request);
@@ -81,7 +82,9 @@ public class ExceptionHandlerService {
     /**
      * A single place to customize the response body of all Exception types.
      */
-    private ResponseEntity<ErrorInfo> handleExceptionInternal(Exception ex, ErrorInfo body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    private ResponseEntity<ErrorInfo> handleExceptionInternal(Exception ex, ErrorInfo body, HttpHeaders headers,
+                                                              HttpStatus status, WebRequest request
+    ) {
         if (HttpStatus.INTERNAL_SERVER_ERROR.equals(status)) {
             request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, WebRequest.SCOPE_REQUEST);
         }
