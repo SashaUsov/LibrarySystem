@@ -26,41 +26,31 @@ public class ExceptionHandlerService {
     public final ResponseEntity<ErrorInfo> handleException(Exception ex, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();
 
-        if (ex instanceof UserNotFoundException) {
+        if (ex instanceof UserNotFoundException || ex instanceof ThereAreNoBooksFoundException) {
             HttpStatus status = HttpStatus.NOT_FOUND;
-            UserNotFoundException unfe = (UserNotFoundException) ex;
+            BusinessExceptions be = (BusinessExceptions) ex;
 
-            return handleUserNotFoundException(unfe, headers, status, request);
-        } else if (ex instanceof ThereAreNoBooksFoundException) {
-            HttpStatus status = HttpStatus.BAD_REQUEST;
-            ThereAreNoBooksFoundException tanfbe = (ThereAreNoBooksFoundException) ex;
-
-            return handleThereAreNoBooksFoundException(tanfbe, headers, status, request);
+            return handleBusinessExceptions(be, headers, status, request);
         } else if (ex instanceof MethodArgumentNotValidException) {
             HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
             MethodArgumentNotValidException manve = (MethodArgumentNotValidException) ex;
 
             return handleMethodArgumentNotValidException(manve, headers, status, request);
-        } else if (ex instanceof ClientAlreadyExistsException) {
+        } else if (ex instanceof OrderNotExistException || ex instanceof ClientAlreadyExistsException) {
             HttpStatus status = HttpStatus.CONFLICT;
-            ClientAlreadyExistsException caee = (ClientAlreadyExistsException) ex;
+            BusinessExceptions be = (BusinessExceptions) ex;
 
-            return handleClientAlreadyExistsException(caee, headers, status, request);
+            return handleBusinessExceptions(be, headers, status, request);
         } else if (ex instanceof DataIsNotCorrectException) {
             HttpStatus status = HttpStatus.BAD_REQUEST;
             DataIsNotCorrectException dince = (DataIsNotCorrectException) ex;
 
-            return handleDataIsNotCorrectException(dince, headers, status, request);
-        } else if (ex instanceof OrderNotExistException) {
-            HttpStatus status = HttpStatus.NOT_FOUND;
-            OrderNotExistException onee = (OrderNotExistException) ex;
-
-            return handleOrderNotExistException(onee, headers, status, request);
+            return handleBusinessExceptions(dince, headers, status, request);
         } else if (ex instanceof PermissionToActionIsAbsentException) {
             HttpStatus status = HttpStatus.FORBIDDEN;
             PermissionToActionIsAbsentException onee = (PermissionToActionIsAbsentException) ex;
 
-            return handlePermissionToActionIsAbsentException(onee, headers, status, request);
+            return handleBusinessExceptions(onee, headers, status, request);
         } else {
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
             return handleExceptionInternal(ex, null, headers, status, request);
@@ -68,21 +58,11 @@ public class ExceptionHandlerService {
     }
 
     /**
-     * Customize the response for UserNotFoundException.
+     * Customize the response for BusinessExceptions.
      */
-    private ResponseEntity<ErrorInfo> handleUserNotFoundException(UserNotFoundException ex, HttpHeaders headers,
-                                                                  HttpStatus status, WebRequest request
+    private ResponseEntity<ErrorInfo> handleBusinessExceptions(BusinessExceptions ex, HttpHeaders headers,
+                                                               HttpStatus status, WebRequest request
     ) {
-        return handleExceptionInternal(ex, new ErrorInfo().setTimestamp(CreateEntityUtil.getCurrentTime())
-                .setMessage(ex.getMessage())
-                .setDeveloperMessage(ex.toString()), headers, status, request);
-    }
-
-    /**
-     * Customize the response for ThereAreNoBooksFoundException.
-     */
-    private ResponseEntity<ErrorInfo> handleThereAreNoBooksFoundException(ThereAreNoBooksFoundException ex, HttpHeaders headers,
-                                                                          HttpStatus status, WebRequest request) {
         return handleExceptionInternal(ex, new ErrorInfo().setTimestamp(CreateEntityUtil.getCurrentTime())
                 .setMessage(ex.getMessage())
                 .setDeveloperMessage(ex.toString()), headers, status, request);
@@ -93,46 +73,6 @@ public class ExceptionHandlerService {
      */
     private ResponseEntity<ErrorInfo> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpHeaders headers,
                                                                             HttpStatus status, WebRequest request) {
-        return handleExceptionInternal(ex, new ErrorInfo().setTimestamp(CreateEntityUtil.getCurrentTime())
-                .setMessage(ex.getMessage())
-                .setDeveloperMessage(ex.toString()), headers, status, request);
-    }
-
-    /**
-     * Customize the response for ClientAlreadyExistsException.
-     */
-    private ResponseEntity<ErrorInfo> handleClientAlreadyExistsException(ClientAlreadyExistsException ex, HttpHeaders headers,
-                                                                         HttpStatus status, WebRequest request) {
-        return handleExceptionInternal(ex, new ErrorInfo().setTimestamp(CreateEntityUtil.getCurrentTime())
-                .setMessage(ex.getMessage())
-                .setDeveloperMessage(ex.toString()), headers, status, request);
-    }
-
-    /**
-     * Customize the response for ClientAlreadyExistsException.
-     */
-    private ResponseEntity<ErrorInfo> handleDataIsNotCorrectException(DataIsNotCorrectException ex, HttpHeaders headers,
-                                                                      HttpStatus status, WebRequest request) {
-        return handleExceptionInternal(ex, new ErrorInfo().setTimestamp(CreateEntityUtil.getCurrentTime())
-                .setMessage(ex.getMessage())
-                .setDeveloperMessage(ex.toString()), headers, status, request);
-    }
-
-    /**
-     * Customize the response for ClientAlreadyExistsException.
-     */
-    private ResponseEntity<ErrorInfo> handleOrderNotExistException(OrderNotExistException ex, HttpHeaders headers,
-                                                                   HttpStatus status, WebRequest request) {
-        return handleExceptionInternal(ex, new ErrorInfo().setTimestamp(CreateEntityUtil.getCurrentTime())
-                .setMessage(ex.getMessage())
-                .setDeveloperMessage(ex.toString()), headers, status, request);
-    }
-
-    /**
-     * Customize the response for ClientAlreadyExistsException.
-     */
-    private ResponseEntity<ErrorInfo> handlePermissionToActionIsAbsentException(PermissionToActionIsAbsentException ex, HttpHeaders headers,
-                                                                                HttpStatus status, WebRequest request) {
         return handleExceptionInternal(ex, new ErrorInfo().setTimestamp(CreateEntityUtil.getCurrentTime())
                 .setMessage(ex.getMessage())
                 .setDeveloperMessage(ex.toString()), headers, status, request);
