@@ -5,11 +5,18 @@ import com.servletProject.librarySystem.domen.dto.archiveBookUsage.ArchiveBookMo
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
 import com.servletProject.librarySystem.exception.ThereAreNoBooksFoundException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 public class CreateEntityUtil {
+
+    public static String getCurrentTime() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        return simpleDateFormat.format(new Date());
+    }
 
     public static CopiesOfBooks createCopiesOfBooksEntity(BookCatalog book) {
         CopiesOfBooks entity = new CopiesOfBooks();
@@ -105,18 +112,21 @@ public class CreateEntityUtil {
                                                      OnlineOrderModel entity
     ) {
         Optional<BookCatalog> first = bookCopyList.stream().filter(b -> book.getIdBook() == b.getId()).findFirst();
-        BookCatalog bookCatalog = first.get();
-        entity.setBookTitle(bookCatalog.getBookTitle());
-        entity.setBookAuthor(bookCatalog.getBookAuthor());
-        entity.setGenre(bookCatalog.getGenre());
-        entity.setYearOfPublication(bookCatalog.getYearOfPublication());
-        entity.setUniqueId(book.getId());
+        BookCatalog bookCatalog;
+        if (first.isPresent()) {
+            bookCatalog = first.get();
+            entity.setBookTitle(bookCatalog.getBookTitle());
+            entity.setBookAuthor(bookCatalog.getBookAuthor());
+            entity.setGenre(bookCatalog.getGenre());
+            entity.setYearOfPublication(bookCatalog.getYearOfPublication());
+            entity.setUniqueId(book.getId());
 
-        Optional<OnlineOrderBook> order = orderBookList.stream()
-                .filter(o -> book.getId() == o.getIdBookCopy())
-                .findFirst();
-        OnlineOrderBook onlineOrderBook = order.orElseThrow(() -> new ThereAreNoBooksFoundException("We could not find any copies of the book"));
-        entity.setUserId(onlineOrderBook.getIdUser());
+            Optional<OnlineOrderBook> order = orderBookList.stream()
+                    .filter(o -> book.getId() == o.getIdBookCopy())
+                    .findFirst();
+            OnlineOrderBook onlineOrderBook = order.orElseThrow(() -> new ThereAreNoBooksFoundException("We could not find any copies of the book"));
+            entity.setUserId(onlineOrderBook.getIdUser());
+        } else throw new ThereAreNoBooksFoundException("We could not find any copies of the book");
     }
 
     public static CompletedOrders createCompletedOrdersEntity(Long idUser, Long idLibrarian, Long idCopy) {
