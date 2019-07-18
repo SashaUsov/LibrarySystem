@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.servletProject.librarySystem.domen.Role;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,7 @@ import static com.servletProject.librarySystem.security.SecurityConstants.HEADER
 import static com.servletProject.librarySystem.security.SecurityConstants.TOKEN_PREFIX;
 import static com.servletProject.librarySystem.security.SecurityConstants.SECRET;
 
+@Slf4j
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -39,6 +41,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         String header = req.getHeader(HEADER_STRING);
 
         if (header == null || !header.startsWith(TOKEN_PREFIX)) {
+            log.info("Header not found.");
             chain.doFilter(req, res);
             return;
         }
@@ -47,6 +50,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);
+        log.info("Authorization by the token is successful.");
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
@@ -57,12 +61,14 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                     .build()
                     .verify(token.replace(TOKEN_PREFIX, ""))
                     .getSubject();
-
             if (user != null) {
+                log.info("Token accepted.");
                 return new UsernamePasswordAuthenticationToken(user, null, getAuthority(token));
             }
+            log.info("User not found.");
             return null;
         }
+        log.info("Token not found.");
         return null;
     }
 
@@ -73,7 +79,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         try {
             return parseAuthority(body);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Attempt to assign roles failed.", e);
             return Collections.emptySet();
         }
     }
