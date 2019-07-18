@@ -8,6 +8,7 @@ import com.servletProject.librarySystem.exception.PermissionToActionIsAbsentExce
 import com.servletProject.librarySystem.service.data.*;
 import com.servletProject.librarySystem.utils.CreateEntityUtil;
 import com.servletProject.librarySystem.utils.OrdersUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class LibrarianControllerService {
     private final UserService userService;
     private final CopiesOfBooksService copiesOfBooksService;
@@ -42,6 +44,7 @@ public class LibrarianControllerService {
         if (user.getRoles().contains(Role.LIBRARIAN)) {
             orderBookService.deleteOrderByCopyIdAndUserId(idCopy, idUser);
             completedOrdersService.saveOrder(idUser, user.getId(), idCopy);
+            log.info("The issuance of the book is successful.");
         } else throw new PermissionToActionIsAbsentException("You do not have permission to confirm this order.");
     }
 
@@ -108,6 +111,7 @@ public class LibrarianControllerService {
         if (user.getRoles().contains(Role.LIBRARIAN)) {
             orderBookService.cancelOrderLibrarian(idCopy, idUser);
             copiesOfBooksService.updateAvailabilityOfCopy(true, idCopy);
+            log.info("Order canceled successfully by librarian. Librarian id = " + user.getId() + " .");
         } else throw new PermissionToActionIsAbsentException("You do not have permission to delete this order.");
     }
 
@@ -116,6 +120,7 @@ public class LibrarianControllerService {
         UserEntity user = userService.getUserByNickName(librarian);
         if (user.getRoles().contains(Role.LIBRARIAN)) {
             copiesOfBooksService.deleteUnusableBookCopy(idCopy);
+            log.info("Unusable book copy successfully deleted by librarian. Librarian id = " + user.getId() + " .");
         } else throw new PermissionToActionIsAbsentException("You do not have permission to remove this book from the catalog.");
     }
 
@@ -129,6 +134,7 @@ public class LibrarianControllerService {
             usageService.putBookInUsageArchive(readerId, copyId, condition);
             completedOrdersService.deleteFromCompletedOrdersByCopyId(copyId);
             copiesOfBooksService.updateCopyOfBookInfo(copyId, condition);
+            log.info("Book copy successfully returned to the catalog.");
         } else throw new PermissionToActionIsAbsentException("You do not have permission to delete this order.");
     }
 

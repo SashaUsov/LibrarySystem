@@ -7,11 +7,13 @@ import com.servletProject.librarySystem.domen.dto.userEntity.CreateUserEntityMod
 import com.servletProject.librarySystem.exception.ClientAlreadyExistsException;
 import com.servletProject.librarySystem.exception.UserNotFoundException;
 import com.servletProject.librarySystem.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -28,7 +30,8 @@ public class UserService {
         entity.setPermission(true);
         entity.getRoles().add(Role.USER);
 
-        userRepository.save(entity);
+        UserEntity userEntity = userRepository.save(entity);
+        log.info("New user created. id=" + userEntity.getId() + " .");
     }
 
     public Long getUserIdByEmail(String email) {

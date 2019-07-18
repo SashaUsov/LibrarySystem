@@ -5,9 +5,11 @@ import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.exception.PermissionToActionIsAbsentException;
 import com.servletProject.librarySystem.repository.UserRepository;
 import com.servletProject.librarySystem.service.data.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class AdminControllerService {
 
     private final UserService userService;
@@ -24,6 +26,7 @@ public class AdminControllerService {
             Role role = createRole(newRole);
             user.getRoles().add(role);
             userRepository.save(user);
+            log.info("Role : \"" + newRole + "\" granted to user with id= " + user.getId() + " .");
         } else throw new PermissionToActionIsAbsentException("You do not have permission to grant a role to the user.");
     }
 
@@ -33,6 +36,7 @@ public class AdminControllerService {
             Role role = createRole(removedRole);
             user.getRoles().remove(role);
             userRepository.save(user);
+            log.info("Role : \"" + removedRole + "\" revoked from the user with id= " + user.getId() + " .");
         } else throw new PermissionToActionIsAbsentException("You do not have permission to revoke the role from the user.");
     }
 

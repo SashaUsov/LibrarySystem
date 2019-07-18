@@ -7,12 +7,14 @@ import com.servletProject.librarySystem.exception.PermissionToActionIsAbsentExce
 import com.servletProject.librarySystem.exception.ThereAreNoBooksFoundException;
 import com.servletProject.librarySystem.repository.OnlineOrderBookRepository;
 import com.servletProject.librarySystem.utils.CreateEntityUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class OnlineOrderBookService {
 
     private final OnlineOrderBookRepository orderBookRepository;
@@ -23,6 +25,7 @@ public class OnlineOrderBookService {
 
     public void reserveBookCopy(Long copyId, Long readerId) {
         orderBookRepository.save(CreateEntityUtil.createOnlineOrderEntity(copyId, readerId));
+        log.info("New order created. Book copy id=" + copyId + ", user id=" + readerId + ".");
     }
 
     public List<OnlineOrderBook> findAllByUserId(Long idUser) {
@@ -42,6 +45,7 @@ public class OnlineOrderBookService {
     public void deleteOrderByCopyIdAndUserId(Long bookCopyId, Long userId) {
         if (isOrderExist(bookCopyId, userId)) {
             orderBookRepository.removeByIdBookCopyAndIdUser(bookCopyId, userId);
+            log.info("Order finished. Copy id=" + bookCopyId + ", user id=" + userId + ".");
         } else throw new OrderNotExistException("The order you are looking for does not exist.");
     }
 
@@ -56,6 +60,7 @@ public class OnlineOrderBookService {
             OnlineOrderBook onlineOrderBook = orderBook.get();
             if (idCopy == onlineOrderBook.getIdBookCopy() && onlineOrderBook.getIdUser() == user.getId()) {
                 orderBookRepository.delete(onlineOrderBook);
+                log.info("Order canceled by user. Copy id=" + idCopy + ", user id=" + user.getId() + ".");
             } else throw new PermissionToActionIsAbsentException("You do not have permission to delete this order.");
         } else throw new OrderNotExistException("The order you are looking for does not exist.");
     }
@@ -65,8 +70,8 @@ public class OnlineOrderBookService {
         if (orderBook.isPresent()) {
             OnlineOrderBook onlineOrderBook = orderBook.get();
             if (idUser == onlineOrderBook.getIdUser()) {
-
                 orderBookRepository.delete(onlineOrderBook);
+                log.info("Order canceled by librarian. Copy id=" + idCopy + ", user id=" + idUser + ".");
             }
         } else throw new OrderNotExistException("The order you are looking for does not exist.");
     }

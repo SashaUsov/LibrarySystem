@@ -4,12 +4,14 @@ import com.servletProject.librarySystem.domen.CompletedOrders;
 import com.servletProject.librarySystem.exception.OrderNotExistException;
 import com.servletProject.librarySystem.repository.CompletedOrdersRepository;
 import com.servletProject.librarySystem.utils.CreateEntityUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class CompletedOrdersService {
 
     private final CompletedOrdersRepository completedOrdersRepository;
@@ -21,6 +23,8 @@ public class CompletedOrdersService {
     public void saveOrder(Long idUser, Long idLibrarian, Long idCopy) {
         CompletedOrders ordersEntity = CreateEntityUtil.createCompletedOrdersEntity(idUser, idLibrarian, idCopy);
         completedOrdersRepository.save(ordersEntity);
+        log.info("New order created : idCopy=" + idCopy
+                + " idUser=" + idUser);
     }
 
     public List<CompletedOrders> findAllByUserId(Long userId) {
@@ -41,5 +45,7 @@ public class CompletedOrdersService {
         Optional<CompletedOrders> completedOrders = completedOrdersRepository.findOneByIdBook(idCopy);
         CompletedOrders order = completedOrders.orElseThrow(() -> new OrderNotExistException("Order not found."));
         completedOrdersRepository.delete(order);
+        log.info("Book returned to catalog. idUser="
+                + order.getIdReader() + " idCopy=" + order.getIdBook());
     }
 }

@@ -10,12 +10,14 @@ import com.servletProject.librarySystem.service.data.OnlineOrderBookService;
 import com.servletProject.librarySystem.service.data.UserService;
 import com.servletProject.librarySystem.utils.CreateEntityUtil;
 import com.servletProject.librarySystem.utils.OrdersUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class BookingControllerService {
 
     private final CopiesOfBooksService copiesOfBooksService;
@@ -40,6 +42,7 @@ public class BookingControllerService {
             copiesOfBooksService.updateAvailabilityOfCopy(false, copyId);
             UserEntity user = userService.getUserByNickName(nickName);
             orderBookService.reserveBookCopy(copyId, user.getId());
+            log.info("New book order created successfully");
         } else throw new ThereAreNoBooksFoundException("This book copy is not available.");
     }
 
@@ -81,6 +84,7 @@ public class BookingControllerService {
     public void cancelOrder(Long bookCopyId, UserEntity user) {
         orderBookService.cancelOrderByReader(bookCopyId, user);
         copiesOfBooksService.updateAvailabilityOfCopy(true, bookCopyId);
+        log.info("Book order cancel successfully");
     }
 }
 

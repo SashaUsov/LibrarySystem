@@ -4,11 +4,13 @@ import com.servletProject.librarySystem.domen.ArchiveBookUsage;
 import com.servletProject.librarySystem.exception.ThereAreNoBooksFoundException;
 import com.servletProject.librarySystem.repository.ArchiveBookUsageRepository;
 import com.servletProject.librarySystem.utils.CreateEntityUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class ArchiveBookUsageService {
 
     private final ArchiveBookUsageRepository usageRepository;
@@ -20,6 +22,7 @@ public class ArchiveBookUsageService {
     public void putBookInUsageArchive(Long readerId, Long copyId, String condition) {
         ArchiveBookUsage entity = CreateEntityUtil.createArchiveBookUsageEntity(readerId, copyId, condition);
         usageRepository.save(entity);
+        log.info("Book with id=" + copyId + " put in usage archive");
     }
 
     public List<ArchiveBookUsage> findAllByUserId(Long idUser) {

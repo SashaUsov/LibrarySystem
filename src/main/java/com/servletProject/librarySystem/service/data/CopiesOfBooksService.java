@@ -5,14 +5,15 @@ import com.servletProject.librarySystem.exception.ThereAreNoBooksFoundException;
 import com.servletProject.librarySystem.repository.ArchiveBookUsageRepository;
 import com.servletProject.librarySystem.repository.BookRepository;
 import com.servletProject.librarySystem.repository.CopiesOfBooksRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
+@Slf4j
 public class CopiesOfBooksService {
 
     private final BookRepository bookRepository;
@@ -33,6 +34,7 @@ public class CopiesOfBooksService {
         Optional<CopiesOfBooks> copiesOfBooks = copiesOfBooksRepository.findOneByIdAndAndAvailabilityTrue(copyId);
         if(copiesOfBooks.isPresent()) {
             deleteIfCopyPresent(copiesOfBooks.get());
+            log.info("Book info from id=" + copyId + " deleted completely");
         } else {
             throw new ThereAreNoBooksFoundException("We could not find any copies of the book");
         }
@@ -40,11 +42,13 @@ public class CopiesOfBooksService {
 
     public boolean ifPresent(Long idCopy) {
         Optional<CopiesOfBooks> copiesOfBooks = copiesOfBooksRepository.findOneByIdAndAndAvailabilityFalse(idCopy);
+        log.info("Book copy with id=" + idCopy + " not found in catalog");
         return copiesOfBooks.isPresent();
     }
 
     public void updateAvailabilityOfCopy(boolean availability, Long copyId){
         copiesOfBooksRepository.updateAvailabilityById(copyId, availability);
+        log.info("Updated book availability with id=" + copyId + ". available -" + availability);
     }
 
     public List<CopiesOfBooks> findAllById(List<Long> copyIdList) {
@@ -63,14 +67,18 @@ public class CopiesOfBooksService {
 
     private void deleteIfCopyPresent(CopiesOfBooks copiesOfBooks) {
         archiveBookUsageRepository.deleteAllByIdCopiesBook(copiesOfBooks.getId());
+        log.info("Information about the use of the book with ID=" + copiesOfBooks.getId() + " removed from the archive");
         bookRepository.decrementBookTotalAmount(copiesOfBooks.getIdBook());
+        log.info("Decrement total amount book with id=" + copiesOfBooks.getIdBook());
         copiesOfBooksRepository.delete(copiesOfBooks);
+        log.info("Copy instance with id=" + copiesOfBooks.getId() + " removed from catalog");
     }
 
     public void updateCopyOfBookInfo(Long copyId, String condition) {
         if (ifPresent(copyId)) {
             boolean availability = isAvailability(condition);
             copiesOfBooksRepository.updateAvailabilityAndConditionOfCopy(copyId, condition, availability);
+            log.info("Update status book copy with id=" + copyId + ". Condition: " + condition + " availability: " + availability);
         } else throw new ThereAreNoBooksFoundException("Unable to update book status because the book does not exist");
     }
 
