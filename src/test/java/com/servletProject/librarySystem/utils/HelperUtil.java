@@ -103,4 +103,14 @@ public class HelperUtil {
 
         return model;
     }
+
+    public static CompletedOrders getCompletedOrders() {
+        CompletedOrders model = new CompletedOrders();
+
+        model.setIdLibrarian(3);
+        model.setIdBook(1);
+        model.setId(2);
+
+        return model;
+    }
 }
