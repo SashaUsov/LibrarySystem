@@ -29,20 +29,28 @@ public class BookCatalogService {
         String bookTitle = model.getBookTitle().trim();
         Optional<BookCatalog> entity = bookRepository.findOneByBookTitle(bookTitle);
         if (!entity.isPresent()) {
-            BookCatalog book = bookRepository.save(BookCatalogConverter.toEntity(model));
-            log.info("Book with id=" + book.getId() + " added to catalog");
-            CopiesOfBooks copiesOfBooks = copiesOfBooksRepository
-                    .save(CreateEntityUtil.createCopiesOfBooksEntity(book));
-            log.info("Book copy with id=" + copiesOfBooks.getId() + " added to catalog");
+            saveOriginalBook(model);
         } else {
             BookCatalog bookCatalog = entity.get();
-            CopiesOfBooks copiesOfBooks = copiesOfBooksRepository
-                    .save(CreateEntityUtil.createCopiesOfBooksEntity(bookCatalog));
-            log.info("Book copy with id=" + copiesOfBooks.getId() + " added to catalog");
-            bookRepository.incrementBookTotalAmount(bookCatalog.getId());
-            log.info("Incrementing the total number of copies of the book with id="
-                    + entity.get().getId() + " in the catalog");
+            saveBookCopy(bookCatalog);
         }
+    }
+
+    private void saveOriginalBook(CreateBookCatalogModel model) {
+        BookCatalog book = bookRepository.save(BookCatalogConverter.toEntity(model));
+        log.info("Book with id=" + book.getId() + " added to catalog");
+        CopiesOfBooks copiesOfBooks = copiesOfBooksRepository
+                .save(CreateEntityUtil.createCopiesOfBooksEntity(book));
+        log.info("Book copy with id=" + copiesOfBooks.getId() + " added to catalog");
+    }
+
+    private void saveBookCopy(BookCatalog bookCatalog) {
+        CopiesOfBooks copiesOfBooks = copiesOfBooksRepository
+                .save(CreateEntityUtil.createCopiesOfBooksEntity(bookCatalog));
+        log.info("Book copy with id=" + copiesOfBooks.getId() + " added to catalog");
+        bookRepository.incrementBookTotalAmount(bookCatalog.getId());
+        log.info("Incrementing the total number of copies of the book with id="
+                + bookCatalog.getId() + " in the catalog");
     }
 
     public List<BookCatalog> getAllBook() {

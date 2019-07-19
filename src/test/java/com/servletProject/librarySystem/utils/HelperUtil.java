@@ -1,8 +1,7 @@
 package com.servletProject.librarySystem.utils;
 
-import com.servletProject.librarySystem.domen.ArchiveBookUsage;
-import com.servletProject.librarySystem.domen.Role;
-import com.servletProject.librarySystem.domen.UserEntity;
+import com.servletProject.librarySystem.domen.*;
+import com.servletProject.librarySystem.domen.dto.bookCatalog.CreateBookCatalogModel;
 import com.servletProject.librarySystem.domen.dto.userEntity.CreateUserEntityModel;
 
 import java.util.ArrayList;
@@ -69,5 +68,39 @@ public class HelperUtil {
         archive.add(entityTwo);
 
         return archive;
+    }
+
+    public static CreateBookCatalogModel getCreateBookCatalogModel() {
+        CreateBookCatalogModel model = new CreateBookCatalogModel();
+
+        model.setBookTitle("Title");
+        model.setBookAuthor("Author");
+        model.setGenre("Genre");
+        model.setYearOfPublication(2019);
+
+        return model;
+    }
+
+    public static BookCatalog getBookCatalogEntity() {
+        BookCatalog model = new BookCatalog();
+
+        model.setBookTitle("Title");
+        model.setBookAuthor("Author");
+        model.setGenre("Genre");
+        model.setYearOfPublication(2019);
+        model.setId(1);
+
+        return model;
+    }
+
+    public static CopiesOfBooks getCopiesOfBooksEntity() {
+        CopiesOfBooks model = new CopiesOfBooks();
+
+        model.setAvailability(true);
+        model.setBookCondition("good");
+        model.setIdBook(1);
+        model.setId(2);
+
+        return model;
     }
 }
