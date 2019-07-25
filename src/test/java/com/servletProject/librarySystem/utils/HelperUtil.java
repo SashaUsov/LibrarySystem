@@ -11,7 +11,7 @@ public class HelperUtil {
 
     public static UserEntity getUser() {
         UserEntity expected = new UserEntity();
-        expected.setId(1);
+        expected.setId(2);
         expected.setFirstName("Sasha");
         expected.setLastName("Sasha");
         expected.setNickName("Sasha");
@@ -110,6 +110,16 @@ public class HelperUtil {
         model.setIdLibrarian(3);
         model.setIdBook(1);
         model.setId(2);
+
+        return model;
+    }
+
+    public static OnlineOrderBook getOnlineOrderBook() {
+        OnlineOrderBook model = new OnlineOrderBook();
+
+        model.setId(1);
+        model.setIdUser(2);
+        model.setIdBookCopy(3);
 
         return model;
     }

@@ -83,12 +83,13 @@ public class BookCatalogServiceTest {
     @Test
     public void shouldReturnBookCatalogListWhenTryGetAllBookMethod() {
         BookCatalog book = HelperUtil.getBookCatalogEntity();
+        List<BookCatalog> given = Collections.singletonList(book);
 
         when(bookRepository.findAll())
-                .thenReturn(Collections.emptyList());
+                .thenReturn(given);
         List<BookCatalog> actual = bookCatalogService.getAllBook();
 
-        assertEquals(Collections.singletonList(book), actual);
+        assertEquals(given, actual);
     }
 
     @Test(expected = ThereAreNoBooksFoundException.class)

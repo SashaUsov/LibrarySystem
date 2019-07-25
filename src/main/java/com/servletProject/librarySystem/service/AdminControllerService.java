@@ -23,7 +23,7 @@ public class AdminControllerService {
     public void addUserRole(String nickName,  String admin, String newRole) {
         if (isAdmin(admin)) {
             UserEntity user = userService.getUserByNickName(nickName);
-            Role role = createRole(newRole);
+            Role role = Role.valueOf(newRole);
             user.getRoles().add(role);
             userRepository.save(user);
             log.info("Role : \"" + newRole + "\" granted to user with id= " + user.getId() + " .");
@@ -33,7 +33,7 @@ public class AdminControllerService {
     public void removeUserRole(String nickName,  String admin, String removedRole) {
         if (isAdmin(admin)) {
             UserEntity user = userService.getUserByNickName(nickName);
-            Role role = createRole(removedRole);
+            Role role = Role.valueOf(removedRole);
             user.getRoles().remove(role);
             userRepository.save(user);
             log.info("Role : \"" + removedRole + "\" revoked from the user with id= " + user.getId() + " .");
@@ -43,23 +43,5 @@ public class AdminControllerService {
     private boolean isAdmin(String admin) {
         UserEntity adminEntity = userService.getUserByNickName(admin);
         return adminEntity.getRoles().contains(Role.ADMIN);
-    }
-
-
-
-    private Role createRole(String newRole) {
-        Role role = null;
-        switch (newRole) {
-            case "USER":
-                role = Role.USER;
-                break;
-            case "ADMIN":
-                role = Role.ADMIN;
-                break;
-            case "LIBRARIAN":
-                role = Role.LIBRARIAN;
-                break;
-        }
-        return role;
     }
 }
