@@ -10,8 +10,6 @@ import com.servletProject.librarySystem.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @Slf4j
 public class UserService {
@@ -25,24 +23,24 @@ public class UserService {
     public void save(CreateUserEntityModel model) {
         checkIfTheUserExists(model.getMail());
 
-        UserEntity entity = UserEntityConverter.toEntity(model);
+        var entity = UserEntityConverter.toEntity(model);
         entity.setActive(true);
         entity.setPermission(true);
         entity.getRoles().add(Role.USER);
 
-        UserEntity userEntity = userRepository.save(entity);
+        var userEntity = userRepository.save(entity);
         log.info("New user created. id=" + userEntity.getId() + " .");
     }
 
     public Long getUserIdByEmail(String email) {
-        Optional<UserEntity> user = userRepository.findOneByMail(email);
+        var user = userRepository.findOneByMail(email);
         if (user.isPresent()) {
             return user.get().getId();
         } else throw new UserNotFoundException("The user you are looking for does not exist.");
     }
 
     public UserEntity getUserByEmail(String email) {
-        Optional<UserEntity> user = userRepository.findOneByMail(email);
+        var user = userRepository.findOneByMail(email);
         if (user.isPresent()) {
             return user.get();
         } else throw new UserNotFoundException("The user you are looking for does not exist.");
@@ -55,21 +53,21 @@ public class UserService {
     }
 
     public UserEntity getUserByNickName(String nickName) {
-        Optional<UserEntity> user = userRepository.findOneByNickName(nickName);
+        var user = userRepository.findOneByNickName(nickName);
         if (user.isPresent()) {
             return user.get();
         } else throw new UserNotFoundException("The user you are looking for does not exist.");
     }
 
     private void checkIfTheUserExists(String email) {
-        Optional<UserEntity> userEntity = userRepository.findOneByMail(email);
+        var userEntity = userRepository.findOneByMail(email);
         userEntity.ifPresent(entity -> {
             throw new ClientAlreadyExistsException("Client with this nick name already exists");
         });
     }
 
     private boolean isUserExist(long id) {
-        Optional<UserEntity> user = userRepository.findOneById(id);
+        var user = userRepository.findOneById(id);
         return user.isPresent();
     }
 }

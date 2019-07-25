@@ -25,19 +25,19 @@ public class UserController {
 
     @GetMapping("orders")
     public List<OnlineOrderModel> getAllOrders(Principal principal) {
-        String nickName = principal.getName();
+        var nickName = principal.getName();
         return bookingFacade.getAllUserOrders(nickName);
     }
 
     @GetMapping("info")
     public UserEntityModel accountDetail(Principal principal) {
-        String nickName = principal.getName();
+        var nickName = principal.getName();
         return userFacade.getUserByNickName(nickName);
     }
 
     @GetMapping("reading")
     public List<OnlineOrderModel> getCompletedOrders(Principal principal) {
-        String nickName = principal.getName();
+        var nickName = principal.getName();
         return bookingFacade.getListOfCompletedOrdersByUser(nickName);
     }
 }

@@ -1,6 +1,7 @@
 package com.servletProject.librarySystem.domen.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.servletProject.librarySystem.domen.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,5 +19,5 @@ public class GrantRoleModel {
 
     @NotNull
     @NotEmpty
-    private String role;
+    private Role role;
 }

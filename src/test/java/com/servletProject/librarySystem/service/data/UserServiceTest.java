@@ -1,22 +1,21 @@
 package com.servletProject.librarySystem.service.data;
 
 import com.servletProject.librarySystem.domen.UserEntity;
-import com.servletProject.librarySystem.domen.dto.userEntity.CreateUserEntityModel;
 import com.servletProject.librarySystem.exception.ClientAlreadyExistsException;
 import com.servletProject.librarySystem.exception.UserNotFoundException;
 import com.servletProject.librarySystem.repository.UserRepository;
 import com.servletProject.librarySystem.utils.HelperUtil;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
 
 @RunWith(SpringRunner.class)
@@ -31,8 +30,8 @@ public class UserServiceTest {
 
     @Test(expected = ClientAlreadyExistsException.class)
     public void shouldThrowClientAlreadyExistsExceptionWhenTrySaveUserWithEmailWhichAlreadyExist() {
-        UserEntity user = HelperUtil.getUser();
-        CreateUserEntityModel model = HelperUtil.getModel();
+        var user = HelperUtil.getUser();
+        var model = HelperUtil.getModel();
 
         when(userRepository.findOneByMail(anyString()))
                 .thenReturn(Optional.of(user));
@@ -41,7 +40,7 @@ public class UserServiceTest {
 
     @Test
     public void shouldDoNothingWhenSaveCreateUserEntityModel() {
-        CreateUserEntityModel model = HelperUtil.getModel();
+        var model = HelperUtil.getModel();
         when(userRepository.findOneByMail(anyString()))
                 .thenReturn(Optional.empty());
         when(userRepository.save(any(UserEntity.class)))
@@ -54,7 +53,7 @@ public class UserServiceTest {
 
     @Test
     public void shouldReturnUserIdWhenGetUserIdByEmailTry() {
-        UserEntity expected = HelperUtil.getUser();
+        var expected = HelperUtil.getUser();
         when(userRepository.findOneByMail(anyString())).thenReturn(Optional.of(expected));
         long actual = userService.getUserIdByEmail(anyString());
 
@@ -69,9 +68,9 @@ public class UserServiceTest {
 
     @Test
     public void shouldReturnUserEntityWhenGetUserByEmail() {
-        UserEntity expected = HelperUtil.getUser();
+        var expected = HelperUtil.getUser();
         when(userRepository.findOneByMail(anyString())).thenReturn(Optional.of(expected));
-        UserEntity actual = userService.getUserByEmail(anyString());
+        var actual = userService.getUserByEmail(anyString());
 
         assertEquals(expected, actual);
     }
@@ -84,13 +83,13 @@ public class UserServiceTest {
 
     @Test
     public void shouldReturnFullUserNameWhenGetFullNameTry() {
-        UserEntity user = HelperUtil.getUser();
-        String expected = user.getFirstName() + " " + user.getLastName();
+        var user = HelperUtil.getUser();
+        var expected = user.getFirstName() + " " + user.getLastName();
         when(userRepository.findOneById(anyLong()))
                 .thenReturn(Optional.of(user));
         when(userRepository.findFullUserName(anyLong()))
                 .thenReturn(user.getFirstName() + " " + user.getLastName());
-        String actual = userService.getFullName(anyLong());
+        var actual = userService.getFullName(anyLong());
 
         assertEquals(expected, actual);
     }
@@ -104,10 +103,10 @@ public class UserServiceTest {
 
     @Test
     public void shouldReturnUserEntityWhenGetUserByNickName() {
-        UserEntity expected = HelperUtil.getUser();
+        var expected = HelperUtil.getUser();
         when(userRepository.findOneByNickName(anyString()))
                 .thenReturn(Optional.of(expected));
-        UserEntity actual = userService.getUserByNickName(anyString());
+        var actual = userService.getUserByNickName(anyString());
 
         assertEquals(expected, actual);
     }

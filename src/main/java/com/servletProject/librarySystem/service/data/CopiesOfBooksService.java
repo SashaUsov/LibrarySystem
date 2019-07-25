@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -31,7 +30,7 @@ public class CopiesOfBooksService {
 
     @Transactional
     public void deleteUnusableBookCopy(Long copyId){
-        Optional<CopiesOfBooks> copiesOfBooks = copiesOfBooksRepository.findOneByIdAndAndAvailabilityTrue(copyId);
+        var copiesOfBooks = copiesOfBooksRepository.findOneByIdAndAndAvailabilityTrue(copyId);
         if(copiesOfBooks.isPresent()) {
             deleteIfCopyPresent(copiesOfBooks.get());
             log.info("Book info from id=" + copyId + " deleted completely");
@@ -41,7 +40,7 @@ public class CopiesOfBooksService {
     }
 
     public boolean ifPresent(Long idCopy) {
-        Optional<CopiesOfBooks> copiesOfBooks = copiesOfBooksRepository.findOneByIdAndAndAvailabilityFalse(idCopy);
+        var copiesOfBooks = copiesOfBooksRepository.findOneByIdAndAndAvailabilityFalse(idCopy);
         log.info("Book copy with id=" + idCopy + " not found in catalog");
         return copiesOfBooks.isPresent();
     }
@@ -52,14 +51,14 @@ public class CopiesOfBooksService {
     }
 
     public List<CopiesOfBooks> findAllById(List<Long> copyIdList) {
-        List<CopiesOfBooks> copiesOfBooksList = copiesOfBooksRepository.findAllByIdIn(copyIdList);
+        var copiesOfBooksList = copiesOfBooksRepository.findAllByIdIn(copyIdList);
         if (copiesOfBooksList != null && !copiesOfBooksList.isEmpty()) {
             return copiesOfBooksList;
         } else throw new ThereAreNoBooksFoundException("We could not find any copies of the book");
     }
 
     public List<CopiesOfBooks> findAllCopy(Long copyId) {
-        List<CopiesOfBooks> copiesOfBooksList = copiesOfBooksRepository.findAllByIdBook(copyId);
+        var copiesOfBooksList = copiesOfBooksRepository.findAllByIdBook(copyId);
         if (copiesOfBooksList != null && !copiesOfBooksList.isEmpty()) {
             return copiesOfBooksList;
         } else throw new ThereAreNoBooksFoundException("We could not find any copies of the book");
@@ -76,21 +75,21 @@ public class CopiesOfBooksService {
 
     public void updateCopyOfBookInfo(Long copyId, String condition) {
         if (ifPresent(copyId)) {
-            boolean availability = isAvailability(condition);
+            var availability = isAvailability(condition);
             copiesOfBooksRepository.updateAvailabilityAndConditionOfCopy(copyId, condition, availability);
             log.info("Update status book copy with id=" + copyId + ". Condition: " + condition + " availability: " + availability);
         } else throw new ThereAreNoBooksFoundException("Unable to update book status because the book does not exist");
     }
 
     public List<CopiesOfBooks> getAllCopyByCondition(String condition) {
-        List<CopiesOfBooks> copiesOfBooks = copiesOfBooksRepository.findAllByBookConditionAndAvailabilityTrue(condition);
+        var copiesOfBooks = copiesOfBooksRepository.findAllByBookConditionAndAvailabilityTrue(condition);
         if (copiesOfBooks != null && !copiesOfBooks.isEmpty()) {
             return copiesOfBooks;
         } else throw new ThereAreNoBooksFoundException("No damaged books found.");
     }
 
     private boolean isAvailability(String condition) {
-        boolean b = true;
+        var b = true;
         if ("unusable".equalsIgnoreCase(condition)) b = false;
         return b;
     }

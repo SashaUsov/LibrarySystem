@@ -10,7 +10,7 @@ import java.util.List;
 public class HelperUtil {
 
     public static UserEntity getUser() {
-        UserEntity expected = new UserEntity();
+        var expected = new UserEntity();
         expected.setId(2);
         expected.setFirstName("Sasha");
         expected.setLastName("Sasha");
@@ -26,7 +26,7 @@ public class HelperUtil {
     }
 
     public static CreateUserEntityModel getModel() {
-        CreateUserEntityModel model = new CreateUserEntityModel();
+        var model = new CreateUserEntityModel();
         model.setFirstName("Sasha");
         model.setLastName("Sasha");
         model.setNickName("Sasha");
@@ -38,7 +38,7 @@ public class HelperUtil {
     }
 
     public static ArchiveBookUsage getArchiveBookUsageEntity() {
-        ArchiveBookUsage entity = new ArchiveBookUsage();
+        var entity = new ArchiveBookUsage();
 
         entity.setId(5);
         entity.setIdReader(1);
@@ -49,14 +49,14 @@ public class HelperUtil {
     }
 
     public static List<ArchiveBookUsage> getArchiveBookUsageList() {
-        ArchiveBookUsage entityOne = new ArchiveBookUsage();
+        var entityOne = new ArchiveBookUsage();
 
         entityOne.setId(5);
         entityOne.setIdReader(1);
         entityOne.setIdCopiesBook(2);
         entityOne.setBookCondition("good");
 
-        ArchiveBookUsage entityTwo = new ArchiveBookUsage();
+        var entityTwo = new ArchiveBookUsage();
 
         entityTwo.setId(9);
         entityTwo.setIdReader(1);
@@ -71,7 +71,7 @@ public class HelperUtil {
     }
 
     public static CreateBookCatalogModel getCreateBookCatalogModel() {
-        CreateBookCatalogModel model = new CreateBookCatalogModel();
+        var model = new CreateBookCatalogModel();
 
         model.setBookTitle("Title");
         model.setBookAuthor("Author");
@@ -82,7 +82,7 @@ public class HelperUtil {
     }
 
     public static BookCatalog getBookCatalogEntity() {
-        BookCatalog model = new BookCatalog();
+        var model = new BookCatalog();
 
         model.setBookTitle("Title");
         model.setBookAuthor("Author");
@@ -94,7 +94,7 @@ public class HelperUtil {
     }
 
     public static CopiesOfBooks getCopiesOfBooksEntity() {
-        CopiesOfBooks model = new CopiesOfBooks();
+        var model = new CopiesOfBooks();
 
         model.setAvailability(true);
         model.setBookCondition("good");
@@ -105,7 +105,7 @@ public class HelperUtil {
     }
 
     public static CompletedOrders getCompletedOrders() {
-        CompletedOrders model = new CompletedOrders();
+        var model = new CompletedOrders();
 
         model.setIdLibrarian(3);
         model.setIdBook(1);
@@ -115,7 +115,7 @@ public class HelperUtil {
     }
 
     public static OnlineOrderBook getOnlineOrderBook() {
-        OnlineOrderBook model = new OnlineOrderBook();
+        var model = new OnlineOrderBook();
 
         model.setId(1);
         model.setIdUser(2);

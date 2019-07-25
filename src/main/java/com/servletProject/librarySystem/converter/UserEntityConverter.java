@@ -11,7 +11,7 @@ public class UserEntityConverter {
     private final static PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder(6);
 
     public static UserEntity toEntity(CreateUserEntityModel model) {
-        UserEntity entity = new UserEntity();
+        var entity = new UserEntity();
         entity.setFirstName(model.getFirstName());
         entity.setLastName(model.getLastName());
         entity.setNickName(model.getNickName());
@@ -23,7 +23,7 @@ public class UserEntityConverter {
     }
 
     public static UserEntityModel toModel(UserEntity entity) {
-        UserEntityModel model = new UserEntityModel();
+        var model = new UserEntityModel();
         model.setId(entity.getId());
         model.setFirstName(entity.getFirstName());
         model.setLastName(entity.getLastName());

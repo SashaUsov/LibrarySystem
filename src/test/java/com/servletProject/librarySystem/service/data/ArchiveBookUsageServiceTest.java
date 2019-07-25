@@ -12,9 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -29,7 +28,7 @@ public class ArchiveBookUsageServiceTest {
 
     @Test
     public void shouldDoNothingWhenTryPutBookInUsageArchive() {
-        ArchiveBookUsage archiveBookUsageEntity = HelperUtil.getArchiveBookUsageEntity();
+        var archiveBookUsageEntity = HelperUtil.getArchiveBookUsageEntity();
 
         when(archiveBookUsageRepository.save(any(ArchiveBookUsage.class)))
                 .thenReturn(archiveBookUsageEntity);
@@ -49,10 +48,10 @@ public class ArchiveBookUsageServiceTest {
 
     @Test
     public void shouldReturnArchiveBookUsageListWhenFindAllByUserId() {
-        List<ArchiveBookUsage> expected = HelperUtil.getArchiveBookUsageList();
+        var expected = HelperUtil.getArchiveBookUsageList();
         when(archiveBookUsageRepository.findAllByIdReader(anyLong()))
                 .thenReturn(expected);
-        List<ArchiveBookUsage> actual = archiveBookUsageService.findAllByUserId(anyLong());
+        var actual = archiveBookUsageService.findAllByUserId(anyLong());
 
         assertEquals(expected, actual);
     }
@@ -66,10 +65,10 @@ public class ArchiveBookUsageServiceTest {
 
     @Test
     public void shouldReturnArchiveBookUsageListWhenFindAllUsageArchive() {
-        List<ArchiveBookUsage> expected = HelperUtil.getArchiveBookUsageList();
+        var expected = HelperUtil.getArchiveBookUsageList();
         when(archiveBookUsageRepository.findAll())
                 .thenReturn(expected);
-        List<ArchiveBookUsage> actual = archiveBookUsageService.findAllUsageArchive();
+        var actual = archiveBookUsageService.findAllUsageArchive();
 
         assertEquals(expected, actual);
     }

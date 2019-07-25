@@ -26,39 +26,39 @@ public class ExceptionHandlerService {
             PermissionToActionIsAbsentException.class
     })
     public final ResponseEntity<ErrorInfo> handleException(Exception ex, WebRequest request) {
-        HttpHeaders headers = new HttpHeaders();
+        var headers = new HttpHeaders();
 
         if (ex instanceof UserNotFoundException || ex instanceof ThereAreNoBooksFoundException) {
-            HttpStatus status = HttpStatus.NOT_FOUND;
-            BusinessExceptions be = (BusinessExceptions) ex;
+            var status = HttpStatus.NOT_FOUND;
+            var be = (BusinessExceptions) ex;
 
             log.error("Requested content not found", ex);
             return handleBusinessExceptions(be, headers, status, request);
         } else if (ex instanceof MethodArgumentNotValidException) {
-            HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-            MethodArgumentNotValidException manve = (MethodArgumentNotValidException) ex;
+            var status = HttpStatus.UNPROCESSABLE_ENTITY;
+            var manve = (MethodArgumentNotValidException) ex;
 
             return handleMethodArgumentNotValidException(manve, headers, status, request);
         } else if (ex instanceof OrderNotExistException || ex instanceof ClientAlreadyExistsException) {
-            HttpStatus status = HttpStatus.OK;
-            BusinessExceptions be = (BusinessExceptions) ex;
+            var status = HttpStatus.OK;
+            var be = (BusinessExceptions) ex;
 
             log.error("Conflict with existing content", ex);
             return handleBusinessExceptions(be, headers, status, request);
         } else if (ex instanceof DataIsNotCorrectException) {
-            HttpStatus status = HttpStatus.BAD_REQUEST;
-            DataIsNotCorrectException dince = (DataIsNotCorrectException) ex;
+            var status = HttpStatus.BAD_REQUEST;
+            var dince = (DataIsNotCorrectException) ex;
 
             log.error("The received data is not correct.", ex);
             return handleBusinessExceptions(dince, headers, status, request);
         } else if (ex instanceof PermissionToActionIsAbsentException) {
-            HttpStatus status = HttpStatus.FORBIDDEN;
-            PermissionToActionIsAbsentException ptaiae = (PermissionToActionIsAbsentException) ex;
+            var status = HttpStatus.FORBIDDEN;
+            var ptaiae = (PermissionToActionIsAbsentException) ex;
 
             log.error("Attempt to access content without proper authority", ex);
             return handleBusinessExceptions(ptaiae, headers, status, request);
         } else {
-            HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+            var status = HttpStatus.INTERNAL_SERVER_ERROR;
             log.error("Unexpected exception", ex);
             return handleExceptionInternal(ex, null, headers, status, request);
         }

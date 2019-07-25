@@ -32,14 +32,14 @@ public class LibrarianActionsController {
 
     @GetMapping("/orders")
     public List<OnlineOrderModel> getAllOrders(Principal principal) {
-        String librarian = principal.getName();
+        var librarian = principal.getName();
         return bookingControllerService.getListOfAllReservedBooks(librarian);
     }
 
     @GetMapping("{email}")
     public List<OnlineOrderModel> getOrdersByUserEmail(@PathVariable("email") String userEmail,
                                                        Principal principal) {
-        String librarian = principal.getName();
+        var librarian = principal.getName();
         return bookingControllerService
                 .getListOfReservedBooksByUserEmail(librarian, userEmail);
     }
@@ -48,7 +48,7 @@ public class LibrarianActionsController {
     @ResponseStatus(HttpStatus.OK)
     public void cancelOrder(@Valid @RequestBody CancelConfirmOrderModel cancelOrderModel,
                             Principal principal) {
-        String librarian = principal.getName();
+        var librarian = principal.getName();
         librarianControllerService
                 .cancelOrder(cancelOrderModel.getIdCopy(), cancelOrderModel.getIdUser(), librarian);
     }
@@ -57,14 +57,14 @@ public class LibrarianActionsController {
     @ResponseStatus(HttpStatus.OK)
     public void confirmOrder(@Valid @RequestBody CancelConfirmOrderModel confirmOrderModel,
                              Principal principal) {
-        String librarian = principal.getName();
+        var librarian = principal.getName();
         librarianControllerService
                 .giveBookToTheReader(confirmOrderModel.getIdCopy(), confirmOrderModel.getIdUser(), librarian);
     }
 
     @GetMapping("completed")
     public List<OnlineOrderModel> getAllCompletedOrders(Principal principal) {
-        String librarian = principal.getName();
+        var librarian = principal.getName();
         return librarianControllerService.getListOfAllCompletedOrders(librarian);
 
     }
@@ -72,7 +72,7 @@ public class LibrarianActionsController {
     @GetMapping("completed/{email}")
     public List<OnlineOrderModel> getCompletedOrdersByEmail(@PathVariable("email") String userEmail,
                                                             Principal principal) {
-        String librarian = principal.getName();
+        var librarian = principal.getName();
         return librarianControllerService
                 .getListOfCompletedOrdersByReader(userEmail, librarian);
 
@@ -82,13 +82,13 @@ public class LibrarianActionsController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void returnBookToTheCatalog(@Valid @RequestBody ReturnOrderInCatalogModel model,
                                        Principal principal) {
-        String librarian = principal.getName();
+        var librarian = principal.getName();
         librarianControllerService.returnBookToTheCatalog(model, librarian);
     }
 
     @GetMapping("archive")
     public List<ArchiveBookModel> getAllArchiveUsage(Principal principal) {
-        String librarian = principal.getName();
+        var librarian = principal.getName();
         return librarianControllerService.getListOfAllArchiveUsage(librarian);
 
     }
@@ -96,13 +96,13 @@ public class LibrarianActionsController {
     @GetMapping("archive/{email}")
     public List<ArchiveBookModel> archiveUsageByUser(@PathVariable("email") String userEmail,
                                                      Principal principal) {
-        String librarian = principal.getName();
+        var librarian = principal.getName();
         return librarianControllerService.getListOfActiveUsageByUser(userEmail, librarian);
     }
 
     @GetMapping("unusable")
     public List<CopiesOfBooks> getAllUnusableBooks(Principal principal) {
-        String librarian = principal.getName();
+        var librarian = principal.getName();
         return librarianControllerService.unusableConditionBooksList(librarian);
     }
 
@@ -110,7 +110,7 @@ public class LibrarianActionsController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void removeUnusable(@PathVariable("idCopy") Long idCopy,
                                Principal principal) {
-        String librarian = principal.getName();
+        var librarian = principal.getName();
         librarianControllerService.deleteUnusableBookCopy(idCopy, librarian);
     }
 }

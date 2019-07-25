@@ -2,7 +2,6 @@ package com.servletProject.librarySystem.facade;
 
 import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
-import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
 import com.servletProject.librarySystem.exception.DataIsNotCorrectException;
 import com.servletProject.librarySystem.service.BookControllerService;
@@ -48,7 +47,7 @@ public class BookingFacade {
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void cancelOrder( Long idCopy, String nickName) {
-        UserEntity user = userService.getUserByNickName(nickName);
+        var user = userService.getUserByNickName(nickName);
         bookingControllerService.cancelOrder(idCopy, user);
     }
 

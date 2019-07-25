@@ -1,7 +1,6 @@
 package com.servletProject.librarySystem.service;
 
 import com.servletProject.librarySystem.domen.Role;
-import com.servletProject.librarySystem.domen.UserEntity;
 import com.servletProject.librarySystem.exception.PermissionToActionIsAbsentException;
 import com.servletProject.librarySystem.repository.UserRepository;
 import com.servletProject.librarySystem.service.data.UserService;
@@ -20,28 +19,26 @@ public class AdminControllerService {
         this.userRepository = userRepository;
     }
 
-    public void addUserRole(String nickName,  String admin, String newRole) {
+    public void addUserRole(String nickName, String admin, Role role) {
         if (isAdmin(admin)) {
-            UserEntity user = userService.getUserByNickName(nickName);
-            Role role = Role.valueOf(newRole);
+            var user = userService.getUserByNickName(nickName);
             user.getRoles().add(role);
             userRepository.save(user);
-            log.info("Role : \"" + newRole + "\" granted to user with id= " + user.getId() + " .");
+            log.info("Role : \"" + role.toString() + "\" granted to user with id= " + user.getId() + " .");
         } else throw new PermissionToActionIsAbsentException("You do not have permission to grant a role to the user.");
     }
 
-    public void removeUserRole(String nickName,  String admin, String removedRole) {
+    public void removeUserRole(String nickName, String admin, Role removedRole) {
         if (isAdmin(admin)) {
-            UserEntity user = userService.getUserByNickName(nickName);
-            Role role = Role.valueOf(removedRole);
-            user.getRoles().remove(role);
+            var user = userService.getUserByNickName(nickName);
+            user.getRoles().remove(removedRole);
             userRepository.save(user);
-            log.info("Role : \"" + removedRole + "\" revoked from the user with id= " + user.getId() + " .");
+            log.info("Role : \"" + removedRole.toString() + "\" revoked from the user with id= " + user.getId() + " .");
         } else throw new PermissionToActionIsAbsentException("You do not have permission to revoke the role from the user.");
     }
 
     private boolean isAdmin(String admin) {
-        UserEntity adminEntity = userService.getUserByNickName(admin);
+        var adminEntity = userService.getUserByNickName(admin);
         return adminEntity.getRoles().contains(Role.ADMIN);
     }
 }

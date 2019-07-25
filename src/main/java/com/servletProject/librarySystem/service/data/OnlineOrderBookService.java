@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -29,14 +28,14 @@ public class OnlineOrderBookService {
     }
 
     public List<OnlineOrderBook> findAllByUserId(Long idUser) {
-        List<OnlineOrderBook> orderBookList = orderBookRepository.findAllByIdUser(idUser);
+        var orderBookList = orderBookRepository.findAllByIdUser(idUser);
         if (orderBookList != null && !orderBookList.isEmpty()) {
             return orderBookList;
         } else throw new ThereAreNoBooksFoundException("We could not find any order");
     }
 
     public List<OnlineOrderBook> findAllOrders() {
-        List<OnlineOrderBook> orderBookList = orderBookRepository.findAll();
+        var orderBookList = orderBookRepository.findAll();
         if (!orderBookList.isEmpty()) {
             return orderBookList;
         } else throw new ThereAreNoBooksFoundException("We could not find any order");
@@ -50,14 +49,14 @@ public class OnlineOrderBookService {
     }
 
     private boolean isOrderExist(Long bookCopyId, Long userId) {
-        Optional<OnlineOrderBook> orderBook = orderBookRepository.findOneByIdUserAndIdBookCopy(userId, bookCopyId);
+        var orderBook = orderBookRepository.findOneByIdUserAndIdBookCopy(userId, bookCopyId);
         return orderBook.isPresent();
     }
 
     public void cancelOrderByReader(Long idCopy, UserEntity user) {
-        Optional<OnlineOrderBook> orderBook = orderBookRepository.findOneByIdBookCopy(idCopy);
+        var orderBook = orderBookRepository.findOneByIdBookCopy(idCopy);
         if (orderBook.isPresent()) {
-            OnlineOrderBook onlineOrderBook = orderBook.get();
+            var onlineOrderBook = orderBook.get();
             if (idCopy == onlineOrderBook.getIdBookCopy() && onlineOrderBook.getIdUser() == user.getId()) {
                 orderBookRepository.delete(onlineOrderBook);
                 log.info("Order canceled by user. Copy id=" + idCopy + ", user id=" + user.getId() + ".");
@@ -66,9 +65,9 @@ public class OnlineOrderBookService {
     }
 
     public void cancelOrderLibrarian(Long idCopy, Long idUser) {
-        Optional<OnlineOrderBook> orderBook = orderBookRepository.findOneByIdBookCopy(idCopy);
+        var orderBook = orderBookRepository.findOneByIdBookCopy(idCopy);
         if (orderBook.isPresent()) {
-            OnlineOrderBook onlineOrderBook = orderBook.get();
+            var onlineOrderBook = orderBook.get();
             if (idUser == onlineOrderBook.getIdUser()) {
                 orderBookRepository.delete(onlineOrderBook);
                 log.info("Order canceled by librarian. Copy id=" + idCopy + ", user id=" + idUser + ".");

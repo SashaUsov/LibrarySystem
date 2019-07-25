@@ -12,10 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -30,7 +29,7 @@ public class CompletedOrdersServiceTest {
 
     @Test
     public void shouldDoNothingWhenSaveOrderMethodTry() {
-        CompletedOrders order = HelperUtil.getCompletedOrders();
+        var order = HelperUtil.getCompletedOrders();
         when(completedOrdersRepository.save(any(CompletedOrders.class)))
                 .thenReturn(new CompletedOrders());
         completedOrdersService.saveOrder(order.getIdReader(), order.getIdLibrarian(),order.getIdBook());
@@ -47,7 +46,7 @@ public class CompletedOrdersServiceTest {
 
     @Test
     public void shouldDoNothingWhenTryDeleteFromCompletedOrdersByCopyIdMethod() {
-        CompletedOrders model = HelperUtil.getCompletedOrders();
+        var model = HelperUtil.getCompletedOrders();
 
         when(completedOrdersRepository.findOneByIdBook(anyLong()))
                 .thenReturn(Optional.of(model));
@@ -68,11 +67,11 @@ public class CompletedOrdersServiceTest {
 
     @Test
     public void shouldReturnCompletedOrdersListWhenTryFindAllCompletedOrdersMethod() {
-        CompletedOrders model = HelperUtil.getCompletedOrders();
+        var model = HelperUtil.getCompletedOrders();
 
         when(completedOrdersRepository.findAll())
                 .thenReturn(Collections.singletonList(model));
-        List<CompletedOrders> actual = completedOrdersService.findAllCompletedOrders();
+        var actual = completedOrdersService.findAllCompletedOrders();
 
         verify(completedOrdersRepository).findAll();
         assertEquals(Collections.singletonList(model), actual);
@@ -87,11 +86,11 @@ public class CompletedOrdersServiceTest {
 
     @Test
     public void shouldReturnCompletedOrdersListWhenTryFindAllByUserIdMethod() {
-        CompletedOrders model = HelperUtil.getCompletedOrders();
+        var model = HelperUtil.getCompletedOrders();
 
         when(completedOrdersRepository.findAllByIdReader(anyLong()))
                 .thenReturn(Collections.singletonList(model));
-        List<CompletedOrders> actual = completedOrdersService.findAllByUserId(anyLong());
+        var actual = completedOrdersService.findAllByUserId(anyLong());
 
         verify(completedOrdersRepository).findAllByIdReader(anyLong());
         assertEquals(Collections.singletonList(model), actual);

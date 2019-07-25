@@ -23,14 +23,14 @@ public class AdminController {
     @PostMapping("grant")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void grantRole(@Valid @RequestBody GrantRoleModel roleModel, Principal principal) {
-        String access = principal.getName();
+        var access = principal.getName();
         adminFacade.grantRole(roleModel.getNickName(), access, roleModel.getRole());
     }
 
     @PostMapping("revoke-role")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void revokeRole(@Valid @RequestBody GrantRoleModel roleModel, Principal principal) {
-        String access = principal.getName();
+        var access = principal.getName();
         adminFacade.revokeRole(roleModel.getNickName(), access, roleModel.getRole());
     }
 }

@@ -2,7 +2,6 @@ package com.servletProject.librarySystem.service.data;
 
 import com.servletProject.librarySystem.domen.BookCatalog;
 import com.servletProject.librarySystem.domen.CopiesOfBooks;
-import com.servletProject.librarySystem.domen.dto.bookCatalog.CreateBookCatalogModel;
 import com.servletProject.librarySystem.exception.ThereAreNoBooksFoundException;
 import com.servletProject.librarySystem.repository.BookRepository;
 import com.servletProject.librarySystem.repository.CopiesOfBooksRepository;
@@ -36,9 +35,9 @@ public class BookCatalogServiceTest {
 
     @Test
     public void shouldSaveOriginalBookAndDoNothingWhenSaveBookMethodCall() {
-        CreateBookCatalogModel model = HelperUtil.getCreateBookCatalogModel();
-        BookCatalog book = HelperUtil.getBookCatalogEntity();
-        CopiesOfBooks copy = HelperUtil.getCopiesOfBooksEntity();
+        var model = HelperUtil.getCreateBookCatalogModel();
+        var book = HelperUtil.getBookCatalogEntity();
+        var copy = HelperUtil.getCopiesOfBooksEntity();
 
         when(bookRepository.findOneByBookTitle(anyString()))
                 .thenReturn(Optional.empty());
@@ -56,9 +55,9 @@ public class BookCatalogServiceTest {
 
     @Test
     public void shouldSaveOnlyBookCopyAndDoNothingWhenSaveBookMethodCall() {
-        CreateBookCatalogModel model = HelperUtil.getCreateBookCatalogModel();
-        BookCatalog book = HelperUtil.getBookCatalogEntity();
-        CopiesOfBooks copy = HelperUtil.getCopiesOfBooksEntity();
+        var model = HelperUtil.getCreateBookCatalogModel();
+        var book = HelperUtil.getBookCatalogEntity();
+        var copy = HelperUtil.getCopiesOfBooksEntity();
 
         when(bookRepository.findOneByBookTitle(anyString()))
                 .thenReturn(Optional.of(book));
@@ -82,12 +81,12 @@ public class BookCatalogServiceTest {
 
     @Test
     public void shouldReturnBookCatalogListWhenTryGetAllBookMethod() {
-        BookCatalog book = HelperUtil.getBookCatalogEntity();
-        List<BookCatalog> given = Collections.singletonList(book);
+        var book = HelperUtil.getBookCatalogEntity();
+        var given = Collections.singletonList(book);
 
         when(bookRepository.findAll())
                 .thenReturn(given);
-        List<BookCatalog> actual = bookCatalogService.getAllBook();
+        var actual = bookCatalogService.getAllBook();
 
         assertEquals(given, actual);
     }
@@ -101,7 +100,7 @@ public class BookCatalogServiceTest {
 
     @Test
     public void shouldReturnBookCatalogListWhenTryGetAllBookByTitleMethod() {
-        BookCatalog book = HelperUtil.getBookCatalogEntity();
+        var book = HelperUtil.getBookCatalogEntity();
 
         when(bookRepository.findAllByBookTitleContaining(anyString()))
                 .thenReturn(Collections.singletonList(book));
@@ -119,12 +118,12 @@ public class BookCatalogServiceTest {
 
     @Test
     public void shouldReturnBookCatalogListWhenTryGetAllBookByAuthorMethod() {
-        BookCatalog book = HelperUtil.getBookCatalogEntity();
+        var book = HelperUtil.getBookCatalogEntity();
 
         when(bookRepository.findAllByBookAuthorContaining(anyString()))
                 .thenReturn(Collections.singletonList(book));
 
-        List<BookCatalog> actual = bookCatalogService.getAllBookByAuthor(anyString());
+        var actual = bookCatalogService.getAllBookByAuthor(anyString());
 
         assertEquals(Collections.singletonList(book), actual);
     }
@@ -138,11 +137,11 @@ public class BookCatalogServiceTest {
 
     @Test
     public void shouldReturnBookCatalogListWhenTryGetAllBookByGenreMethod() {
-        BookCatalog book = HelperUtil.getBookCatalogEntity();
+        var book = HelperUtil.getBookCatalogEntity();
 
         when(bookRepository.findAllByGenreContaining(anyString()))
                 .thenReturn(Collections.singletonList(book));
-        List<BookCatalog> actual = bookCatalogService.getAllBookByGenre(anyString());
+        var actual = bookCatalogService.getAllBookByGenre(anyString());
 
         assertEquals(Collections.singletonList(book), actual);
     }
@@ -156,11 +155,11 @@ public class BookCatalogServiceTest {
 
     @Test
     public void shouldReturnBookCatalogListWhenTryFindAllByIdInMethod() {
-        BookCatalog book = HelperUtil.getBookCatalogEntity();
+        var book = HelperUtil.getBookCatalogEntity();
 
         when(bookRepository.findAllByIdIn(anyCollection()))
                 .thenReturn(Collections.singletonList(book));
-        List<BookCatalog> actual = bookCatalogService.findAllByIdIn(anyList());
+        var actual = bookCatalogService.findAllByIdIn(anyList());
 
         assertEquals(Collections.singletonList(book), actual);
     }

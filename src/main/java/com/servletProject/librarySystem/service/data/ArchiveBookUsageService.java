@@ -20,20 +20,20 @@ public class ArchiveBookUsageService {
     }
 
     public void putBookInUsageArchive(Long readerId, Long copyId, String condition) {
-        ArchiveBookUsage entity = CreateEntityUtil.createArchiveBookUsageEntity(readerId, copyId, condition);
+        var entity = CreateEntityUtil.createArchiveBookUsageEntity(readerId, copyId, condition);
         usageRepository.save(entity);
         log.info("Book with id=" + copyId + " put in usage archive");
     }
 
     public List<ArchiveBookUsage> findAllByUserId(Long idUser) {
-        List<ArchiveBookUsage> bookUsageList = usageRepository.findAllByIdReader(idUser);
+        var bookUsageList = usageRepository.findAllByIdReader(idUser);
         if (bookUsageList != null && !bookUsageList.isEmpty()) {
             return bookUsageList;
         } else throw new ThereAreNoBooksFoundException("No books found in user archive");
     }
 
     public List<ArchiveBookUsage> findAllUsageArchive() {
-        List<ArchiveBookUsage> bookUsageList = usageRepository.findAll();
+        var bookUsageList = usageRepository.findAll();
         if (!bookUsageList.isEmpty()) {
             return bookUsageList;
         } else throw new ThereAreNoBooksFoundException("No books found in user archive");
