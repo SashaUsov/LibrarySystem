@@ -8,8 +8,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -17,7 +17,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class CompletedOrdersServiceTest {
 
@@ -28,7 +28,7 @@ public class CompletedOrdersServiceTest {
     private CompletedOrdersService completedOrdersService;
 
     @Test
-    public void shouldDoNothingWhenSaveOrderMethodTry() {
+    public void testSaveOrderShouldDoNothingWhen() {
         var order = HelperUtil.getCompletedOrders();
         when(completedOrdersRepository.save(any(CompletedOrders.class)))
                 .thenReturn(new CompletedOrders());
@@ -38,14 +38,14 @@ public class CompletedOrdersServiceTest {
     }
 
     @Test(expected = OrderNotExistException.class)
-    public void shouldThrowOrderNotExistExceptionWhenTryDeleteFromCompletedOrdersByCopyIdMethod() {
+    public void testDeleteFromCompletedOrdersByCopyIdShouldThrowOrderNotExistException() {
         when(completedOrdersRepository.findOneByIdBook(anyLong()))
                 .thenReturn(Optional.empty());
         completedOrdersService.deleteFromCompletedOrdersByCopyId(anyLong());
     }
 
     @Test
-    public void shouldDoNothingWhenTryDeleteFromCompletedOrdersByCopyIdMethod() {
+    public void testDeleteFromCompletedOrdersByCopyIdShouldDoNothing() {
         var model = HelperUtil.getCompletedOrders();
 
         when(completedOrdersRepository.findOneByIdBook(anyLong()))
@@ -59,14 +59,14 @@ public class CompletedOrdersServiceTest {
     }
 
     @Test(expected = OrderNotExistException.class)
-    public void shouldThrowOrderNotExistExceptionWhenTryFindAllCompletedOrdersMethod() {
+    public void testFindAllCompletedOrdersShouldThrowOrderNotExistException() {
         when(completedOrdersRepository.findAll())
                 .thenReturn(Collections.emptyList());
         completedOrdersService.findAllCompletedOrders();
     }
 
     @Test
-    public void shouldReturnCompletedOrdersListWhenTryFindAllCompletedOrdersMethod() {
+    public void testFindAllCompletedOrdersShouldReturnCompletedOrdersList() {
         var model = HelperUtil.getCompletedOrders();
 
         when(completedOrdersRepository.findAll())
@@ -78,14 +78,14 @@ public class CompletedOrdersServiceTest {
     }
 
     @Test(expected = OrderNotExistException.class)
-    public void shouldThrowOrderNotExistExceptionWhenTryFindAllByUserIdMethod() {
+    public void testFindAllByUserIdShouldThrowOrderNotExistException() {
         when(completedOrdersRepository.findAllByIdReader(anyLong()))
                 .thenReturn(Collections.emptyList());
         completedOrdersService.findAllByUserId(anyLong());
     }
 
     @Test
-    public void shouldReturnCompletedOrdersListWhenTryFindAllByUserIdMethod() {
+    public void testFindAllByUserIdShouldReturnCompletedOrdersList() {
         var model = HelperUtil.getCompletedOrders();
 
         when(completedOrdersRepository.findAllByIdReader(anyLong()))

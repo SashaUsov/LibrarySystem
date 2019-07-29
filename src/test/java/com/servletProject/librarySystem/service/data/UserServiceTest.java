@@ -9,8 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class UserServiceTest {
 
@@ -29,7 +29,7 @@ public class UserServiceTest {
     private UserService userService;
 
     @Test(expected = ClientAlreadyExistsException.class)
-    public void shouldThrowClientAlreadyExistsExceptionWhenTrySaveUserWithEmailWhichAlreadyExist() {
+    public void testSaveShouldThrowClientAlreadyExistsException() {
         var user = HelperUtil.getUser();
         var model = HelperUtil.getModel();
 
@@ -39,7 +39,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldDoNothingWhenSaveCreateUserEntityModel() {
+    public void testSaveShouldDoNothing() {
         var model = HelperUtil.getModel();
         when(userRepository.findOneByMail(anyString()))
                 .thenReturn(Optional.empty());
@@ -52,7 +52,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldReturnUserIdWhenGetUserIdByEmailTry() {
+    public void testGetUserIdByEmailShouldReturnUserId() {
         var expected = HelperUtil.getUser();
         when(userRepository.findOneByMail(anyString())).thenReturn(Optional.of(expected));
         long actual = userService.getUserIdByEmail(anyString());
@@ -61,13 +61,13 @@ public class UserServiceTest {
     }
 
     @Test(expected = UserNotFoundException.class)
-    public void shouldThrowUserNotFoundExceptionWhenGetUserIdByEmailAndEmailNotExistInDb() {
+    public void testGetUserIdByEmailShouldThrowUserNotFoundException() {
         when(userRepository.findOneByMail(anyString())).thenReturn(Optional.empty());
         userService.getUserIdByEmail(anyString());
     }
 
     @Test
-    public void shouldReturnUserEntityWhenGetUserByEmail() {
+    public void testGetUserByEmailShouldReturnUserEntity() {
         var expected = HelperUtil.getUser();
         when(userRepository.findOneByMail(anyString())).thenReturn(Optional.of(expected));
         var actual = userService.getUserByEmail(anyString());
@@ -76,13 +76,13 @@ public class UserServiceTest {
     }
 
     @Test(expected = UserNotFoundException.class)
-    public void shouldThrowUserNotFoundExceptionWhenGetUserByEmailAndEmailNotExistInDb() {
+    public void testGetUserByEmailShouldThrowUserNotFoundException() {
         when(userRepository.findOneByMail(anyString())).thenReturn(Optional.empty());
         userService.getUserByEmail(anyString());
     }
 
     @Test
-    public void shouldReturnFullUserNameWhenGetFullNameTry() {
+    public void testGetFullNameShouldReturnFullUserName() {
         var user = HelperUtil.getUser();
         var expected = user.getFirstName() + " " + user.getLastName();
         when(userRepository.findOneById(anyLong()))
@@ -95,14 +95,14 @@ public class UserServiceTest {
     }
 
     @Test(expected = UserNotFoundException.class)
-    public void shouldThrowUserNotFoundExceptionWhenGetFullNameAddIdIsNotExist() {
+    public void testGetFullNameShouldThrowUserNotFoundException() {
         when(userRepository.findOneById(anyLong()))
                 .thenReturn(Optional.empty());
         userService.getFullName(anyLong());
     }
 
     @Test
-    public void shouldReturnUserEntityWhenGetUserByNickName() {
+    public void testGetUserByNickNameShouldReturnUserEntity() {
         var expected = HelperUtil.getUser();
         when(userRepository.findOneByNickName(anyString()))
                 .thenReturn(Optional.of(expected));
@@ -112,7 +112,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = UserNotFoundException.class)
-    public void shouldThrowUserNotFoundExceptionWhenGetUserByNickNameAndNickNameIsNotExistInDb() {
+    public void testGetUserByNickNameShouldThrowUserNotFoundException() {
         when(userRepository.findOneByNickName(anyString())).thenReturn(Optional.empty());
         userService.getUserByNickName(anyString());
     }

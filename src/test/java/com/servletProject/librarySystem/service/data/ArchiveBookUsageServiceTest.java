@@ -8,15 +8,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class ArchiveBookUsageServiceTest {
 
@@ -27,7 +27,7 @@ public class ArchiveBookUsageServiceTest {
     private ArchiveBookUsageService archiveBookUsageService;
 
     @Test
-    public void shouldDoNothingWhenTryPutBookInUsageArchive() {
+    public void testPutBookInUsageArchiveShouldDoNothing() {
         var archiveBookUsageEntity = HelperUtil.getArchiveBookUsageEntity();
 
         when(archiveBookUsageRepository.save(any(ArchiveBookUsage.class)))
@@ -40,14 +40,14 @@ public class ArchiveBookUsageServiceTest {
     }
 
     @Test(expected = ThereAreNoBooksFoundException.class)
-    public void shouldTrowThereAreNoBooksFoundExceptionWhenFindAllByUserIdAndUserIdIsNotExist() {
+    public void testFindAllByUserIdShouldTrowThereAreNoBooksFoundException() {
         when(archiveBookUsageRepository.findAllByIdReader(anyLong())).thenReturn(null);
 
         archiveBookUsageService.findAllByUserId(anyLong());
     }
 
     @Test
-    public void shouldReturnArchiveBookUsageListWhenFindAllByUserId() {
+    public void testFindAllByUserIdShouldReturnArchiveBookUsageList() {
         var expected = HelperUtil.getArchiveBookUsageList();
         when(archiveBookUsageRepository.findAllByIdReader(anyLong()))
                 .thenReturn(expected);
@@ -57,14 +57,14 @@ public class ArchiveBookUsageServiceTest {
     }
 
     @Test(expected = ThereAreNoBooksFoundException.class)
-    public void shouldTrowThereAreNoBooksFoundExceptionWhenFindAllUsageArchive() {
+    public void testFindAllUsageArchiveShouldTrowThereAreNoBooksFoundException() {
         when(archiveBookUsageRepository.findAll()).thenReturn(Collections.emptyList());
 
         archiveBookUsageService.findAllUsageArchive();
     }
 
     @Test
-    public void shouldReturnArchiveBookUsageListWhenFindAllUsageArchive() {
+    public void testFindAllUsageArchiveShouldReturnArchiveBookUsageList() {
         var expected = HelperUtil.getArchiveBookUsageList();
         when(archiveBookUsageRepository.findAll())
                 .thenReturn(expected);

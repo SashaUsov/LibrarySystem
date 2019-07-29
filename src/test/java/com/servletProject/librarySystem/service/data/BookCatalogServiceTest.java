@@ -10,8 +10,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 public class BookCatalogServiceTest {
 
@@ -34,7 +34,7 @@ public class BookCatalogServiceTest {
     private BookCatalogService bookCatalogService;
 
     @Test
-    public void shouldSaveOriginalBookAndDoNothingWhenSaveBookMethodCall() {
+    public void testSaveBookShouldSaveOriginalBookAndDoNothing() {
         var model = HelperUtil.getCreateBookCatalogModel();
         var book = HelperUtil.getBookCatalogEntity();
         var copy = HelperUtil.getCopiesOfBooksEntity();
@@ -54,7 +54,7 @@ public class BookCatalogServiceTest {
     }
 
     @Test
-    public void shouldSaveOnlyBookCopyAndDoNothingWhenSaveBookMethodCall() {
+    public void testSaveBookShouldSaveOnlyBookCopyAndDoNothing() {
         var model = HelperUtil.getCreateBookCatalogModel();
         var book = HelperUtil.getBookCatalogEntity();
         var copy = HelperUtil.getCopiesOfBooksEntity();
@@ -73,14 +73,14 @@ public class BookCatalogServiceTest {
     }
 
     @Test(expected = ThereAreNoBooksFoundException.class)
-    public void shouldThrowThereAreNoBooksFoundExceptionWhenTryGetAllBookMethod() {
+    public void testGetAllBookShouldThrowThereAreNoBooksFoundException() {
         when(bookRepository.findAll())
                 .thenReturn(Collections.emptyList());
         bookCatalogService.getAllBook();
     }
 
     @Test
-    public void shouldReturnBookCatalogListWhenTryGetAllBookMethod() {
+    public void testGetAllBookShouldReturnBookCatalogList() {
         var book = HelperUtil.getBookCatalogEntity();
         var given = Collections.singletonList(book);
 
@@ -92,14 +92,14 @@ public class BookCatalogServiceTest {
     }
 
     @Test(expected = ThereAreNoBooksFoundException.class)
-    public void shouldThrowThereAreNoBooksFoundExceptionWhenTryGetAllBookByTitleMethod() {
+    public void testGetAllBookByTitleShouldThrowThereAreNoBooksFoundException() {
         when(bookRepository.findAllByBookTitleContaining(anyString()))
                 .thenReturn(Collections.emptyList());
         bookCatalogService.getAllBookByTitle(anyString());
     }
 
     @Test
-    public void shouldReturnBookCatalogListWhenTryGetAllBookByTitleMethod() {
+    public void testGetAllBookByTitleShouldReturnBookCatalogList() {
         var book = HelperUtil.getBookCatalogEntity();
 
         when(bookRepository.findAllByBookTitleContaining(anyString()))
@@ -110,14 +110,14 @@ public class BookCatalogServiceTest {
     }
 
     @Test(expected = ThereAreNoBooksFoundException.class)
-    public void shouldThrowThereAreNoBooksFoundExceptionWhenTryGetAllBookByAuthorMethod() {
+    public void testGetAllBookByAuthorShouldThrowThereAreNoBooksFoundException() {
         when(bookRepository.findAllByBookAuthorContaining(anyString()))
                 .thenReturn(Collections.emptyList());
         bookCatalogService.getAllBookByAuthor(anyString());
     }
 
     @Test
-    public void shouldReturnBookCatalogListWhenTryGetAllBookByAuthorMethod() {
+    public void testGetAllBookByAuthorShouldReturnBookCatalogList() {
         var book = HelperUtil.getBookCatalogEntity();
 
         when(bookRepository.findAllByBookAuthorContaining(anyString()))
@@ -129,14 +129,14 @@ public class BookCatalogServiceTest {
     }
 
     @Test(expected = ThereAreNoBooksFoundException.class)
-    public void shouldThrowThereAreNoBooksFoundExceptionWhenTryGetAllBookByGenreMethod() {
+    public void testGetAllBookByGenreShouldThrowThereAreNoBooksFoundException() {
         when(bookRepository.findAllByGenreContaining(anyString()))
                 .thenReturn(Collections.emptyList());
         bookCatalogService.getAllBookByGenre(anyString());
     }
 
     @Test
-    public void shouldReturnBookCatalogListWhenTryGetAllBookByGenreMethod() {
+    public void testGetAllBookByGenreShouldReturnBookCatalogList() {
         var book = HelperUtil.getBookCatalogEntity();
 
         when(bookRepository.findAllByGenreContaining(anyString()))
@@ -147,14 +147,14 @@ public class BookCatalogServiceTest {
     }
 
     @Test(expected = ThereAreNoBooksFoundException.class)
-    public void shouldThrowThereAreNoBooksFoundExceptionWhenTryFindAllByIdInMethod() {
+    public void testFindAllByIdInShouldThrowThereAreNoBooksFoundException() {
         when(bookRepository.findAllByIdIn(anyCollection()))
                 .thenReturn(Collections.emptyList());
         bookCatalogService.findAllByIdIn(anyList());
     }
 
     @Test
-    public void shouldReturnBookCatalogListWhenTryFindAllByIdInMethod() {
+    public void testFindAllByIdInShouldReturnBookCatalogList() {
         var book = HelperUtil.getBookCatalogEntity();
 
         when(bookRepository.findAllByIdIn(anyCollection()))
