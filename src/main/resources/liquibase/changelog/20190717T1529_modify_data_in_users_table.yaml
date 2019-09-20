@@ -1,0 +1,10 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: modifyDataType-user_entity_table
+      author: sasha_vosu
+      changes:
+        - modifyDataType:
+            columnName: password
+            newDataType: varchar(250)
+            tableName: user_entity

@@ -1,9 +1,9 @@
 databaseChangeLog:
 
-    - changeSet:
-        id: rename_column-in-book_catalog-table
-        author: sasha_vosu
-        changes:
+  - changeSet:
+      id: rename_column-in-book_catalog-table
+      author: sasha_vosu
+      changes:
         - renameColumn:
             columnDataType: bigint
             newColumnName: total_amount

@@ -3,42 +3,52 @@ package com.servletProject.librarySystem.domen;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+@Getter
+@Setter
+@Entity
+@Table(name = "user_entity")
 public class UserEntity {
 
-    @Getter
-    @Setter
+    @Column(name = "id", updatable = false, nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_user_id")
     private long id;
-    @Getter
-    @Setter
+
+    @Column(name = "first_name")
     private String firstName;
-    @Getter
-    @Setter
+
+    @Column(name = "last_name")
     private String lastName;
-    @Getter
-    @Setter
+
+    @Column(name = "nick_name")
     private String nickName;
-    @Getter
-    @Setter
+
+    @Column(name = "password")
     private String password;
-    @Getter
-    @Setter
+
+    @Column(name = "mail")
+    @Email(message = "Email should be valid")
     private String mail;
-    @Getter
-    @Setter
+
+    @Column(name = "address")
     private String address;
-    @Getter
-    @Setter
-    private List<String> role = new ArrayList<>();
-    @Getter
-    @Setter
-    private boolean permissionToOrder;
 
-    @Getter
-    @Setter
-    private boolean login = false;
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "users_role", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Set<Role> roles = new HashSet<>();
 
+    @Column(name = "permission_to_order")
+    private boolean active;
+
+    @Transient
+    private boolean permission = false;
 }
 

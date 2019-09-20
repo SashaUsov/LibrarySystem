@@ -1,0 +1,77 @@
+package com.servletProject.librarySystem.service.data;
+
+import com.servletProject.librarySystem.domen.OnlineOrderBook;
+import com.servletProject.librarySystem.domen.UserEntity;
+import com.servletProject.librarySystem.exception.OrderNotExistException;
+import com.servletProject.librarySystem.exception.PermissionToActionIsAbsentException;
+import com.servletProject.librarySystem.exception.ThereAreNoBooksFoundException;
+import com.servletProject.librarySystem.repository.OnlineOrderBookRepository;
+import com.servletProject.librarySystem.utils.CreateEntityUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@Slf4j
+public class OnlineOrderBookService {
+
+    private final OnlineOrderBookRepository orderBookRepository;
+
+    public OnlineOrderBookService(OnlineOrderBookRepository orderBookRepository) {
+        this.orderBookRepository = orderBookRepository;
+    }
+
+    public void reserveBookCopy(Long copyId, Long readerId) {
+        orderBookRepository.save(CreateEntityUtil.createOnlineOrderEntity(copyId, readerId));
+        log.info("New order created. Book copy id=" + copyId + ", user id=" + readerId + ".");
+    }
+
+    public List<OnlineOrderBook> findAllByUserId(Long idUser) {
+        var orderBookList = orderBookRepository.findAllByIdUser(idUser);
+        if (orderBookList != null && !orderBookList.isEmpty()) {
+            return orderBookList;
+        } else throw new ThereAreNoBooksFoundException("We could not find any order");
+    }
+
+    public List<OnlineOrderBook> findAllOrders() {
+        var orderBookList = orderBookRepository.findAll();
+        if (!orderBookList.isEmpty()) {
+            return orderBookList;
+        } else throw new ThereAreNoBooksFoundException("We could not find any order");
+    }
+
+    public void deleteOrderByCopyIdAndUserId(Long bookCopyId, Long userId) {
+        if (isOrderExist(bookCopyId, userId)) {
+            orderBookRepository.removeByIdBookCopyAndIdUser(bookCopyId, userId);
+            log.info("Order finished. Copy id=" + bookCopyId + ", user id=" + userId + ".");
+        } else throw new OrderNotExistException("The order you are looking for does not exist.");
+    }
+
+    private boolean isOrderExist(Long bookCopyId, Long userId) {
+        var orderBook = orderBookRepository.findOneByIdUserAndIdBookCopy(userId, bookCopyId);
+        return orderBook.isPresent();
+    }
+
+    public void cancelOrderByReader(Long idCopy, UserEntity user) {
+        var orderBook = orderBookRepository.findOneByIdBookCopy(idCopy);
+        if (orderBook.isPresent()) {
+            var onlineOrderBook = orderBook.get();
+            if (idCopy == onlineOrderBook.getIdBookCopy() && onlineOrderBook.getIdUser() == user.getId()) {
+                orderBookRepository.delete(onlineOrderBook);
+                log.info("Order canceled by user. Copy id=" + idCopy + ", user id=" + user.getId() + ".");
+            } else throw new PermissionToActionIsAbsentException("You do not have permission to delete this order.");
+        } else throw new OrderNotExistException("The order you are looking for does not exist.");
+    }
+
+    public void cancelOrderLibrarian(Long idCopy, Long idUser) {
+        var orderBook = orderBookRepository.findOneByIdBookCopy(idCopy);
+        if (orderBook.isPresent()) {
+            var onlineOrderBook = orderBook.get();
+            if (idUser == onlineOrderBook.getIdUser()) {
+                orderBookRepository.delete(onlineOrderBook);
+                log.info("Order canceled by librarian. Copy id=" + idCopy + ", user id=" + idUser + ".");
+            }
+        } else throw new OrderNotExistException("The order you are looking for does not exist.");
+    }
+}

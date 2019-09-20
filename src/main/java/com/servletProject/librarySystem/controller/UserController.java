@@ -1,0 +1,43 @@
+package com.servletProject.librarySystem.controller;
+
+import com.servletProject.librarySystem.domen.dto.onlineOrderBook.OnlineOrderModel;
+import com.servletProject.librarySystem.domen.dto.userEntity.UserEntityModel;
+import com.servletProject.librarySystem.facade.BookingFacade;
+import com.servletProject.librarySystem.facade.UserFacade;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
+import java.util.List;
+
+@RestController
+@RequestMapping("user")
+public class UserController {
+
+    private final BookingFacade bookingFacade;
+    private final UserFacade userFacade;
+
+    public UserController(BookingFacade bookingFacade, UserFacade userFacade) {
+        this.bookingFacade = bookingFacade;
+        this.userFacade = userFacade;
+    }
+
+    @GetMapping("orders")
+    public List<OnlineOrderModel> getAllOrders(Principal principal) {
+        var nickName = principal.getName();
+        return bookingFacade.getAllUserOrders(nickName);
+    }
+
+    @GetMapping("info")
+    public UserEntityModel accountDetail(Principal principal) {
+        var nickName = principal.getName();
+        return userFacade.getUserByNickName(nickName);
+    }
+
+    @GetMapping("reading")
+    public List<OnlineOrderModel> getCompletedOrders(Principal principal) {
+        var nickName = principal.getName();
+        return bookingFacade.getListOfCompletedOrdersByUser(nickName);
+    }
+}

@@ -1,9 +1,9 @@
 databaseChangeLog:
 
-    - changeSet:
-            id: delete-period-column-in-completed-orders-table
-            author: sasha_vosu
-            changes:
-            - dropColumn:
-                  columnName: period
-                  tableName: completed_orders
+  - changeSet:
+      id: delete-period-column-in-completed-orders-table
+      author: sasha_vosu
+      changes:
+        - dropColumn:
+            columnName: period
+            tableName: completed_orders

@@ -1,14 +1,14 @@
 databaseChangeLog:
 
-    - changeSet:
-        id: 8
-        author: sasha_vosu
-        changes:
-          - createIndex:
-              columns:
+  - changeSet:
+      id: 8
+      author: sasha_vosu
+      changes:
+        - createIndex:
+            columns:
               - column:
                   name: nick_name
                   type: varchar(15)
-              indexName: idx_nick
-              tableName: user_entity
-              unique: true
+            indexName: idx_nick
+            tableName: user_entity
+            unique: true

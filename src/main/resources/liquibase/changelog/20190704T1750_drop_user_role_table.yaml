@@ -1,0 +1,9 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: drop_user_role_table
+      author: sasha_vosu
+      changes:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: user_role

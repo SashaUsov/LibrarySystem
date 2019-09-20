@@ -1,9 +1,9 @@
 databaseChangeLog:
 
-    - changeSet:
-        id: rename-issued-books-table
-        author: sasha_vosu
-        changes:
+  - changeSet:
+      id: rename-issued-books-table
+      author: sasha_vosu
+      changes:
         - renameTable:
             newTableName: completed_orders
             oldTableName: issued_books
