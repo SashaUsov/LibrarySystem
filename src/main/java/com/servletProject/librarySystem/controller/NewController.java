@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class NewController {
 
     @GetMapping("orders")
-    public String getString() {
-        return "Hi";
+    public String getString(String s) {
+        var s1 = "Hi " + s;
+        return s1;
     }
 }
